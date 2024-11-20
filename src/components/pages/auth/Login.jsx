@@ -11,25 +11,38 @@ const Login = () => {
     alert(password);
   };
   return (
-    <>
-      <h1>Login</h1>
-      <form action="" onSubmit={submitForm}>
-        <span>Email or phone </span>
-        <input type="text" />
-        <br />
-        <br />
-        <span>password </span>
-        <input type="password" />
-        <br />
-        <br />
-        <input type="button" value="Login" />
-      </form><p>
-        Forget Your password ? <Link to="/reset">Reset Now</Link>
-      </p>
-      <p>
-        New user? <Link to="/register">Register Now</Link>
-      </p>
-    </>
+    <div className="border p-5">
+      <h1 className="text-xl border-b-2 pb-2 mb-2">Login</h1>
+      <form action="">
+        <table>
+          <tr className="">
+            <td>
+              <span>Email or phone </span>
+            </td>
+            <td>
+              <input type="text" className="border" />
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <span>password </span>
+            </td>
+            <td>
+              <input type="password" className="border" />
+            </td>
+          </tr>
+          <tr>
+            <td colSpan="2">
+              <input
+                type="button"
+                value="Login"
+                className="border px-5 py-0 text-sm"
+              />
+            </td>
+          </tr>
+        </table>
+      </form>   
+    </div>
   );
 };
 

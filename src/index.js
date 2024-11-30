@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import "./index.css"; 
+import "./index.css";
 import reportWebVitals from "./reportWebVitals";
 import Login from "./components/pages/auth/Login";
 import Register from "./components/pages/auth/Register";
@@ -10,6 +10,8 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import MainLayout from "./components/layout/MainLayout";
 import MainPage from "./components/pages/MainPage";
 import LoginReg from "./components/pages/auth/LoginReg";
+import { Provider } from "react-redux";
+import store from "./app/store";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
@@ -20,9 +22,9 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <MainPage />
-      }
-    ]
+        element: <MainPage />,
+      },
+    ],
   },
   {
     path: "/auth",
@@ -45,7 +47,9 @@ const router = createBrowserRouter([
 ]);
 root.render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <Provider store={store}>
+      <RouterProvider router={router} />
+    </Provider>
   </React.StrictMode>
 );
 

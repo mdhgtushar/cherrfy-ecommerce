@@ -9,6 +9,10 @@ export const signup = async (req, res) => {
       throw new Error("All fields are required");
     }
 
+    if (password.length < 6) {
+      throw new Error("Password must be at least 6 characters");
+    }
+
     const userAlreadyExists = await User.findOne({ email });
 
     if (userAlreadyExists) {

@@ -1,14 +1,13 @@
 import React from "react";
-// import scrape from "aliexpress-product-scraper";
-import AliExpressProduct from "./AliExpressProduct";
+
 import ProductInfo from "./Product";
+import GetAccessToken from "./GetAccessToken";
 
 const MainPage = () => {
-  
   return (
     <div>
-      {/* <AliExpressProduct/> */}
       <ProductInfo />
+      {/* <GetAccessToken /> */}
       <div className="h-96 bg-gray-100 flex items-center justify-center mb-2">
         <h2 className="text-xl">Product Showcase</h2>
       </div>

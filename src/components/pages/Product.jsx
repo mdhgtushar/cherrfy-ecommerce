@@ -19,22 +19,17 @@ const Product = () => {
   };
 
   const fetchProductDetails = async () => {
-    const apiUrl = 'https://api-sg.aliexpress.com/sync'; // Replace with the correct API endpoint
+    const apiUrl = 'https://api-sg.aliexpress.com/rest/auth/token/security/create'; // Replace with the correct API endpoint,ik
     const appKey = '510834';
     const appSecret = 'FVRr5J6Abj8XK4ANH7Hh7TFNuUWNRvad';
-    const accessToken = 'YOUR_ACCESS_TOKEN';
+    // const accessToken = 'test';
 
     setLoading(true);
     setError(null);
 
     const timestamp = Date.now();
-    const params = {
-      method: 'aliexpress.ds.product.get',
-      app_key: appKey,
-      access_token: accessToken,
-      product_id: productId,
-      target_currency: 'USD',
-      target_language: 'en',
+    const params = { 
+      app_key: appKey, 
       timestamp: timestamp,
       sign_method: 'sha256', // Set the sign_method to sha256
     };
@@ -44,9 +39,9 @@ const Product = () => {
     try {
       const response = await axios.post(
         apiUrl,
-        {
-          ...params,
+        { 
           sign: signature,
+          code: '3_510834_hzRRzthCxJ9a2P7OVliY19vv3876'
         },
         {
           headers: {

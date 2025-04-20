@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Home, Eye, Settings, Users, Info, Plus } from 'lucide-react';
+import { Home, Eye, Settings, Users, Info, Plus, List } from 'lucide-react';
 
 const Sidebar = () => {
   return (
@@ -15,7 +15,8 @@ const Sidebar = () => {
         <nav className="flex flex-col gap-3">
           <SidebarLink to="/" icon={<Home size={18} />} label="Dashboard" />
           <SidebarLink to="/productViewer" icon={<Eye size={18} />} label="Product View" />
-          <SidebarLink to="/users" icon={<Users size={18} />} label="Users" />
+          <SidebarLink to="/productList" icon={<List size={18} />} label="Product List" />
+          <SidebarLink to="/adminList" icon={<Users size={18} />} label="Admin Manager" />
           <SidebarLink to="/settings" icon={<Settings size={18} />} label="Settings" />
           <SidebarLink to="/about" icon={<Info size={18} />} label="About" />
         </nav>
@@ -23,9 +24,9 @@ const Sidebar = () => {
 
       {/* Full-width Button */}
       <div className="mt-6">
-        <button className="w-full flex items-center justify-center gap-2 bg-red-500 hover:bg-red-600 text-white font-semibold py-2 rounded-lg transition-all duration-200">
+        <Link to="/addProduct" className="w-full flex items-center justify-center gap-2 bg-red-500 hover:bg-red-600 text-white font-semibold py-2 rounded-lg transition-all duration-200">
           <Plus size={16} /> Add Product
-        </button>
+        </Link>
       </div>
     </aside>
   );

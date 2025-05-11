@@ -3,13 +3,16 @@
   "version": "1.0.0",
   "description": "Root project to run admin and api together",
   "scripts": {
-    "dev": "concurrently -n \"ADMIN,API,FRONTEND,TAILWIND\" -c \"cyan,green,magenta,blue\" \"npm start --prefix admin\" \"npm run dev --prefix api\" \"npm start --prefix frontend\" \"npx @tailwindcss/cli -i ./src/input.css -o ./src/index.css --watch\""
+    "dev": "concurrently -n \"API,FRONTEND\" -c \"green,magenta,blue\" \"npm run dev --prefix api\" \"npm start --prefix frontend\""
   },
   "devDependencies": {
-    "concurrently": "^9.1.2"
+    "@tailwindcss/postcss": "^4.1.4",
+    "concurrently": "^9.1.2",
+    "tailwindcss": "^3.4.17"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.6.1",
+    "@tailwindcss/cli": "^4.1.4",
     "react-redux": "^9.2.0"
   }
 }

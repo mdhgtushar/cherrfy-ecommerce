@@ -1,0 +1,72 @@
+import React, { useState, useEffect } from 'react';
+
+const ProductEditor = ({ productData }) => {
+    productData = {
+        "mobile_detail": "{\"version\":\"2.0.0\",\"moduleList\":[{\"type\":\"text\",\"data\":{\"content\":\"Package Included:\",\"style\":{\"paddingLeft\":16,\"paddingRight\":16,\"paddingTop\":10,\"paddingBottom\":10,\"fontSize\":14,\"fontWeight\":\"regular\",\"align\":\"left\",\"color\":\"#666666\",\"fontFamily\":\"OpenSans\",\"backgroundColor\":\"#FFFFFF\"}}},{\"type\":\"text\",\"data\":{\"content\":\"1 x POEDAGAR Clock\",\"style\":{\"paddingLeft\":16,\"paddingRight\":16,\"paddingTop\":10,\"paddingBottom\":10,\"fontSize\":14,\"fontWeight\":\"regular\",\"align\":\"left\",\"color\":\"#666666\",\"fontFamily\":\"OpenSans\",\"backgroundColor\":\"#FFFFFF\"}}},{\"type\":\"text\",\"data\":{\"content\":\"1 x POEDAGAR Box\",\"style\":{\"paddingLeft\":16,\"paddingRight\":16,\"paddingTop\":10,\"paddingBottom\":10,\"fontSize\":14,\"fontWeight\":\"regular\",\"align\":\"left\",\"color\":\"#666666\",\"fontFamily\":\"OpenSans\",\"backgroundColor\":\"#FFFFFF\"}}},{\"type\":\"text\",\"data\":{\"content\":\"1 x Watchband adjust tool\",\"style\":{\"paddingLeft\":16,\"paddingRight\":16,\"paddingTop\":10,\"paddingBottom\":10,\"fontSize\":14,\"fontWeight\":\"regular\",\"align\":\"left\",\"color\":\"#666666\",\"fontFamily\":\"OpenSans\",\"backgroundColor\":\"#FFFFFF\"}}},{\"type\":\"text\",\"data\":{\"content\":\"1 x Watch wipe\",\"style\":{\"paddingLeft\":16,\"paddingRight\":16,\"paddingTop\":10,\"paddingBottom\":10,\"fontSize\":14,\"fontWeight\":\"regular\",\"align\":\"left\",\"color\":\"#666666\",\"fontFamily\":\"OpenSans\",\"backgroundColor\":\"#FFFFFF\"}}},{\"type\":\"text\",\"data\":{\"content\":\"1 x Warranty card\",\"style\":{\"paddingLeft\":16,\"paddingRight\":16,\"paddingTop\":10,\"paddingBottom\":10,\"fontSize\":14,\"fontWeight\":\"regular\",\"align\":\"left\",\"color\":\"#666666\",\"fontFamily\":\"OpenSans\",\"backgroundColor\":\"#FFFFFF\"}}},{\"type\":\"text\",\"data\":{\"content\":\"After-Sales Service:\",\"style\":{\"paddingLeft\":16,\"paddingRight\":16,\"paddingTop\":10,\"paddingBottom\":10,\"fontSize\":14,\"fontWeight\":\"regular\",\"align\":\"left\",\"color\":\"#666666\",\"fontFamily\":\"OpenSans\",\"backgroundColor\":\"#FFFFFF\"}}},{\"type\":\"text\",\"data\":{\"content\":\"If you have any questions, please contact us by email, we will try our best to deal with it for you.We will reply within 24 hours.\",\"style\":{\"paddingLeft\":16,\"paddingRight\":16,\"paddingTop\":10,\"paddingBottom\":10,\"fontSize\":14,\"fontWeight\":\"regular\",\"align\":\"left\",\"color\":\"#666666\",\"fontFamily\":\"OpenSans\",\"backgroundColor\":\"#FFFFFF\"}}},{\"type\":\"image\",\"data\":{\"url\":\"https://ae01.alicdn.com/kf/S44ab74493f7e408ba55d8e37be2ba30eF.jpg\",\"style\":{\"width\":1000,\"height\":1105}}},{\"type\":\"image\",\"data\":{\"url\":\"https://ae01.alicdn.com/kf/Sea7edc918828411e81cd137d27552b42Z.jpg\",\"style\":{\"width\":1600,\"height\":2711}}},{\"type\":\"image\",\"data\":{\"url\":\"https://ae01.alicdn.com/kf/S8033d23406c34b809806a22f061c354dj.jpg\",\"style\":{\"width\":1600,\"height\":1679}}},{\"type\":\"image\",\"data\":{\"url\":\"https://ae01.alicdn.com/kf/Sb311134db65846369c461eda552822d3f.jpg\",\"style\":{\"width\":1600,\"height\":2600}}},{\"type\":\"image\",\"data\":{\"url\":\"https://ae01.alicdn.com/kf/S3aee9425c7294618957fed11bc5ae131s.jpg\",\"style\":{\"width\":1600,\"height\":2437}}},{\"type\":\"image\",\"data\":{\"url\":\"https://ae01.alicdn.com/kf/Se2a37f59d57b4c0d9c86e9319bc1f762s.jpg\",\"style\":{\"width\":1600,\"height\":2600}}},{\"type\":\"image\",\"data\":{\"url\":\"https://ae01.alicdn.com/kf/Sd76df6d18d954cc9a9083562f9e9a026T.jpg\",\"style\":{\"width\":1600,\"height\":2621}}},{\"type\":\"image\",\"data\":{\"url\":\"https://ae01.alicdn.com/kf/Sf5c0c9df31334b218310c7286c262516D.jpg\",\"style\":{\"width\":1600,\"height\":1706}}},{\"type\":\"image\",\"data\":{\"url\":\"https://ae01.alicdn.com/kf/S182a2329f44e4ed5ba8b9ce000c7d524i.jpg\",\"style\":{\"width\":1600,\"height\":3453}}},{\"type\":\"image\",\"data\":{\"url\":\"https://ae01.alicdn.com/kf/S694db0c94fc1424e8cc51e243ed1dc39G.jpg\",\"style\":{\"width\":1600,\"height\":2354}}},{\"type\":\"image\",\"data\":{\"url\":\"https://ae01.alicdn.com/kf/See00effbc88144df810c9c6e7de052020.jpg\",\"style\":{\"width\":1600,\"height\":2250}}},{\"type\":\"image\",\"data\":{\"url\":\"https://ae01.alicdn.com/kf/S6b008e16b6f84a19b039d349cb940c8dr.jpg\",\"style\":{\"width\":1600,\"height\":2250}}},{\"type\":\"image\",\"data\":{\"url\":\"https://ae01.alicdn.com/kf/Sf78545c77dea43ad807ec6b7873514cbq.jpg\",\"style\":{\"width\":1600,\"height\":2600}}},{\"type\":\"image\",\"data\":{\"url\":\"https://ae01.alicdn.com/kf/S9cba692a2a954c8893ea7abc3767f6cfi.jpg\",\"style\":{\"width\":1600,\"height\":2438}}},{\"type\":\"image\",\"data\":{\"url\":\"https://ae01.alicdn.com/kf/Sd0fb13dff7c9440fb08fd51aaec0046ek.jpg\",\"style\":{\"width\":1600,\"height\":2000}}},{\"type\":\"image\",\"data\":{\"url\":\"https://ae01.alicdn.com/kf/S2cddd6addc054e818f9d87d22827bc46D.jpg\",\"style\":{\"width\":1600,\"height\":2453}}},{\"type\":\"image\",\"data\":{\"url\":\"https://ae01.alicdn.com/kf/Sd3e47b62ff3a43a88c76ad62d2e87310a.jpg\",\"style\":{\"width\":950,\"height\":1886}}},{\"type\":\"image\",\"data\":{\"url\":\"https://ae01.alicdn.com/kf/S45b039ccd31749e59f49dd396719179ax.jpg\",\"style\":{\"width\":1000,\"height\":2402}}},{\"type\":\"image\",\"data\":{\"url\":\"https://ae01.alicdn.com/kf/S5e688d9f1f9f4baf9596f502dbd5ba2aT.jpg\",\"style\":{\"width\":1000,\"height\":2696}}},{\"type\":\"image\",\"data\":{\"url\":\"https://ae01.alicdn.com/kf/Se452c2cdbf8d4cacaf15ec49e3534aaeZ.jpg\",\"style\":{\"width\":1000,\"height\":1872}}}]}",
+        "subject": "POEDAGAR Luxury Fashion Men Watch Waterproof Luminous Date Man Wristwatch Stainless Steel Chronograph Quartz Men's Watches Reloj",
+        "evaluation_count": "92",
+        "sales_count": "481",
+        "product_status_type": "onSelling",
+        "avg_evaluation_rating": "4.6",
+        "currency_code": "CNY",
+        "category_id": 200034143,
+        "product_id": 1005008252021087,
+        "detail": "<p style=\"font-family:&quot;TT Norms Pro&quot;, &quot;Open Sans&quot;, Roboto, Arial, Helvetica, sans-serif, SimSun;font-size:14px;font-weight:400;letter-spacing:normal;line-height:inherit;text-align:start;white-space:normal;color:rgb(34, 34, 34);margin:0px;margin-bottom:0px;margin-top:0px;margin-left:0px;margin-right:0px;padding:0px;padding-bottom:0px;padding-top:0px;padding-left:0px;padding-right:0px;box-sizing:border-box\" align=\"start\"><span style=\"font-size:16px\"><strong>Package Included:</strong></span></p><p style=\"font-family:&quot;TT Norms Pro&quot;, &quot;Open Sans&quot;, Roboto, Arial, Helvetica, sans-serif, SimSun;font-size:14px;font-weight:400;letter-spacing:normal;line-height:inherit;text-align:start;white-space:normal;color:rgb(34, 34, 34);margin:0px;margin-bottom:0px;margin-top:0px;margin-left:0px;margin-right:0px;padding:0px;padding-bottom:0px;padding-top:0px;padding-left:0px;padding-right:0px;box-sizing:border-box\" align=\"start\">1 x POEDAGAR Clock</p><p style=\"font-family:&quot;TT Norms Pro&quot;, &quot;Open Sans&quot;, Roboto, Arial, Helvetica, sans-serif, SimSun;font-size:14px;font-weight:400;letter-spacing:normal;line-height:inherit;text-align:start;white-space:normal;color:rgb(34, 34, 34);margin:0px;margin-bottom:0px;margin-top:0px;margin-left:0px;margin-right:0px;padding:0px;padding-bottom:0px;padding-top:0px;padding-left:0px;padding-right:0px;box-sizing:border-box\" align=\"start\">1 x POEDAGAR Box</p><p style=\"font-family:&quot;TT Norms Pro&quot;, &quot;Open Sans&quot;, Roboto, Arial, Helvetica, sans-serif, SimSun;font-size:14px;font-weight:400;letter-spacing:normal;line-height:inherit;text-align:start;white-space:normal;color:rgb(34, 34, 34);margin:0px;margin-bottom:0px;margin-top:0px;margin-left:0px;margin-right:0px;padding:0px;padding-bottom:0px;padding-top:0px;padding-left:0px;padding-right:0px;box-sizing:border-box\" align=\"start\">1 x Watchband adjust tool</p><p style=\"font-family:&quot;TT Norms Pro&quot;, &quot;Open Sans&quot;, Roboto, Arial, Helvetica, sans-serif, SimSun;font-size:14px;font-weight:400;letter-spacing:normal;line-height:inherit;text-align:start;white-space:normal;color:rgb(34, 34, 34);margin:0px;margin-bottom:0px;margin-top:0px;margin-left:0px;margin-right:0px;padding:0px;padding-bottom:0px;padding-top:0px;padding-left:0px;padding-right:0px;box-sizing:border-box\" align=\"start\">1 x Watch wipe</p><p style=\"font-family:&quot;TT Norms Pro&quot;, &quot;Open Sans&quot;, Roboto, Arial, Helvetica, sans-serif, SimSun;font-size:14px;font-weight:400;letter-spacing:normal;line-height:inherit;text-align:start;white-space:normal;color:rgb(34, 34, 34);margin:0px;margin-bottom:0px;margin-top:0px;margin-left:0px;margin-right:0px;padding:0px;padding-bottom:0px;padding-top:0px;padding-left:0px;padding-right:0px;box-sizing:border-box\" align=\"start\">1 x Warranty card</p><p style=\"font-family:&quot;TT Norms Pro&quot;, &quot;Open Sans&quot;, Roboto, Arial, Helvetica, sans-serif, SimSun;font-size:14px;font-weight:400;letter-spacing:normal;line-height:inherit;text-align:start;white-space:normal;color:rgb(34, 34, 34);margin:0px;margin-bottom:0px;margin-top:0px;margin-left:0px;margin-right:0px;padding:0px;padding-bottom:0px;padding-top:0px;padding-left:0px;padding-right:0px;box-sizing:border-box\" align=\"start\"><span style=\"font-size:16px\"><strong>After-Sales Service:</strong></span></p><p style=\"font-family:&quot;TT Norms Pro&quot;, &quot;Open Sans&quot;, Roboto, Arial, Helvetica, sans-serif, SimSun;font-size:14px;font-weight:400;letter-spacing:normal;line-height:inherit;text-align:start;white-space:normal;color:rgb(34, 34, 34);margin:0px;margin-bottom:0px;margin-top:0px;margin-left:0px;margin-right:0px;padding:0px;padding-bottom:0px;padding-top:0px;padding-left:0px;padding-right:0px;box-sizing:border-box\" align=\"start\">If you have any questions, please contact us by email, we will try our best to deal with it for you.We will reply within 24 hours.</p><p style=\"font-family:&quot;TT Norms Pro&quot;, &quot;Open Sans&quot;, Roboto, Arial, Helvetica, sans-serif, SimSun;font-size:14px;font-weight:400;letter-spacing:normal;line-height:inherit;text-align:start;white-space:normal;color:rgb(34, 34, 34);margin:0px;margin-bottom:0px;margin-top:0px;margin-left:0px;margin-right:0px;padding:0px;padding-bottom:0px;padding-top:0px;padding-left:0px;padding-right:0px;box-sizing:border-box\" align=\"start\"><img src=\"https://ae01.alicdn.com/kf/S44ab74493f7e408ba55d8e37be2ba30eF.jpg\" slate-data-type=\"image\"/><img src=\"https://ae01.alicdn.com/kf/Sea7edc918828411e81cd137d27552b42Z.jpg\" slate-data-type=\"image\"/><img src=\"https://ae01.alicdn.com/kf/S8033d23406c34b809806a22f061c354dj.jpg\" slate-data-type=\"image\"/><img src=\"https://ae01.alicdn.com/kf/Sb311134db65846369c461eda552822d3f.jpg\" slate-data-type=\"image\"/><img src=\"https://ae01.alicdn.com/kf/S3aee9425c7294618957fed11bc5ae131s.jpg\" slate-data-type=\"image\"/><img src=\"https://ae01.alicdn.com/kf/Se2a37f59d57b4c0d9c86e9319bc1f762s.jpg\" slate-data-type=\"image\"/><img src=\"https://ae01.alicdn.com/kf/Sd76df6d18d954cc9a9083562f9e9a026T.jpg\" slate-data-type=\"image\"/><img src=\"https://ae01.alicdn.com/kf/Sf5c0c9df31334b218310c7286c262516D.jpg\" slate-data-type=\"image\"/><img src=\"https://ae01.alicdn.com/kf/S182a2329f44e4ed5ba8b9ce000c7d524i.jpg\" slate-data-type=\"image\"/><img src=\"https://ae01.alicdn.com/kf/S694db0c94fc1424e8cc51e243ed1dc39G.jpg\" slate-data-type=\"image\"/><img src=\"https://ae01.alicdn.com/kf/See00effbc88144df810c9c6e7de052020.jpg\" slate-data-type=\"image\"/><img src=\"https://ae01.alicdn.com/kf/S6b008e16b6f84a19b039d349cb940c8dr.jpg\" slate-data-type=\"image\"/><img src=\"https://ae01.alicdn.com/kf/Sf78545c77dea43ad807ec6b7873514cbq.jpg\" slate-data-type=\"image\"/><img src=\"https://ae01.alicdn.com/kf/S9cba692a2a954c8893ea7abc3767f6cfi.jpg\" slate-data-type=\"image\"/><img src=\"https://ae01.alicdn.com/kf/Sd0fb13dff7c9440fb08fd51aaec0046ek.jpg\" slate-data-type=\"image\"/><img src=\"https://ae01.alicdn.com/kf/S2cddd6addc054e818f9d87d22827bc46D.jpg\" slate-data-type=\"image\"/><img src=\"https://ae01.alicdn.com/kf/Sd3e47b62ff3a43a88c76ad62d2e87310a.jpg\" slate-data-type=\"image\"/><img src=\"https://ae01.alicdn.com/kf/S45b039ccd31749e59f49dd396719179ax.jpg\" slate-data-type=\"image\"/><img src=\"https://ae01.alicdn.com/kf/S5e688d9f1f9f4baf9596f502dbd5ba2aT.jpg\" slate-data-type=\"image\"/><img src=\"https://ae01.alicdn.com/kf/Se452c2cdbf8d4cacaf15ec49e3534aaeZ.jpg\" slate-data-type=\"image\"/></p>"
+    }
+  const [product, setProduct] = useState({});
+  const [mobileDetail, setMobileDetail] = useState(null);
+
+  useEffect(() => {
+    const parsedMobileDetail = JSON.parse(productData.mobile_detail);
+    setProduct({ ...productData, mobile_detail: parsedMobileDetail });
+    setMobileDetail(parsedMobileDetail);
+  }, [productData]);
+
+  const handleTextChange = (index, newText) => {
+    const updatedModules = [...mobileDetail.moduleList];
+    updatedModules[index].data.content = newText;
+
+    const updatedMobileDetail = { ...mobileDetail, moduleList: updatedModules };
+    setMobileDetail(updatedMobileDetail);
+    setProduct(prev => ({ ...prev, mobile_detail: updatedMobileDetail }));
+  };
+
+  const handleSubjectChange = (e) => {
+    setProduct(prev => ({ ...prev, subject: e.target.value }));
+  };
+
+  // Save changes function (if needed)
+  const saveChanges = () => {
+    const updated = {
+      ...product,
+      mobile_detail: JSON.stringify(mobileDetail), // stringify again before sending to backend
+    };
+    console.log(updated);
+  };
+
+  return (
+    <div>
+      <h2>Product Editor</h2>
+      <div>
+        <label>Subject:</label>
+        <input value={product.subject} onChange={handleSubjectChange} />
+      </div>
+
+      <h3>Mobile Detail Modules:</h3>
+      {mobileDetail?.moduleList.map((module, index) => (
+        module.type === 'text' && (
+          <div key={index}>
+            <textarea
+              value={module.data.content}
+              onChange={(e) => handleTextChange(index, e.target.value)}
+            />
+          </div>
+        )
+      ))}
+
+      <button onClick={saveChanges}>Save</button>
+    </div>
+  );
+};
+
+export default ProductEditor;

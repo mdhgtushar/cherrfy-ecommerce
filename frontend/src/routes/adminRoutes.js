@@ -2,7 +2,7 @@ import { Navigate } from "react-router-dom";
 import { ADMIN_PATHS } from "./paths";
 
 // Layouts
-import AdminLayout from "../layout/admin/AdminLayout"; 
+import AdminLayout from "../layout/admin/AdminLayout";
 
 // Pages
 import Dashboard from "../admin/site/Dashboard";
@@ -30,9 +30,12 @@ import D2CManagement from "../admin/D2CManagement/D2CManagement";
 import PricingAndProfitManagement from "../admin/PricingAndProfitManagement/PricingAndProfitManagement";
 import ProductLayout from "../layout/admin/product/ProductLayout";
 import ProductListPage from "../admin/products/list/ProductListPage";
-import AliExpressViewer from "../admin/products/create/AliExpressViewer";
+import AliExpressAdd from "../admin/products/create/AliExpressAdd";
 import ChooseSource from "../admin/products/ChooseSource";
 import ManualCreatePage from "../admin/products/create/ManualCreatePage";
+import OrderManagementMenu from "../admin/order/OrderManagementMenu";
+import OrderLayout from "../layout/admin/order/OrderLayout";
+import RoleLayout from "../layout/admin/role/RoleLayout";
 
 export const adminRoutes = [
   {
@@ -42,9 +45,15 @@ export const adminRoutes = [
       { index: true, element: <Dashboard /> }, // Default dashboard
       { path: ADMIN_PATHS.DASHBOARD.replace(ADMIN_PATHS.BASE + '/', ''), element: <Dashboard /> }, // Only "dashboard"
       { path: ADMIN_PATHS.ABOUT.replace(ADMIN_PATHS.BASE + '/', ''), element: <About /> },
-      { path: ADMIN_PATHS.ADMIN_LIST.replace(ADMIN_PATHS.BASE + '/', ''), element: <AdminList /> },
       { path: ADMIN_PATHS.SETTINGS.replace(ADMIN_PATHS.BASE + '/', ''), element: <ProjectForm /> },
-      { path: ADMIN_PATHS.ADMIN.replace(ADMIN_PATHS.BASE + '/', ''), element: <AdminList /> },
+      {
+        path: ADMIN_PATHS.ADMIN.BASE.replace(ADMIN_PATHS.BASE + '/', ''),
+        element: <RoleLayout />,
+        children: [
+          { path: ADMIN_PATHS.ADMIN.BASE.replace(ADMIN_PATHS.ADMIN.BASE + '/', ''), element: <AdminList /> },
+          { path: ADMIN_PATHS.ADMIN.LIST.replace(ADMIN_PATHS.ADMIN.BASE + '/', ''), element: <AdminList /> },
+        ]
+      },
       { path: ADMIN_PATHS.BACKUP.replace(ADMIN_PATHS.BASE + '/', ''), element: <BackupRestorePage /> },
       { path: ADMIN_PATHS.MEDIA.replace(ADMIN_PATHS.BASE + '/', ''), element: <FileMediaManager /> },
       { path: ADMIN_PATHS.MARKETING.replace(ADMIN_PATHS.BASE + '/', ''), element: <MarketingContentPage /> },
@@ -53,7 +62,7 @@ export const adminRoutes = [
       { path: ADMIN_PATHS.D2C.replace(ADMIN_PATHS.BASE + '/', ''), element: <D2CManagement /> },
       { path: ADMIN_PATHS.PRICING.replace(ADMIN_PATHS.BASE + '/', ''), element: <PricingAndProfitManagement /> },
       {
-        path: ADMIN_PATHS.PRODUCTS.BASE.replace(ADMIN_PATHS.BASE + '/', ''), 
+        path: ADMIN_PATHS.PRODUCTS.BASE.replace(ADMIN_PATHS.BASE + '/', ''),
         element: <ProductLayout />,
         children: [
           { path: ADMIN_PATHS.PRODUCTS.BASE.replace(ADMIN_PATHS.PRODUCTS.BASE + '/', ''), element: <ProductManagement /> },
@@ -61,9 +70,16 @@ export const adminRoutes = [
           // { path: ADMIN_PATHS.PRODUCTS.EDITOR.replace(ADMIN_PATHS.PRODUCTS.BASE + '/', ''), element: <AliExpressEdit /> },
           { path: ADMIN_PATHS.PRODUCTS.SOURCE.replace(ADMIN_PATHS.PRODUCTS.BASE + '/', ''), element: <ChooseSource /> },
           { path: ADMIN_PATHS.PRODUCTS.ADD.replace(ADMIN_PATHS.PRODUCTS.BASE + '/', ''), element: <ManualCreatePage /> },
-          { path: ADMIN_PATHS.PRODUCTS.ALIEXPRESS.replace(ADMIN_PATHS.PRODUCTS.BASE + '/', ''), element: <AliExpressViewer /> },
+          { path: ADMIN_PATHS.PRODUCTS.ALIEXPRESS.replace(ADMIN_PATHS.PRODUCTS.BASE + '/', ''), element: <AliExpressAdd /> },
           { path: ADMIN_PATHS.PRODUCTS.LIST.replace(ADMIN_PATHS.PRODUCTS.BASE + '/', ''), element: <ProductListPage /> },
           // { path: ADMIN_PATHS.PRODUCTS.EDIT.replace(ADMIN_PATHS.PRODUCTS.BASE + '/', ''), element: <EditProduct /> },
+        ],
+      },
+      {
+        path: ADMIN_PATHS.ORDERS.replace(ADMIN_PATHS.BASE + '/', ''),
+        element: <OrderLayout />,
+        children: [
+          { path: ADMIN_PATHS.ORDERS.replace(ADMIN_PATHS.ORDERS + '/', ''), element: <OrderManagementMenu /> },
         ],
       },
       { path: "*", element: <h1>Page Not Found</h1> },

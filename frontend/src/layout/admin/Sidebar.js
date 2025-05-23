@@ -34,20 +34,20 @@ const Sidebar = () => {
         <nav className="flex flex-col gap-1">
           <SidebarLink to={ADMIN_PATHS.DASHBOARD} icon={<Home size={18} />} label="Dashboard" />
           <SidebarLink to={ADMIN_PATHS.PRODUCTS.BASE} icon={<Boxes size={18} />} label="Product Management" />
-          {/* <SidebarLink to={ADMIN_PATHS.ADMIN} icon={<Users size={18} />} label="Admin & Role Management" />
+          <SidebarLink to={ADMIN_PATHS.ORDERS} icon={<ClipboardList size={18} />} label="Order Management" />
+          <SidebarLink to={ADMIN_PATHS.ADMIN.BASE} icon={<Users size={18} />} label="Admin & Role Management" />
           <SidebarLink to={ADMIN_PATHS.ALIEXPRESS} icon={<PackageSearch size={18} />} label="AliExpress Integration" />
           <SidebarLink to={ADMIN_PATHS.B2C} icon={<ShoppingCart size={18} />} label="B2C Management" />
           <SidebarLink to={ADMIN_PATHS.D2C} icon={<Factory size={18} />} label="Domestic D2C Management" />
           <SidebarLink to={ADMIN_PATHS.PRICING} icon={<DollarSign size={18} />} label="Pricing & Profit Management" />
-          <SidebarLink to={ADMIN_PATHS.ORDERS} icon={<ClipboardList size={18} />} label="Order Management" />
           <SidebarLink to={ADMIN_PATHS.SHIPPING} icon={<Truck size={18} />} label="Courier Integration & API Logs" />
-          <SidebarLink to={ADMIN_PATHS.SHIPPING} icon={<Truck size={18} />} label="Shipping Rules & Price Zones" />
+          <SidebarLink to="ADMIN_PATHS" icon={<Truck size={18} />} label="Shipping Rules & Price Zones" />
           <SidebarLink to={ADMIN_PATHS.CAMPAIGNS} icon={<Tag size={18} />} label="Campaigns & Discounts" />
           <SidebarLink to={ADMIN_PATHS.MARKETING} icon={<Megaphone size={18} />} label="Marketing & Content" />
           <SidebarLink to={ADMIN_PATHS.ANALYTICS} icon={<BarChart size={18} />} label="Analytics & Reports" />
           <SidebarLink to={ADMIN_PATHS.MEDIA} icon={<Image size={18} />} label="File & Media Manager" />
           <SidebarLink to={ADMIN_PATHS.BACKUP} icon={<RefreshCcw size={18} />} label="Backup & Restore" />
-          <SidebarLink to={ADMIN_PATHS.SETTINGS} icon={<Settings size={18} />} label="System Settings" /> */}
+          <SidebarLink to={ADMIN_PATHS.SETTINGS} icon={<Settings size={18} />} label="System Settings" />
         </nav>
       </div>
 

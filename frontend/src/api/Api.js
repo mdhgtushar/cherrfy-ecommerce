@@ -1,7 +1,8 @@
 import axios from 'axios';
 
 const Api = axios.create({
-  baseURL: 'http://localhost:5000/api/', // 🔗 Your main link here
+  baseURL: 'https://api.cherrfy.com/api', // 🔗 Your main link here
+  // baseURL: 'http://localhost:8080/api', // 🔗 Your main link here
   headers: {
     'Content-Type': 'application/json',
   },

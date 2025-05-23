@@ -1,80 +1,148 @@
-import React from "react";
+import React, { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { ADMIN_PATHS } from "../../../routes/paths";
+import { useDispatch } from "react-redux";
+import { deleteProduct, fetchProducts } from "../../../features/product/productSlice";
+import { toast } from "react-toastify";
 
 const ProductList = ({ products = [] }) => {
-  if (!products.length) {
-    return (
-      <div className="text-center text-gray-500 mt-10">Loading...</div>
-    );
-  }
+  const dispatch = useDispatch();
+  const [filter, setFilter] = useState({ source: "all", search: "" });
+
+  const handleDelete = async (productId) => {
+    const response = await dispatch(deleteProduct(productId));
+    if (response.error) {
+      console.log("error", response.error);
+      return toast.error(response.error.message);
+    } else {
+      dispatch(fetchProducts());
+      return toast.success("Product deleted successfully.");
+    }
+  };
+
+  const filteredProducts = useMemo(() => {
+    return products.filter((product) => {
+      const sourceMatch =
+        filter.source === "all" || product.source === filter.source;
+      const searchMatch = filter.search
+        ? JSON.stringify(product)
+            .toLowerCase()
+            .includes(filter.search.toLowerCase())
+        : true;
+      return sourceMatch && searchMatch;
+    });
+  }, [products, filter]);
 
   return (
-    <div className="overflow-x-auto">
-      <table className="min-w-full table-auto border-collapse border border-gray-200 border-gray-300">
-        <thead>
-          <tr>
-            <th className="border border-gray-200 px-4 py-2">Image</th>
-            <th className="border border-gray-200 px-4 py-2">Title</th>
-            <th className="border border-gray-200 px-4 py-2">AliExpress</th>
-            <th className="border border-gray-200 px-4 py-2">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {products.map((product, index) => {
-            let imageUrl = "";
-            try {
-              const parsed = JSON.parse(product.logText);
-              imageUrl = parsed?.ae_multimedia_info_dto?.image_urls?.split(";")[0] || "";
-            } catch (err) {
-              console.warn("Invalid logText for product", product);
-            }
+    <div className="space-y-6">
+      {/* Filter Section */}
+      <section className="border p-4 rounded shadow bg-white">
+        <h2 className="text-xl font-semibold mb-4">Product Filters</h2>
+        <div className="flex flex-col md:flex-row md:items-center md:space-x-4 space-y-3 md:space-y-0">
+          <select
+            className="p-2 border rounded-md w-full md:w-48"
+            value={filter.source}
+            onChange={(e) => setFilter({ ...filter, source: e.target.value })}
+          >
+            <option value="all">All Sources</option>
+            <option value="aliexpress">AliExpress</option>
+            <option value="local">Local</option>
+            <option value="vendor">Vendor</option>
+          </select>
+          <input
+            type="text"
+            placeholder="Search by Name, SKU, Tag"
+            className="p-2 border rounded-md w-full flex-1"
+            value={filter.search}
+            onChange={(e) => setFilter({ ...filter, search: e.target.value })}
+          />
+        </div>
+        {/* Action Buttons */}
+        <div className="mt-4 flex flex-wrap gap-2">
+          <button className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600">Edit</button>
+          <button className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700">Disable</button>
+          <button className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Delete</button>
+          <button className="bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600">Bulk Edit</button>
+          <button className="bg-black text-white px-4 py-2 rounded hover:bg-gray-800">Export CSV</button>
+          <button className="bg-black text-white px-4 py-2 rounded hover:bg-gray-800">Export JSON</button>
+        </div>
+      </section>
 
-            return (
-              <tr key={index} className="hover:bg-gray-100">
-                <td className="border border-gray-200 px-4 py-2">
-                  {imageUrl ? (
-                    <img
-                      src={imageUrl}
-                      alt={product.title}
-                      className="w-16 h-16 object-cover"
-                    />
-                  ) : (
-                    "No image"
-                  )}
-                </td>
-                <td className="border border-gray-200 px-4 py-2">{JSON.parse(product.logText).ae_item_base_info_dto.subject.length > 120
-                      ? JSON.parse(product.logText).ae_item_base_info_dto.subject.slice(0, 120) +
-                        "..."
-                      : JSON.parse(product.logText).ae_item_base_info_dto.subject}</td>
-                <td className="border border-gray-200 px-4 py-2">
-                  <a
-                    href={`https://www.aliexpress.com/item/${product.productId}.html`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                      className="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600 mr-2"
-                  >
-                    View
-                  </a>
-                </td>
-                <td className="border border-gray-200 px-4 py-2">
-                  
-                    <Link to={`${ADMIN_PATHS.PRODUCTS.EDIT+product._id}`} 
-                      className="bg-yellow-500 text-white px-4 py-1 rounded hover:bg-blue-600 mr-2"
-                    >
-                      Edit
-                    </Link>
-                    <Link to={`/editProduct/${product._id}`} 
-                      className="bg-red-500 text-white px-4 py-1 rounded hover:bg-blue-600"
-                    >
-                      Delete
-                    </Link>
+      {/* Product Table */}
+      <div className="overflow-x-auto border rounded shadow bg-white">
+        <table className="min-w-full table-auto border-collapse">
+          <thead>
+            <tr className="bg-gray-100">
+              <th className="border px-4 py-2 text-left">Image</th>
+              <th className="border px-4 py-2 text-left">Title</th> 
+              <th className="border px-4 py-2 text-left">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredProducts.length ? (
+              filteredProducts.map((product, index) => {
+                let imageUrl = "";
+                let title = "";
+                try {
+                  const parsed = JSON.parse(product.logText);
+                  imageUrl = parsed?.ae_multimedia_info_dto?.image_urls?.split(";")[0] || "";
+                  title = parsed?.ae_item_base_info_dto?.subject || "No title";
+                } catch (err) {
+                  console.warn("Invalid logText for product", product);
+                }
+
+                return (
+                  <tr key={index} className="hover:bg-gray-50">
+                    <td className="border px-4 py-2">
+                      {imageUrl ? (
+                        <img
+                          src={imageUrl}
+                          alt={title}
+                          className="w-16 h-16 object-cover rounded"
+                        />
+                      ) : (
+                        <span className="text-gray-400">No image</span>
+                      )}
+                    </td>
+                    <td className="border px-4 py-2">
+                      {title.length > 120 ? `${title.slice(0, 120)}...` : title}
+                    </td>
+                     
+                    <td className="border px-4 py-2">
+                      <a
+                        href={`https://www.aliexpress.com/item/${product.productId}.html`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 mr-2"
+                      >
+                        View on AliExpress
+                      </a>
+                      <Link
+                        to={`${ADMIN_PATHS.PRODUCTS.EDIT + product._id}`}
+                        className="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600 mr-2"
+                      >
+                        Edit
+                      </Link>
+                      <button
+                        className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+                        onClick={() => handleDelete(product._id)}
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })
+            ) : (
+              <tr>
+                <td colSpan="4" className="text-center text-gray-500 py-6">
+                  No products found.
                 </td>
               </tr>
-            );
-          })}
-        </tbody>
-      </table>
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };

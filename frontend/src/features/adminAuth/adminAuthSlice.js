@@ -20,7 +20,7 @@ export const loginUser = createAsyncThunk("auth/login", async (data, thunkAPI) =
   }
 });
 
-export const authSlice = createSlice({
+export const adminAuthSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
@@ -54,5 +54,5 @@ export const authSlice = createSlice({
   },
 });
 
-export const { logout, checkToken } = authSlice.actions;
-export default authSlice.reducer;
+export const { logout, checkToken } = adminAuthSlice.actions;
+export default adminAuthSlice.reducer;

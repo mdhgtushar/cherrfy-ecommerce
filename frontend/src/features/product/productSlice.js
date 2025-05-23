@@ -3,7 +3,7 @@ import Api from "../../api/Api";
 
 const initialState = {
     products: [],
-    status: "loading",
+    status: "idle",
     selectedProduct: {},
     error: null,
 };
@@ -25,10 +25,28 @@ export const fetchProductById = createAsyncThunk(
     }
 );
 
+export const fetchAliProduct = createAsyncThunk(
+    "products/fetchAliProduct",
+    async (id) => {
+        const response = await Api.get("/product/ali/" + id);
+        return response.data;
+    }
+);
+
+
+export const SaveAliProduct = createAsyncThunk(
+    "products/saveAliProduct",
+    async (id) => {
+        const response = await Api.get("/product/ali/" + id);
+        return response.data;
+    }
+);
+
+
 export const deleteProduct = createAsyncThunk(
     "products/deleteProduct",
     async (productId) => {
-        const response = await Api.delete(`/products/${productId}`);
+        const response = await Api.delete(`/product/${productId}`);
         return response.data;
     }
 );
@@ -37,7 +55,13 @@ export const deleteProduct = createAsyncThunk(
 const productSlice = createSlice({
     name: "products",
     initialState,
-    reducers: {},
+    reducers: {
+        clearSelectedProduct: (state) => { 
+            state.status = "idle";
+            state.error = null;
+            state.selectedProduct = {};
+        }
+    },
     extraReducers: (builder) => {
         builder
             .addCase(fetchProducts.pending, (state) => {
@@ -68,7 +92,19 @@ const productSlice = createSlice({
             .addCase(fetchProductById.rejected, (state, action) => {
                 state.status = "failed";
                 state.error = action.error.message;
-            });
+            })
+            .addCase(fetchAliProduct.pending, (state) => {
+                state.status = "loading";
+            })
+            .addCase(fetchAliProduct.fulfilled, (state, action) => {
+                state.status = "succeeded";
+                state.error = "";
+                state.selectedProduct = action.payload;
+            })
+            .addCase(fetchAliProduct.rejected, (state, action) => {
+                state.status = "failed"; 
+                state.error = action.error.message;
+            })
     },
 });
 
@@ -76,4 +112,5 @@ export const selectProducts = (state) => state.products.products;
 export const selectProductById = (state, productId) =>
     state.products.products.find((product) => product.id === productId);
 
+export const { clearSelectedProduct } = productSlice.actions;
 export default productSlice.reducer;

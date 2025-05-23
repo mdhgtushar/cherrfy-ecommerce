@@ -8,7 +8,6 @@ import ThemeSwitcher from "./ThemeSwitcher";
 // ...other imports
 
 function App() { 
-  const { user } = useSelector((state) => state.auth);
 
   const renderRoutes = (routes) =>
     routes.map((route, index) => {
@@ -27,7 +26,7 @@ function App() {
   return (
     <>
     
-      <div className="hidden md:block bg-primary ">
+      <div className="bg-primary overflow-hidden">
         <Routes>
           {renderRoutes(userRoutes)}
           {renderRoutes(adminRoutes)}

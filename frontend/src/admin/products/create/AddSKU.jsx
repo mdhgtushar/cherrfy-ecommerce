@@ -1,44 +1,7 @@
 import React, { useState } from 'react';
 
-const AddSKU = () => {
-  const [skus, setSkus] = useState([{
-    sku_attr: "",
-    offer_sale_price: "",
-    sku_id: "",
-    limit_strategy: "create_order_fail",
-    price_include_tax: false,
-    currency_code: "USD",
-    sku_price: "",
-    buy_amount_limit_set_by_promotion: "",
-    offer_bulk_sale_price: "",
-    sku_available_stock: 0,
-    id: "",
-    sku_bulk_order: 0,
-    ae_sku_property_dtos: {
-      ae_sku_property_d_t_o: [
-        {
-          sku_property_value: "",
-          sku_image: "",
-          sku_property_name: "Color",
-          property_value_definition_name: "",
-          property_value_id: 0,
-          sku_property_id: 14
-        },
-        {
-          sku_property_value: "",
-          sku_property_name: "Is Customized",
-          property_value_id: 0,
-          sku_property_id: 200007009
-        },
-        {
-          sku_property_value: "",
-          sku_property_name: "Ships From",
-          property_value_id: 0,
-          sku_property_id: 200007763
-        }
-      ]
-    }
-  }]);
+const AddSKU = ({skuList = []}) => {
+  const [skus, setSkus] = useState(skuList);
 
   const handleAddSku = () => {
     setSkus([...skus, {
@@ -122,12 +85,12 @@ const AddSKU = () => {
   };
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-6">SKU Management</h1>
+    <div className="container mx-auto">
+      <h1 className="text-2xl font-bold pb-6 mb-6 border-b">SKU Management</h1>
       
       <form onSubmit={handleSubmit}>
         {skus.map((sku, skuIndex) => (
-          <div key={skuIndex} className="mb-8 p-6 border rounded-lg shadow-md bg-white">
+          <div key={skuIndex} className="mb-8 bg-white">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-semibold">SKU #{skuIndex + 1}</h2>
               {skus.length > 1 && (

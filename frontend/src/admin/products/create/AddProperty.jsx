@@ -1,10 +1,7 @@
 import React, { useState } from 'react';
 
-const AddProperty = () => {
-    const [dataList, setDataList] = useState([{
-        attr_name: '',
-        attr_value: '',
-    }]);
+const AddProperty = ({propertyList = []}) => {
+    const [dataList, setDataList] = useState(propertyList);
 
     const handleInputChange = (index, event) => {
         const values = [...dataList];
@@ -34,7 +31,7 @@ const AddProperty = () => {
     };
 
     return (
-        <div className='p-6'>
+        <div className=''>
             <h2 className='text-lg font-bold mb-4'>Add Product Attributes</h2>
             {dataList.map((data, index) => (
                 <div key={index} className='mb-4'>

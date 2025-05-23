@@ -3,14 +3,16 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import Slider from "react-slick";
 import { fetchProducts } from "../features/product/productSlice";
+import Loader from "../components/Loader";
 
 const ProductSlider = () => {
-  const products = useSelector((state) => state.products.products);
-  console.log("Products in ProductSlider:", products);
+  const { products, status } = useSelector((state) => state.products); 
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(fetchProducts());
+    if (status === "idle") {
+      dispatch(fetchProducts());
+    }
   }, [dispatch]);
   const settings = {
     dots: true,
@@ -30,16 +32,17 @@ const ProductSlider = () => {
       },
     ],
   };
-
+  if (status === "loading") {
+    return <Loader />;
+  }
   return (
-    <div className="px-4 py-8 bg-white">
+    <div className="px-4 py-8 bg-white pt-0">
       <h2 className="text-xl font-bold mb-4">🔥 Hot Offers</h2>
       <Slider {...settings}>
         {products.map((product) => {
           let prodctbody;
           try {
-            prodctbody = JSON.parse(product.logText);
-            console.log("Parsed product:", prodctbody);
+            prodctbody = JSON.parse(product.logText); 
           } catch (error) {
             console.error("Error parsing product:", error);
           }

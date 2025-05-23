@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Cherrfy API Landing Page</title>
+    <style>
+        body {
+            background: #f8fafc;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #22223b;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        header {
+            background: #e63946;
+            color: #fff;
+            padding: 2rem 0 1rem 0;
+            text-align: center;
+        }
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+        .card {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+            padding: 2rem 2.5rem;
+            max-width: 420px;
+            text-align: center;
+        }
+        .endpoint {
+            background: #f1faee;
+            color: #1d3557;
+            font-family: monospace;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            margin: 1rem 0;
+            display: inline-block;
+        }
+        footer {
+            text-align: center;
+            padding: 1rem 0;
+            font-size: 0.95rem;
+            color: #a8a8a8;
+        }
+        @media (max-width: 600px) {
+            .card { padding: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Cherrfy API</h1>
+        <p>Simple, reliable e-commerce API</p>
+    </header>
+    <main>
+        <div class="card">
+            <h2>Welcome to <span style="color:#e63946;">api.cherrfy.com</span></h2>
+            <p>Integrate your app with Cherrfy's powerful e-commerce features.</p>
+            <div class="endpoint">
+                https://api.cherrfy.com/v1/
+            </div>
+            <p>
+                <a href="mailto:support@cherrfy.com" style="color:#e63946;text-decoration:none;">Contact Support</a>
+            </p>
+        </div>
+    </main>
+    <footer>
+        &copy; 2024 Cherrfy. All rights reserved.
+    </footer>
+</body>
+</html>

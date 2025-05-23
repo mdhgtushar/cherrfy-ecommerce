@@ -3,9 +3,15 @@
 export const USER_PATHS = {
   HOME: '/',
   PRODUCTS: '/products/:id',
+  SEARCH: '/search/:id',
   ABOUT: '/about',
   CART: '/cart',
   ORDER: '/order',
+  ORDER_DETAILS: '/order/:id',
+  CHECKOUT: '/checkout',
+  LOGIN: '/login',
+  REGISTER: '/register',
+  PROFILE : '/profile',
 };
 
 const ADMIN_BASE = '/manage-admin';
@@ -15,8 +21,10 @@ export const ADMIN_PATHS = {
   BASE: ADMIN_BASE,
   DASHBOARD: `${ADMIN_BASE}/dashboard`,
   ABOUT: `${ADMIN_BASE}/about`,
-  ADMIN: `${ADMIN_BASE}/admin`,
-  ADMIN_LIST: `${ADMIN_BASE}/adminList`,
+  ADMIN: {
+    BASE: `${ADMIN_BASE}/admin`,
+    LIST: `${ADMIN_BASE}/admin/adminList`,
+  },
   SETTINGS: `${ADMIN_BASE}/settings`,
   PRODUCTS: {
     BASE: `${ADMIN_BASE}/products`,

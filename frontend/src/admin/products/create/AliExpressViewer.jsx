@@ -83,12 +83,12 @@ const AliExpressViewer = () => {
   const saveProductInfo = async () => {
     try {
       const response = await axios.post(
-        "https://api.cherrfy.com/api/product/" + productId,
+        "http://localhost:8080/api/product/" + productId,
         {
           productId: productId,
         }
       );
-
+      console.log(response.data);
       if (response.status === 200) {
         console.log("Product info saved successfully.");
         setMessage("Product info saved successfully.");
@@ -144,7 +144,7 @@ const AliExpressViewer = () => {
               {loading ? "Loading..." : "Save Product Info"}
             </button>
           )}
-        {message && (<b>{message}</b>)}
+          {message && <b>{message}</b>}
         </form>
 
         {error && <p className="text-red-600 font-semibold">{error}</p>}

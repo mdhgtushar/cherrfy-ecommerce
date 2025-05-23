@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 function Footer() {
     return (
       <footer className="bg-gray-100 text-black py-10">
-        <div className="max-w-7xl mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-6">
+        <div className="container mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-6">
           <div>
             <h3 className="font-bold mb-3">Customer Service</h3>
             <ul className="space-y-2 text-sm">
@@ -20,8 +20,7 @@ function Footer() {
               <li>Company Info</li>
               <li>Careers</li>
               <li>Privacy Policy</li>
-              <li>Terms & Conditions</li>
-              <li><Link to="/manage-admin" target="_blank">ADMIN</Link></li>
+              <li>Terms & Conditions</li> 
             </ul>
           </div>
           <div>
@@ -42,7 +41,7 @@ function Footer() {
             </div>
           </div>
         </div>
-        <div className="text-center text-sm mt-6">© 2025 YourCompany. All rights reserved.</div>
+        <div className="text-center text-sm mt-6">© 2025 Cherrfy.com - All rights reserved.</div>
 
       </footer>
     );

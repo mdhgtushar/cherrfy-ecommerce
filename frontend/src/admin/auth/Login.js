@@ -1,24 +1,34 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
-import { loginUser } from "./authSlice";
+import { Link, useNavigate } from "react-router-dom";
+import { loginUser } from "../../features/adminAuth/adminAuthSlice";
+import { toast, ToastContainer } from "react-toastify";
+import { ADMIN_PATHS } from "../../routes/paths";
 
 const LoginPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const dispatch = useDispatch();
-    const { loading, error } = useSelector((state) => state.auth);
-
+    const { loading, error } = useSelector((state) => state.adminAuth);
+const navigate = useNavigate();
     const handleSubmit = async (e) => {
         e.preventDefault();
         const data = await dispatch(loginUser({ email, password }));
-        if(data) {
-            console.log(data);
+        if(data.error) {
+            console.log("error", data.error);
+            toast.error(data.error.message);
+           
+        }else{
+            toast.success("Login successful.");
+             setTimeout(() => {
+                navigate(ADMIN_PATHS.DASHBOARD);
+            }, 1000);
         }
     };
 
     return (
         <div className="h-screen w-screen bg-gray-100 flex">
+            <ToastContainer />
             {/* Left: Login Form */}
             <div className="w-full md:w-1/2 flex items-center justify-center">
                 <div className="w-full max-w-sm p-8 bg-white rounded-2xl shadow-lg">
@@ -67,7 +77,7 @@ const LoginPage = () => {
             <div className="hidden md:block w-1/2 h-full">
                 <img
                     src="https://picsum.photos/1600/900"
-                    alt="Login Image"
+                    alt="Login"
                     className="w-full h-full object-cover"
                 />
             </div>

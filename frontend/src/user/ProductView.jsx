@@ -9,6 +9,7 @@ import {
 } from "../features/product/productSlice";
 import Loader from "../components/Loader";
 import { USER_PATHS } from "../routes/paths";
+import ReviewList from "./ReviewList";
 
 const ProductView = () => {
   const product = useSelector((state) => state.products.selectedProduct);
@@ -59,7 +60,7 @@ const ProductView = () => {
   const imageList = prodctbody.ae_multimedia_info_dto.image_urls.split(";");
 
   return (
-    <div className="flex flex-wrap bg-gray-50">
+    <div className="flex flex-wrap bg-gray-50 mb-10">
       <div className="w-full md:w-3/4">
         <div className="block md:flex border-b-2 border-gray-200 py-2 pr-2">
           {/* Images Column */}
@@ -156,6 +157,22 @@ const ProductView = () => {
               ))}
           </div>
         </div>
+        <ReviewList
+          reviews={[
+            {
+              name: "Alice",
+              rating: 4,
+              comment: "Great product!",
+              createdAt: "2024-12-01T12:34:56Z",
+            },
+            {
+              name: "Bob",
+              rating: 5,
+              comment: "Excellent quality and fast delivery.",
+              createdAt: "2024-12-03T15:20:00Z",
+            },
+          ]}
+        />
       </div>
 
       {/* Right Sidebar */}

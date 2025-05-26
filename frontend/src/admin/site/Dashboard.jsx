@@ -1,7 +1,18 @@
-import React from 'react';
+import React, { use, useEffect } from 'react';
 import { MapPin, AlertTriangle, CheckCircle } from 'lucide-react';
+import Api from '../../api/Api';
 
 export default function Dashboard() {
+  const [callsToday, setCallsToday] = React.useState(0);
+
+  useEffect(() => {
+    apiCallsToday();
+  }, []);
+  const apiCallsToday = async() => {
+    const data = await Api.get('stats/daily-count');
+    console.log(data);
+    setCallsToday(data.data[0]?.count || 0);
+  }; // Example data
   return (
     <div className="p-4 grid gap-6 grid-cols-1 xl:grid-cols-3">
       {/* Overview */}
@@ -32,6 +43,10 @@ export default function Dashboard() {
             <div className="bg-gray-100 p-4 rounded-xl">
               <p className="text-sm">Popular Products</p>
               <p className="text-lg font-bold">Smart Watch, Headphones</p>
+            </div>
+            <div className="bg-gray-100 p-4 rounded-xl">
+              <p className="text-sm">API Calls Today</p>
+              <p className="text-lg font-bold">{callsToday}</p>
             </div>
           </div>
         </div>

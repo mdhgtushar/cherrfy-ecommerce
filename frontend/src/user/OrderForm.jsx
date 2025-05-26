@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import Api from "../api/Api";
+import { USER_PATHS } from "../routes/paths";
+import { useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
 
 const OrderForm = () => {
   const checkoutItems = useSelector((state) => state.cart.checkoutItems);
-
+  const navigate = useNavigate();
   const [products, setProducts] = useState({});
   const [formData, setFormData] = useState({
     product_id: "",
@@ -18,7 +22,7 @@ const OrderForm = () => {
     mobile_no: "",
     phone_country: "",
     logistics_service_name: "",
-    payment_channel: ""
+    payment_channel: "",
   });
 
   useEffect(() => {
@@ -35,23 +39,51 @@ const OrderForm = () => {
   const submitOrder = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:3001/api/order", formData);
-      alert("Order Response: " + JSON.stringify(res.data));
+      const res = await Api.post("/order", {
+        items: [
+          {
+            product: "664eaeafc123456789abcd01",
+            name: "Sample Product",
+            quantity: 2,
+            price: 100,
+            image: "/images/sample.jpg",
+          },
+        ],
+        shippingAddress: {
+          address: "123 Main Street",
+          city: "Dhaka",
+          postalCode: "1205",
+          country: "Bangladesh",
+        },
+        paymentMethod: "Credit Card",
+        itemsPrice: 200,
+        shippingPrice: 20,
+        taxPrice: 10,
+        totalPrice: 230,
+      });
+
+      toast.success("Order placed successfully");
+      setTimeout(() => {
+        navigate(USER_PATHS.ORDERS);
+      }, 300);
     } catch (error) {
       alert("Error placing order");
     }
   };
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-8">
+    <div className="container mx-auto p-4">
+      <ToastContainer />
       <h2 className="text-3xl font-bold mb-8 text-center text-gray-800">
         🛒 Place Your Order
       </h2>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div className="flex flex-row justify-between">
         {/* Order Summary */}
-        <div className="bg-white shadow rounded-lg p-4 border">
-          <h3 className="text-xl font-semibold mb-4 text-gray-700">Your Items</h3>
+        <div className="w-1/3 bg-white rounded-lg p-4 border mr-4">
+          <h3 className="text-xl font-semibold mb-4 text-gray-700">
+            Your Items
+          </h3>
           {checkoutItems.map((item) => (
             <div key={item.id} className="flex items-center mb-4 border-b pb-2">
               <img
@@ -69,14 +101,15 @@ const OrderForm = () => {
         </div>
 
         {/* Order Form */}
-        <div className="md:col-span-2 bg-white shadow rounded-lg p-6 border">
+        <div className="w-2/3 bg-white rounded-lg p-6 border">
           <form onSubmit={submitOrder} className="space-y-6">
-            <h3 className="text-xl font-semibold text-gray-700">Billing Address</h3>
- 
+            <h3 className="text-xl font-semibold text-gray-700">
+              Billing Address
+            </h3>
 
             {/* Fields */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-              {[ 
+              {[
                 { label: "Address", name: "address" },
                 { label: "City", name: "city" },
                 { label: "Province", name: "province" },
@@ -103,8 +136,12 @@ const OrderForm = () => {
 
             {/* Payment Section */}
             <div>
-              <h3 className="text-xl font-semibold text-gray-700 mb-2">Payment Details</h3>
-              <label className="block mb-1 text-gray-600">Payment Channel</label>
+              <h3 className="text-xl font-semibold text-gray-700 mb-2">
+                Payment Details
+              </h3>
+              <label className="block mb-1 text-gray-600">
+                Payment Channel
+              </label>
               <select
                 name="payment_channel"
                 value={formData.payment_channel}
@@ -134,3 +171,4 @@ const OrderForm = () => {
 };
 
 export default OrderForm;
+

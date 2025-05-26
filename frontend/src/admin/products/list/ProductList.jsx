@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 const ProductList = ({ products = [] }) => {
   const dispatch = useDispatch();
   const [filter, setFilter] = useState({ source: "all", search: "" });
+  const [confirmDelete, setConfirmDelete] = useState(null);
 
   const handleDelete = async (productId) => {
     const response = await dispatch(deleteProduct(productId));
@@ -74,7 +75,7 @@ const ProductList = ({ products = [] }) => {
           <thead>
             <tr className="bg-gray-100">
               <th className="border px-4 py-2 text-left">Image</th>
-              <th className="border px-4 py-2 text-left">Title</th> 
+              <th className="border px-4 py-2 text-left">Title</th>
               <th className="border px-4 py-2 text-left">Actions</th>
             </tr>
           </thead>
@@ -107,7 +108,6 @@ const ProductList = ({ products = [] }) => {
                     <td className="border px-4 py-2">
                       {title.length > 120 ? `${title.slice(0, 120)}...` : title}
                     </td>
-                     
                     <td className="border px-4 py-2">
                       <a
                         href={`https://www.aliexpress.com/item/${product.productId}.html`}
@@ -125,7 +125,7 @@ const ProductList = ({ products = [] }) => {
                       </Link>
                       <button
                         className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
-                        onClick={() => handleDelete(product._id)}
+                        onClick={() => setConfirmDelete(product._id)}
                       >
                         Delete
                       </button>
@@ -143,8 +143,36 @@ const ProductList = ({ products = [] }) => {
           </tbody>
         </table>
       </div>
+
+      {/* Delete Confirmation Modal */}
+      {confirmDelete && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 top-0" style={{ margin: 0 }}>
+          <div className="bg-white p-6 rounded shadow-lg">
+            <h3 className="text-lg font-semibold mb-4">Confirm Delete</h3>
+            <p className="mb-4">Are you sure you want to delete this product?</p>
+            <div className="flex justify-end space-x-4">
+              <button
+                className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
+                onClick={() => setConfirmDelete(null)}
+              >
+                Cancel
+              </button>
+              <button
+                className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+                onClick={() => {
+                  handleDelete(confirmDelete);
+                  setConfirmDelete(null);
+                }}
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
 
 export default ProductList;
+

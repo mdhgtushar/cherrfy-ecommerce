@@ -8,6 +8,7 @@ import ProductInformationCreate from "./ProductInformationCreate";
 import ProductImages from "./ProductImages";
 import AddProperty from "./AddProperty";
 import AddSKU from "./AddSKU";
+import Api from "../../../api/Api";
 
 const AliExpressViewer = () => {
   const [productId, setProductId] = useState("");
@@ -33,7 +34,7 @@ const AliExpressViewer = () => {
 
   const saveProductInfo = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/api/product/ali/create/" + productId);
+      const response = await Api.get("/product/ali/create/" + productId);
       console.log(response.data);
       if (response.status === 200) {
         console.log("Product info saved successfully.");

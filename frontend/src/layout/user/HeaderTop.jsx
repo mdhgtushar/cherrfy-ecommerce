@@ -1,14 +1,14 @@
 import { Link } from "react-router-dom";
 import { useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { CheckCheck, ListOrdered, LogOut, ShoppingCart, Truck, User } from "lucide-react";
+import { CheckCheck, ListOrdered, LogOut, Settings, ShoppingCart, Truck, User } from "lucide-react";
 import { logout } from "../../features/userAuth/userAuthSlice";
 import SearchBar from "./SearchBar";
 import { USER_PATHS } from "../../routes/paths";
 import SettingsPopup from "./SettingsPopup";
 import ConfirmDialog from "../../components/ConfirmDialog";
 import { toast } from "react-toastify";
-import LoginModal from "../../user/LoginModal";
+import LoginModal from "../../user/LoginModal"; 
 
 const useSmartDropdown = () => {
   const [show, setShow] = useState(false);
@@ -236,6 +236,12 @@ const HeaderTop = () => {
                       className="flex items-center px-4 py-2 hover:bg-gray-100 text-gray-700"
                     >
                       <ShoppingCart className="mr-2 text-red-500" /> Cart
+                    </Link>
+                    <Link
+                      to={USER_PATHS.SETTINGS}
+                      className="flex items-center px-4 py-2 hover:bg-gray-100 text-gray-700"
+                    >
+                      <Settings className="mr-2 text-red-500" /> Settings
                     </Link>
                     
 

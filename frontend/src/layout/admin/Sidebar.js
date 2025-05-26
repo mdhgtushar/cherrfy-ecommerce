@@ -15,7 +15,8 @@ import {
   Image,
   RefreshCcw,
   Settings,
-  Plus
+  Plus,
+  ClipboardListIcon
 } from 'lucide-react';
 import { ADMIN_PATHS } from '../../routes/paths';
 
@@ -35,6 +36,7 @@ const Sidebar = () => {
           <SidebarLink to={ADMIN_PATHS.DASHBOARD} icon={<Home size={18} />} label="Dashboard" />
           <SidebarLink to={ADMIN_PATHS.PRODUCTS.BASE} icon={<Boxes size={18} />} label="Product Management" />
           <SidebarLink to={ADMIN_PATHS.ORDERS} icon={<ClipboardList size={18} />} label="Order Management" />
+          <SidebarLink to={ADMIN_PATHS.USERSs} icon={<Users size={18} />} label="Users Management" />
           <SidebarLink to={ADMIN_PATHS.ADMIN.BASE} icon={<Users size={18} />} label="Admin & Role Management" />
           <SidebarLink to={ADMIN_PATHS.ALIEXPRESS} icon={<PackageSearch size={18} />} label="AliExpress Integration" />
           <SidebarLink to={ADMIN_PATHS.B2C} icon={<ShoppingCart size={18} />} label="B2C Management" />
@@ -48,6 +50,7 @@ const Sidebar = () => {
           <SidebarLink to={ADMIN_PATHS.MEDIA} icon={<Image size={18} />} label="File & Media Manager" />
           <SidebarLink to={ADMIN_PATHS.BACKUP} icon={<RefreshCcw size={18} />} label="Backup & Restore" />
           <SidebarLink to={ADMIN_PATHS.SETTINGS} icon={<Settings size={18} />} label="System Settings" />
+          <SidebarLink to={ADMIN_PATHS.WORKUPDATE} icon={<ClipboardListIcon size={18} />} label="Work Update" />
         </nav>
       </div>
 

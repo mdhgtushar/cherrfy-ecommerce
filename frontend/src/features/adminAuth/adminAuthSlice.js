@@ -27,7 +27,7 @@ export const adminAuthSlice = createSlice({
     logout: (state) => {
       state.user = null;
       state.token = null;
-      localStorage.removeItem("token");
+      localStorage.removeItem("adminToken");
     },
     checkToken: (state) => {
       try {

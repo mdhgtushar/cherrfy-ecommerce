@@ -36,6 +36,9 @@ import ManualCreatePage from "../admin/products/create/ManualCreatePage";
 import OrderManagementMenu from "../admin/order/OrderManagementMenu";
 import OrderLayout from "../layout/admin/order/OrderLayout";
 import RoleLayout from "../layout/admin/role/RoleLayout";
+import UserDashboard from "../admin/workUpdate/UserDeshboard";
+import UserList from "../admin/users/UserList";
+import Page404 from "../user/Page404";
 
 export const adminRoutes = [
   {
@@ -45,6 +48,7 @@ export const adminRoutes = [
       { index: true, element: <Dashboard /> }, // Default dashboard
       { path: ADMIN_PATHS.DASHBOARD.replace(ADMIN_PATHS.BASE + '/', ''), element: <Dashboard /> }, // Only "dashboard"
       { path: ADMIN_PATHS.ABOUT.replace(ADMIN_PATHS.BASE + '/', ''), element: <About /> },
+      { path: ADMIN_PATHS.WORKUPDATE.replace(ADMIN_PATHS.BASE + '/', ''), element: <UserDashboard /> },
       { path: ADMIN_PATHS.SETTINGS.replace(ADMIN_PATHS.BASE + '/', ''), element: <ProjectForm /> },
       {
         path: ADMIN_PATHS.ADMIN.BASE.replace(ADMIN_PATHS.BASE + '/', ''),
@@ -54,6 +58,7 @@ export const adminRoutes = [
           { path: ADMIN_PATHS.ADMIN.LIST.replace(ADMIN_PATHS.ADMIN.BASE + '/', ''), element: <AdminList /> },
         ]
       },
+      { path: ADMIN_PATHS.USERS.replace(ADMIN_PATHS.BASE + '/', ''), element: <UserList /> },
       { path: ADMIN_PATHS.BACKUP.replace(ADMIN_PATHS.BASE + '/', ''), element: <BackupRestorePage /> },
       { path: ADMIN_PATHS.MEDIA.replace(ADMIN_PATHS.BASE + '/', ''), element: <FileMediaManager /> },
       { path: ADMIN_PATHS.MARKETING.replace(ADMIN_PATHS.BASE + '/', ''), element: <MarketingContentPage /> },
@@ -82,7 +87,7 @@ export const adminRoutes = [
           { path: ADMIN_PATHS.ORDERS.replace(ADMIN_PATHS.ORDERS + '/', ''), element: <OrderManagementMenu /> },
         ],
       },
-      { path: "*", element: <h1>Page Not Found</h1> },
+      { path: "*", element: <Page404 /> },
     ],
   },
   {

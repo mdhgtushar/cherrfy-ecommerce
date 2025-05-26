@@ -5,6 +5,8 @@ const Api = axios.create({
   // baseURL: 'http://localhost:8080/api', // 🔗 Your main link here
   headers: {
     'Content-Type': 'application/json',
+    'Access-Control-Allow-Origin': '*',
+    'Authorization': 'Bearer ' + localStorage.getItem('userToken'),
   },
 });
 

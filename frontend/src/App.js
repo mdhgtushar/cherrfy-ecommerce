@@ -1,11 +1,11 @@
 import { useSelector } from "react-redux";
-import { adminRoutes } from "./routes/adminRoutes";
-import { userRoutes } from "./routes/userRoutes";
+import { adminRoutes } from "./roles/admin/adminRoutes";
+import { userRoutes } from "./roles/user/userRoutes";
+import { vandorRoutes } from "./roles/vendor/vendorRoutes";
 import { Route, Routes } from "react-router-dom";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import ThemeSwitcher from "./ThemeSwitcher";
-import { vandorRoutes } from "./routes/vandorRoutes";
 // ...other imports
 
 function App() { 

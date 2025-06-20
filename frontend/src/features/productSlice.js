@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import Api from "../util/API";
-
+// Default to 'BD' if not set
 const initialState = {
     products: [],
     status: "idle",
@@ -11,16 +11,16 @@ const initialState = {
 // ✅ Correct action type here
 export const fetchProducts = createAsyncThunk(
     "products/fetchProducts",
-    async () => {
-        const response = await Api.get("/product/");
+    async ({ country }) => {
+        const response = await Api.get("/product/?country=" + country); // Assuming 'BD' is the country code
         return response.data;
     }
 );
 
 export const fetchProductById = createAsyncThunk(
     "products/fetchProductById",
-    async (id) => {
-        const response = await Api.get("/product/" + id);
+    async ({ id, country }) => {
+        const response = await Api.get("/product/" + id + "?country=" + country); // Assuming 'BD' is the country code
         return response.data;
     }
 );
@@ -37,7 +37,7 @@ export const fetchAliProduct = createAsyncThunk(
 export const SaveAliProduct = createAsyncThunk(
     "products/saveAliProduct",
     async (id) => {
-        const response = await Api.get("/product/ali/" + id);
+        const response = await Api.get("/product/ali/create/" + id);
         return response.data;
     }
 );
@@ -56,7 +56,7 @@ const productSlice = createSlice({
     name: "products",
     initialState,
     reducers: {
-        clearSelectedProduct: (state) => { 
+        clearSelectedProduct: (state) => {
             state.status = "idle";
             state.error = null;
             state.selectedProduct = {};
@@ -87,6 +87,7 @@ const productSlice = createSlice({
             })
             .addCase(fetchProductById.fulfilled, (state, action) => {
                 state.status = "succeeded";
+                console.log("Product fetched by ID:", action.payload);
                 state.selectedProduct = action.payload;
             })
             .addCase(fetchProductById.rejected, (state, action) => {
@@ -103,6 +104,18 @@ const productSlice = createSlice({
             })
             .addCase(fetchAliProduct.rejected, (state, action) => {
                 state.status = "failed"; 
+                state.error = action.payload;
+            })
+            .addCase(SaveAliProduct.pending, (state) => {
+                state.status = "loading";
+            })
+            .addCase(SaveAliProduct.fulfilled, (state, action) => {
+                state.status = "succeeded";
+                state.error = "";
+                state.selectedProduct = action.payload;
+            })
+            .addCase(SaveAliProduct.rejected, (state, action) => {
+                state.status = "failed";
                 state.error = action.error.message;
             })
     },

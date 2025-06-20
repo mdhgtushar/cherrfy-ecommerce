@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { registerUser } from "../../features/userAuthSlice";
+import { registerUser } from "../../../features/userAuthSlice";
 import { toast, ToastContainer } from "react-toastify";
 import { Link } from "react-router-dom";
-import USER_PATHS from "./USER_PATHS";
+import USER_PATHS from "../USER_PATHS";
 
 const RegisterPage = () => {
   const dispatch = useDispatch();

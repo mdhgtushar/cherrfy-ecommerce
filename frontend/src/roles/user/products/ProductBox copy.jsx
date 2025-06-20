@@ -2,7 +2,7 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
-import { addToCart } from "../../features/cartSlice";
+import { addToCart } from "../../../features/cartSlice";
 
 const ProductBox = ({ product }) => {
   const dispatch = useDispatch();

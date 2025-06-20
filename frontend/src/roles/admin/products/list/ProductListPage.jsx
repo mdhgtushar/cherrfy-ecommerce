@@ -10,7 +10,7 @@ const ProductListPage = () => {
  
 
   useEffect(() => {
-    dispatch(fetchProducts());
+    dispatch(fetchProducts({country: "BD"}));
   }, [dispatch]);
  
 

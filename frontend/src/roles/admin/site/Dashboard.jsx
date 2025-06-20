@@ -1,6 +1,6 @@
-import React, { use, useEffect } from 'react';
-import { MapPin, AlertTriangle, CheckCircle } from 'lucide-react';
-import API from '../../../util/API';
+import React, { use, useEffect } from "react";
+import { MapPin, AlertTriangle, CheckCircle } from "lucide-react";
+import Api from "../../../util/API";
 
 export default function Dashboard() {
   const [callsToday, setCallsToday] = React.useState(0);
@@ -8,10 +8,14 @@ export default function Dashboard() {
   useEffect(() => {
     apiCallsToday();
   }, []);
-  const apiCallsToday = async() => {
-    const data = await API.get('stats/daily-count');
-    console.log(data);
-    setCallsToday(data.data[0]?.count || 0);
+  const apiCallsToday = async () => {
+    try {
+      const data = await Api.get("/stats/daily-count");
+      setCallsToday(data.data[0]?.count || 0);
+    } catch (error) {
+      console.error("Error fetching API calls today:", error);
+      setCallsToday(0);
+    }
   }; // Example data
   return (
     <div className="p-4 grid gap-6 grid-cols-1 xl:grid-cols-3">
@@ -25,7 +29,9 @@ export default function Dashboard() {
             <div className="bg-gray-100 p-4 rounded-xl">
               <p className="text-sm">Total Sales</p>
               <p className="text-lg font-bold">$2,345 Today</p>
-              <p className="text-sm text-gray-500">$12,456 This Week / $45,678 This Month</p>
+              <p className="text-sm text-gray-500">
+                $12,456 This Week / $45,678 This Month
+              </p>
             </div>
             <div className="bg-gray-100 p-4 rounded-xl">
               <p className="text-sm">Orders Count</p>
@@ -57,12 +63,24 @@ export default function Dashboard() {
             <h2 className="text-lg font-semibold">Quick Actions</h2>
           </div>
           <div className="p-4 grid grid-cols-2 md:grid-cols-3 gap-4">
-            <button className="bg-blue-600 text-white py-2 px-4 rounded">Add New Product</button>
-            <button className="border py-2 px-4 rounded">Import AliExpress Product</button>
-            <button className="bg-blue-600 text-white py-2 px-4 rounded">Create Flash Sale</button>
-            <button className="border py-2 px-4 rounded">Check Sync Logs</button>
-            <button className="bg-blue-600 text-white py-2 px-4 rounded">View Latest Orders</button>
-            <button className="bg-red-600 text-white py-2 px-4 rounded">Approve Pending Vendors</button>
+            <button className="bg-blue-600 text-white py-2 px-4 rounded">
+              Add New Product
+            </button>
+            <button className="border py-2 px-4 rounded">
+              Import AliExpress Product
+            </button>
+            <button className="bg-blue-600 text-white py-2 px-4 rounded">
+              Create Flash Sale
+            </button>
+            <button className="border py-2 px-4 rounded">
+              Check Sync Logs
+            </button>
+            <button className="bg-blue-600 text-white py-2 px-4 rounded">
+              View Latest Orders
+            </button>
+            <button className="bg-red-600 text-white py-2 px-4 rounded">
+              Approve Pending Vendors
+            </button>
           </div>
         </div>
 
@@ -72,12 +90,30 @@ export default function Dashboard() {
             <h2 className="text-lg font-semibold">System Alerts</h2>
           </div>
           <div className="p-4 text-sm text-red-600 space-y-2">
-            <p><AlertTriangle className="inline mr-2" />Token Expiry Warning (AliExpress)</p>
-            <p><AlertTriangle className="inline mr-2" />API Sync Failures</p>
-            <p><AlertTriangle className="inline mr-2" />Low Stock Notifications</p>
-            <p><AlertTriangle className="inline mr-2" />Product Import Failures</p>
-            <p><AlertTriangle className="inline mr-2" />Manual Payment Match Pending</p>
-            <p><AlertTriangle className="inline mr-2" />New Support Tickets Opened</p>
+            <p>
+              <AlertTriangle className="inline mr-2" />
+              Token Expiry Warning (AliExpress)
+            </p>
+            <p>
+              <AlertTriangle className="inline mr-2" />
+              API Sync Failures
+            </p>
+            <p>
+              <AlertTriangle className="inline mr-2" />
+              Low Stock Notifications
+            </p>
+            <p>
+              <AlertTriangle className="inline mr-2" />
+              Product Import Failures
+            </p>
+            <p>
+              <AlertTriangle className="inline mr-2" />
+              Manual Payment Match Pending
+            </p>
+            <p>
+              <AlertTriangle className="inline mr-2" />
+              New Support Tickets Opened
+            </p>
           </div>
         </div>
       </div>
@@ -88,7 +124,9 @@ export default function Dashboard() {
           <div className="p-4 border-b">
             <h2 className="text-lg font-semibold">Revenue vs Refund</h2>
           </div>
-          <div className="p-4 h-40 bg-gray-50 flex items-center justify-center text-gray-400 text-sm">Graph Here</div>
+          <div className="p-4 h-40 bg-gray-50 flex items-center justify-center text-gray-400 text-sm">
+            Graph Here
+          </div>
         </div>
         <div className="bg-white shadow rounded-xl">
           <div className="p-4 border-b">
@@ -109,7 +147,8 @@ export default function Dashboard() {
             <h2 className="text-lg font-semibold">Customer Geo Distribution</h2>
           </div>
           <div className="p-4 h-40 bg-gray-50 flex items-center justify-center text-gray-400 text-sm">
-            <MapPin className="mr-2" />Map Here
+            <MapPin className="mr-2" />
+            Map Here
           </div>
         </div>
       </div>
@@ -121,10 +160,22 @@ export default function Dashboard() {
             <h2 className="text-lg font-semibold">Pending Actions Overview</h2>
           </div>
           <div className="p-4 grid md:grid-cols-2 gap-4 text-sm">
-            <p><CheckCircle className="inline mr-2 text-yellow-500" />Products Pending Approval</p>
-            <p><CheckCircle className="inline mr-2 text-yellow-500" />Orders Awaiting Fulfillment</p>
-            <p><CheckCircle className="inline mr-2 text-yellow-500" />Factory/Vendor Applications</p>
-            <p><CheckCircle className="inline mr-2 text-yellow-500" />Unread Support Messages</p>
+            <p>
+              <CheckCircle className="inline mr-2 text-yellow-500" />
+              Products Pending Approval
+            </p>
+            <p>
+              <CheckCircle className="inline mr-2 text-yellow-500" />
+              Orders Awaiting Fulfillment
+            </p>
+            <p>
+              <CheckCircle className="inline mr-2 text-yellow-500" />
+              Factory/Vendor Applications
+            </p>
+            <p>
+              <CheckCircle className="inline mr-2 text-yellow-500" />
+              Unread Support Messages
+            </p>
           </div>
         </div>
       </div>

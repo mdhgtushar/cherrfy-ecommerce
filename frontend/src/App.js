@@ -24,8 +24,8 @@ function App() {
       );
     });
 
-    const user = useSelector((state) => state.userAuth.user); 
-    const admin = useSelector((state) => state.adminAuth.user); 
+    // const user = useSelector((state) => state.userAuth.user); 
+    // const admin = useSelector((state) => state.adminAuth.user); 
     
 
    
@@ -40,14 +40,14 @@ function App() {
           {renderRoutes(vandorRoutes)}
         </Routes>
       </div>
-      {user && admin && (
+      {/* {user && admin && (
         <div className="fixed bottom-0 right-0 p-4 border m-2">
           <h1 className="text-2xl font-bold">Admin and User both logged in</h1>
           <p className="text-lg">Please logout one of them</p>
           <p>User Email: {user.email}</p>
           <p>Admin Email: {admin.email}</p>
         </div>
-      )}
+      )} */}
     </>
   );
 }

@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Trash2 } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
-import { checkout, checkoutOne, clearCart, removeFromCart, updateQuantity } from '../../features/cartSlice';
+import { checkout, checkoutOne, clearCart, removeFromCart, updateQuantity } from '../../../features/cartSlice';
 import { Link, useNavigate } from 'react-router-dom';
-import USER_PATHS from './USER_PATHS';
+import USER_PATHS from '../USER_PATHS';
 
 export default function CartPage() {
   const dispatch = useDispatch();

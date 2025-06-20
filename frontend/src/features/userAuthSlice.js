@@ -1,16 +1,11 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { jwtDecode } from "jwt-decode";
-
 import Api from "../util/API";
+
 // Example async thunk for login
 export const loginUser = createAsyncThunk(
     'userAuth/loginUser',
     async (credentials, thunkAPI) => {
-        // Replace with your API call
-        //    const response = await Api.post('/user/auth/login', credentials);
-        //    console.log(response);
-        //     return response.data;
-
         try {
             const res = await Api.post("/user/auth/login", credentials);
             localStorage.setItem("userToken", res.data.token);

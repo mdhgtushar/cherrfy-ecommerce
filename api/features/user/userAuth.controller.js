@@ -1,6 +1,6 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const User = require('../models/user.model.js');
+const User = require('./user.model.js');
 
 // Register a new user
 exports.register = async (req, res) => {
@@ -103,6 +103,24 @@ exports.updateUserById = async (req, res) => {
         res.status(500).json({ message: 'Server error.' });
     }
 };
+
+
+exports.updateUserSettings = async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found.' });
+        }
+
+        // Update user settings
+        user.settings = { ...user.settings, ...req.body };
+        await user.save();
+
+        res.json({ message: 'User settings updated successfully.', settings: user.settings });
+    } catch (err) {
+        res.status(500).json({ message: 'Server error.' });
+    }
+}
 
 // Delete user by ID
 exports.deleteUserById = async (req, res) => {

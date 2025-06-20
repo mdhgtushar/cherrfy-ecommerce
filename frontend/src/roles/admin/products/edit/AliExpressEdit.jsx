@@ -86,7 +86,7 @@ const AliExpressViewer = () => {
     setMessage("Loading...");
     try {
       const response = await axios.post(
-        "http://localhost:8080/api/product/" + productId,
+        "https://api.cherrfy.com/api/product/" + productId,
         {
           productId: productId,
         }

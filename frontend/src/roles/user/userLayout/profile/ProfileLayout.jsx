@@ -8,8 +8,8 @@ const menuItems = [
   { name: "My Orders", url: USER_PATHS.ORDER },
   { name: "Return & Refund", url: USER_PATHS.RETURN_AND_REFUND },
   { name: "My Reviews", url: USER_PATHS.MY_REVIEWS },
-  { name: "Wishlist & Followed Stores", url: USER_PATHS.WISHLIST_AND_FOLLOWED_STORES },
-  { name: "Appeal /profile/ Dispute Center", url: USER_PATHS.APPEAL_DISPUTE_CENTER },
+  { name: "Wishlist / Followed Stores", url: USER_PATHS.WISHLIST_AND_FOLLOWED_STORES },
+  { name: "Appeal / Dispute Center", url: USER_PATHS.APPEAL_DISPUTE_CENTER },
   { name: "Settings", url: USER_PATHS.SETTINGS },
 ];
 
@@ -26,9 +26,9 @@ const ProfileLayout = () => {
   }, [location]);
 
   return (
-    <div className="min-h-screen flex mb-5">
+    <div className="min-h-screen md:flex mb-5">
       {/* Sidebar */}
-      <aside className="w-64 bg-white border mr-2 h-full">
+      <aside className="md:w-64 bg-white border m-2 md:m-0 md:mr-2 h-full">
         <div className="p-6 font-bold text-xl border-b text-blue-600">User Dashboard</div>
         <nav className="p-4 space-y-2">
           {menuItems.map((item) => (
@@ -46,7 +46,7 @@ const ProfileLayout = () => {
       </aside>
 
       {/* Content */}
-      <main className="flex-1 p-8 bg-gray-50 ">
+      <main className="flex-1 p-2 md:p-4 bg-gray-50 ">
         <Outlet />
       </main>
     </div>

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
-import API from "../../util/API";
-import USER_PATHS from "./USER_PATHS";
+import API from "../../../util/API";
+import USER_PATHS from "../USER_PATHS";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 
@@ -27,7 +27,7 @@ const OrderForm = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:3001/api/products")
+      .get("https://api.cherrfy.com/api/products")
       .then((res) => setProducts(res.data))
       .catch((err) => console.error(err));
   }, []);

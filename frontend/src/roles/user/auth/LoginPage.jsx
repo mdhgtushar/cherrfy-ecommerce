@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { loginUser } from "../../features/userAuthSlice";
+import { loginUser } from "../../../features/userAuthSlice";
 import { toast, ToastContainer } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
-import USER_PATHS from "./USER_PATHS";
+import USER_PATHS from "../USER_PATHS";
 
 const LoginPage = () => {
   const dispatch = useDispatch();

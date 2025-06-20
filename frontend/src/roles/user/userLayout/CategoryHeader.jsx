@@ -8,11 +8,11 @@ const sortOptions = [
   { value: "newest", label: "Newest First" },
 ];
 
-const CategoryHeader = ({ title = "All Products", onFilterToggle }) => {
+const CategoryHeader = ({ title = "✨ Top Picks For", onFilterToggle }) => {
   const [sort, setSort] = useState("popularity");
 
   return (
-    <div className="container mx-auto bg-white px-4 md:px-8 py-6 shadow-sm border-b">
+    <div className="bg-white px-4 md:px-8 py-6 shadow-sm border-b">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         {/* Title & Breadcrumb */}
         <div>

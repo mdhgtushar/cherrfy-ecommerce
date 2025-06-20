@@ -1,7 +1,7 @@
 // components/LoginModal.jsx
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { loginUser } from "../../features/userAuthSlice";
+import { loginUser } from "../../../features/userAuthSlice";
 import { toast, ToastContainer } from "react-toastify";
 
 

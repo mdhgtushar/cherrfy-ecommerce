@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import Slider from "react-slick";
-import { fetchProducts } from "../../features/productSlice";
-import Loader from "../../components/Loader";
+import { fetchProducts } from "../../../features/productSlice";
+import Loader from "../../../components/Loader";
 
 const ProductSlider = () => {
   const { products, status } = useSelector((state) => state.products); 

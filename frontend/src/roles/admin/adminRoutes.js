@@ -38,7 +38,7 @@ import OrderLayout from "./adminLayout/order/OrderLayout";
 import RoleLayout from "./adminLayout/role/RoleLayout";
 import UserDashboard from "./workUpdate/UserDeshboard";
 import UserList from "./users/UserList"; 
-import Page404 from "../user/Page404";
+import Page404 from "../user/site/Page404";
 
 export const adminRoutes = [
   {

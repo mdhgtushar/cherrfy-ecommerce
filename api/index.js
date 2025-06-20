@@ -15,7 +15,7 @@ dotenv.config();
 
 
 
-app.use("/api", require("./routes/index"));
+app.use("/api", require("./routes.js"));
 
 
 app.listen(8080, () => {

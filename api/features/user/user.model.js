@@ -25,6 +25,16 @@ const userSchema = new mongoose.Schema({
         enum: ['user', 'admin'],
         default: 'user'
     },
+    settings: {
+        type: mongoose.Schema.Types.Mixed, // To store user-specific settings
+        default: {
+            currency: 'USD',
+            shipto: 'BD',
+            theme: 'light',
+            language: 'en',
+            country: 'BD',
+        }
+    },
     createdAt: {
         type: Date,
         default: Date.now

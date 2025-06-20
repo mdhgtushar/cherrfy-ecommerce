@@ -1,23 +1,26 @@
 // src/routes/userRoutes.js
 
 import Layout from './userLayout/Layout';
-import MainPage from './MainPage';
-import ProductView from './ProductView';
-import About from './About';
-import CartPage from './CartPage';
-import OrderForm from './OrderForm';
+import MainPage from './site/MainPage';
+import ProductView from './products/ProductView';
+import About from './site/About';
+import CartPage from './Order/CartPage';
+import OrderForm from './Order/OrderForm';
 import USER_PATHS from './USER_PATHS';
-import LoginPage from './LoginPage';
-import RegisterPage from './RegisterPage';
-import SearchResultPage from './SearchResultPage';
-import OrdersPage from './OrderPage';
-import OrderDetails from './OrderDetails';
-import UserDashboardPage from './UserDashboardPage';
-import ProfileLayout from './userLayout/profile/ProfileLayout';
-import UserProfile from './UserProfile';
-import Page404 from './Page404'; 
-import MyReviews from './MyReviews';
-import Settings from './Settings';
+import LoginPage from './auth/LoginPage';
+import RegisterPage from './auth/RegisterPage';
+import SearchResultPage from './searchResult/SearchResultPage';
+import OrdersPage from './Order/OrderPage';
+import OrderDetails from './Order/OrderDetails'; 
+import ProfileLayout from './userLayout/profile/ProfileLayout'; 
+import Page404 from './site/Page404'; 
+import MyReviews from './review/MyReviews';
+import Settings from './profile/Settings';
+import UserOverview from './profile/UserOverview';
+import ManageAccount from './profile/ManageAccount';
+import ReturnAndRefund from './profile/ReturnAndRefund';
+import WishlistAndStores from './profile/WishlistAndStores';
+import DisputeCenter from './profile/DisputeCenter';
 export const userRoutes = [
   {
     element: <Layout />,
@@ -38,9 +41,12 @@ export const userRoutes = [
         element: <ProfileLayout />,
         path: USER_PATHS.PROFILE,
         children: [
-          { path: USER_PATHS.PROFILE, element: <UserProfile /> },
+          { path: USER_PATHS.PROFILE, element: <UserOverview /> },
           { path: USER_PATHS.ORDER.split('/').pop(), element: <OrdersPage /> },
-          { path: USER_PATHS.MANAGEPROFILE.split('/').pop(), element: <UserDashboardPage /> },
+          { path: USER_PATHS.MANAGEPROFILE.split('/').pop(), element: <ManageAccount /> },
+          { path: USER_PATHS.RETURN_AND_REFUND.split('/').pop(), element: <ReturnAndRefund /> },
+          { path: USER_PATHS.WISHLIST_AND_FOLLOWED_STORES.split('/').pop(), element: <WishlistAndStores /> },
+          { path: USER_PATHS.APPEAL_DISPUTE_CENTER.split('/').pop(), element: <DisputeCenter /> },
           { path: USER_PATHS.MY_REVIEWS.split('/').pop(), element: <MyReviews /> },
           { path: USER_PATHS.SETTINGS.split('/').pop(), element: <Settings /> },
           { path: '*', element: <Page404 /> },

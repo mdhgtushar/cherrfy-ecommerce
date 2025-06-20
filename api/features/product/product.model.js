@@ -7,8 +7,8 @@ const productSchema = new Schema({
         required: true,
         unique: true
     },
-    logText: {
-        type: String,  // You can store very long text here
+    ali_data: {
+       type: mongoose.Schema.Types.Mixed , // এখানে সব দেশের ডেটা JSON আকারে থাকবে
         required: false
     }
     // name: {

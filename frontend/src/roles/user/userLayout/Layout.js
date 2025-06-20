@@ -1,23 +1,22 @@
- 
+
 import { Outlet } from 'react-router-dom'
 import Footer from './Footer'
-import HeaderTop from './HeaderTop' 
+import HeaderTop from './HeaderTop'
 import CategoryNav from './CategoryNav'
 
 const Layout = () => {
- 
+
   return (
     <div>
-        <div className='mb-5'>
-          <HeaderTop />
-          <CategoryNav />
+      <div className='mb-0'>
+        <HeaderTop />
+        <CategoryNav />
         {/* <Header/> */}
-        </div>
-        <div className='container mx-auto'>
-          
+      </div>
+      <div className='container mx-auto pt-5'> 
         <Outlet />
-        </div>
-        <Footer />
+      </div>
+      <Footer />
     </div>
   )
 }

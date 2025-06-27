@@ -1,13 +1,11 @@
-import { useSelector } from "react-redux";
 import { adminRoutes } from "./roles/admin/adminRoutes";
 import { userRoutes } from "./roles/user/userRoutes";
 import { vandorRoutes } from "./roles/vendor/vendorRoutes";
 import { Route, Routes } from "react-router-dom";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import ThemeSwitcher from "./ThemeSwitcher";
-// ...other imports
 
+ 
 function App() { 
 
   const renderRoutes = (routes) =>

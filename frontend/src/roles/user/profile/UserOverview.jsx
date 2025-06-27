@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import USER_PATHS from "../USER_PATHS";
 
 const UserOverview = () => {
-  const { userProfile, status } = useSelector((state) => state.userSettings);
+  const { userProfile } = useSelector((state) => state.userSettings);
   const dispatch = useDispatch();
 
   useEffect(() => {

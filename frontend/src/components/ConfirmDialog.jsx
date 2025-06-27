@@ -1,11 +1,23 @@
 // components/ConfirmDialog.jsx
-import React from "react";
+import React, { useEffect } from "react";
 
 const ConfirmDialog = ({ isOpen, title, message, onCancel, onConfirm }) => {
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+
+    return () => {
+      document.body.style.overflow = ""; // Cleanup on unmount
+    };
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 h-screen">
       <div className="bg-white rounded-xl shadow-lg max-w-sm w-full p-6">
         <h2 className="text-lg font-semibold mb-2">{title}</h2>
         <p className="text-gray-600 mb-6">{message}</p>

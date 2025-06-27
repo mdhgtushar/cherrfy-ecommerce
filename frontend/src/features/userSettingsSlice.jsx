@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import API from '../util/API';
 
 // Example async thunk for updating user settings
 export const updateUserSettings = createAsyncThunk(
@@ -10,10 +11,24 @@ export const updateUserSettings = createAsyncThunk(
         return settings; // Mocked response
     }
 );
+export const userProfileInfo = createAsyncThunk(
+    'userAuth/userProfileInfo',
+     async (credentials, thunkAPI) => {
+        // Replace with your API call
+        try {
+            const res = await API.get("/user/auth/profile");
+            return res.data;
+        } catch (err) {
+            return thunkAPI.rejectWithValue(err.response.data.message);
+        }
+    }
+);
 
 const initialState = {
+    userProfile: null,
     theme: 'light',
     language: 'en',
+    currency: 'USD', // Default currency
     shipToCountry: 'BD', // Default to 'BD' if not set
     notifications: true,
     status: 'idle',
@@ -39,6 +54,7 @@ const userSettingsSlice = createSlice({
         setSettingsSlice(state, action) {
             console.log("setSettingsSlice called with payload:", action.payload);
             state.shipToCountry = action.payload.shipToCountry;
+            state.currency = action.payload.currency;
             state.settings = action.payload;
         }
     },
@@ -55,7 +71,20 @@ const userSettingsSlice = createSlice({
             .addCase(updateUserSettings.rejected, (state, action) => {
                 state.status = 'failed';
                 state.error = action.error.message;
-            });
+            })
+            .addCase(userProfileInfo.pending, (state) => {
+                state.status = 'loading';
+                state.error = null;
+            })
+            .addCase(userProfileInfo.fulfilled, (state, action) => {
+                state.status = 'succeeded';
+                // Assuming action.payload contains user profile info
+                state.userProfile = action.payload;
+            })
+            .addCase(userProfileInfo.rejected, (state, action) => {
+                state.status = 'failed';
+                state.error = action.error.message;
+            })
     },
 });
 

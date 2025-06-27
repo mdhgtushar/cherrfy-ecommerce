@@ -11,16 +11,16 @@ const initialState = {
 // ✅ Correct action type here
 export const fetchProducts = createAsyncThunk(
     "products/fetchProducts",
-    async ({ country }) => {
-        const response = await Api.get("/product/?country=" + country); // Assuming 'BD' is the country code
+    async ({ country, currency }) => {
+        const response = await Api.get("/product/?country=" + country + "&currency=" + currency); // Assuming 'BD' is the country code
         return response.data;
     }
 );
 
 export const fetchProductById = createAsyncThunk(
     "products/fetchProductById",
-    async ({ id, country }) => {
-        const response = await Api.get("/product/" + id + "?country=" + country); // Assuming 'BD' is the country code
+    async ({ id, country, currency }) => {
+        const response = await Api.get("/product/" + id + "?country=" + country + "&currency=" + currency); // Assuming 'BD' is the country code
         return response.data;
     }
 );
@@ -32,7 +32,13 @@ export const fetchAliProduct = createAsyncThunk(
         return response.data;
     }
 );
-
+export const fetchLogistic = createAsyncThunk(
+    "products/fetchLogistic",
+    async (data) => {
+        const response = await Api.post("/logistic", data);
+        return response.data;
+    }
+);
 
 export const SaveAliProduct = createAsyncThunk(
     "products/saveAliProduct",
@@ -118,6 +124,19 @@ const productSlice = createSlice({
                 state.status = "failed";
                 state.error = action.error.message;
             })
+            .addCase(fetchLogistic.pending, (state) => {
+                state.status = "loading";
+            })
+            .addCase(fetchLogistic.fulfilled, (state, action) => {
+                state.status = "succeeded";
+                state.error = "";
+                // Assuming the response contains logistic data
+                state.selectedProduct.logistic = action.payload;
+            })
+            .addCase(fetchLogistic.rejected, (state, action) => {
+                state.status = "failed";
+                state.error = action.error.message;
+            });
     },
 });
 

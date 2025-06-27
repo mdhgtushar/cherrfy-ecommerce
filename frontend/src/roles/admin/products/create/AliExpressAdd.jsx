@@ -24,7 +24,7 @@ const AliExpressViewer = () => {
 
     const response = await dispatch(fetchAliProduct(productId));
 
-      console.log("error response", response);
+    console.log("error response", response);
     if (response.error) {
       console.log("error", response);
       return toast.error(response.error.message);
@@ -148,52 +148,6 @@ const AliExpressViewer = () => {
             Please Search by a product from aliexpress
           </p>
         )}
-
-        {/* <div className="space-y-6">
-          {selectedProduct?.BD?.skus.map((sku, index) => (
-            <div
-              key={index}
-              className="border border-gray-200 p-4 rounded-lg shadow-sm bg-gray-50"
-            >
-              <p>
-                <strong>SKU Attribute:</strong> {sku.sku_attr}
-              </p>
-              <p>
-                <strong>Sale Price:</strong> {sku.offer_sale_price}{" "}
-                {sku.currency_code}
-              </p>
-              <p>
-                <strong>Stock:</strong> {sku.sku_available_stock}
-              </p>
-              <p>
-                <strong>SKU ID:</strong> {sku.sku_id}
-              </p>
-              <p>
-                <strong>SKU Code:</strong> {sku.sku_code}
-              </p>
-
-              {(sku.ae_sku_property_dtos?.ae_sku_property_d_t_o || []).map(
-                (prop, i) => (
-                  <div key={i} className="mt-2 pl-2 border-l-4 border-blue-500">
-                    <p>
-                      <strong>Property Name:</strong> {prop.sku_property_name}
-                    </p>
-                    <p>
-                      <strong>Property Value:</strong> {prop.sku_property_value}
-                    </p>
-                    {prop.sku_image && (
-                      <img
-                        src={prop.sku_image}
-                        alt="SKU"
-                        className="w-24 h-24 object-cover rounded border mt-2"
-                      />
-                    )}
-                  </div>
-                )
-              )}
-            </div>
-          ))}
-        </div> */}
       </div>
     </div>
   );

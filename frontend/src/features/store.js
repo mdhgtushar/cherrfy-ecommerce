@@ -3,8 +3,10 @@ import { configureStore } from "@reduxjs/toolkit";
 import cartReducter from "./cartSlice"; 
 import productReducer from "./productSlice"; 
 import adminAuthReducer from "./adminAuthSlice";
-import userAuthReducer from "./userAuthSlice";
-import userSettingsReducer from "./userSettingsSlice"; // Import user settings reducer
+import userAuthReducer, { logout } from "./userAuthSlice";
+import userSettingsReducer from "./userSettingsSlice";  
+import currencyReducer from "./currencySlice"; 
+import { setUnauthorizedHandler } from "../util/API";
 
 
 const store = configureStore({
@@ -13,8 +15,13 @@ const store = configureStore({
     adminAuth: adminAuthReducer,
     userAuth: userAuthReducer,
     products: productReducer,
-    userSettings: userSettingsReducer, // Add user settings reducer
+    userSettings: userSettingsReducer, 
+    currency: currencyReducer
   },
+});
+ 
+setUnauthorizedHandler(() => {
+  store.dispatch(logout());
 });
 
 export default store;

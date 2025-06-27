@@ -30,6 +30,8 @@ export const registerUser = createAsyncThunk(
     }
 )
 
+
+
 const token = localStorage.getItem("userToken");
 const initialState = {
     user: token ? jwtDecode(token) : null,

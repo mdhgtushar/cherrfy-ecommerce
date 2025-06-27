@@ -1,134 +1,121 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom"; 
+import { Link } from "react-router-dom";
 import API from "../../../util/API";
 
 const OrdersPage = () => {
   const [orders, setOrders] = useState([]);
+
   useEffect(() => {
     getMyOrders();
   }, []);
 
-  const getMyOrders = async (req, res) => {
+  const getMyOrders = async () => {
     try {
-      const result = await API.get(`/order/myorders`);
-      console.log(result.data);
+      const result = await API.get(`/order`);
       setOrders(result.data);
     } catch (error) {
-      console.log(error);
+      console.error("Failed to fetch orders:", error);
     }
   };
 
+  const formatDate = (dateString) => {
+    const options = { year: "numeric", month: "short", day: "numeric" };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+  };
 
-
-
-  // const orders = [
-  //   {
-  //     id: "ORD123456",
-  //     date: "2025-05-15",
-  //     status: "Delivered",
-  //     total: 120.49,
-  //     items: [
-  //       {
-  //         id: 1,
-  //         name: "Men's Leather Watch",
-  //         image: "https://via.placeholder.com/80",
-  //         price: 49.99,
-  //         quantity: 1,
-  //       },
-  //       {
-  //         id: 2,
-  //         name: "Smartphone Case",
-  //         image: "https://via.placeholder.com/80",
-  //         price: 14.99,
-  //         quantity: 2,
-  //       },
-  //     ],
-  //   },
-  //   {
-  //     id: "ORD123457",
-  //     date: "2025-04-28",
-  //     status: "Shipped",
-  //     total: 78.00,
-  //     items: [
-  //       {
-  //         id: 3,
-  //         name: "Wireless Earbuds",
-  //         image: "https://via.placeholder.com/80",
-  //         price: 78.0,
-  //         quantity: 1,
-  //       },
-  //     ],
-  //   },
-  // ];
+  const formatCurrency = (amount, currency = "USD") =>
+    new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency,
+    }).format(amount);
 
   return (
-    <div className="mx-auto px-4 py-6">
-      <h2 className="text-2xl font-semibold mb-4">My Orders</h2>
+    <div className="mx-auto max-w-5xl px-4 py-10">
+      <h2 className="text-3xl font-bold mb-8 text-gray-800">My Orders</h2>
 
-      {orders.map((order) => (
-        <div
-          key={order.id}
-          className="bg-white border rounded-lg shadow-sm p-4 mb-5"
-        >
-          {/* Order Summary */}
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4">
-            <div>
-              <p className="text-sm text-gray-500">Order ID: {order._id}</p>
-              <p className="text-sm text-gray-500">Date: {order.createdAt}</p>
-            </div>
-            <div className="text-right mt-2 md:mt-0">
-              <p
-                className={`text-sm font-medium ${
-                  order.status === "Delivered"
-                    ? "text-green-600"
-                    : order.status === "Shipped"
-                    ? "text-yellow-600"
-                    : "text-gray-600"
-                }`}
-              >
-                Status: {order.isDelivered ? "Delivered" : "Shipped"}
-              </p>
-              <p className="text-lg font-semibold text-red-600">
-                Total: ${order.totalPrice?.toFixed(2)}
-              </p>
-            </div>
-          </div>
-
-          {/* Items */}
-          <div className="space-y-3">
-            {order.items.map((item) => (
-              <div key={item.id} className="flex items-center gap-4">
-                <img
-                  src={item.image}
-                  alt={item.name}
-                  className="w-16 h-16 object-cover rounded border"
-                />
-                <div className="flex-1">
-                  <h4 className="text-sm font-medium text-gray-800">
-                    {item.product}
-                  </h4>
-                  <p className="text-sm text-gray-500">
-                    Quantity: {item.quantity}
-                  </p>
-                </div>
-                <div className="text-sm font-medium text-gray-700">
-                  ${item.price.toFixed(2)}
-                </div>
-              </div>
-            ))}
-          </div>
-<p className="text-sm text-gray-500 p-2 bg-gray-100 mt-3">Payment Method: <b>{order.paymentMethod}</b></p>
-          {/* Action Button (optional) */}
-          <div className="mt-4 text-right">
-            <Link to={`/order/${order.id}`} className="text-sm text-blue-600 hover:underline">
-              View Details
-            </Link>
-          </div>
+      {orders.length === 0 ? (
+        <div className="text-center py-20 bg-white shadow rounded-lg">
+          <p className="text-gray-500 text-lg">You haven’t placed any orders yet.</p>
+          <Link
+            to="/"
+            className="inline-block mt-4 text-sm px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+          >
+            Start Shopping
+          </Link>
         </div>
-      ))}
+      ) : (
+        orders.map((order) => (
+          <div
+            key={order._id}
+            className="bg-white border rounded-xl shadow-sm p-6 mb-6"
+          >
+            {/* Order Info */}
+            <div className="flex flex-col md:flex-row justify-between md:items-center mb-4 gap-4">
+              <div>
+                <p className="text-sm text-gray-600">
+                  <span className="font-medium">Order ID:</span> {order._id}
+                </p>
+                <p className="text-sm text-gray-600">
+                  <span className="font-medium">Date:</span> {formatDate(order.createdAt)}
+                </p>
+                <p className="text-sm text-gray-600">
+                  <span className="font-medium">Payment:</span>{" "}
+                  {order.isPaid ? (
+                    <span className="text-green-600">Paid</span>
+                  ) : (
+                    <span className="text-red-500">Unpaid</span>
+                  )}
+                </p>
+              </div>
+              <div className="text-right">
+                <span
+                  className={`inline-block text-sm px-3 py-1 rounded-full font-medium ${
+                    order.isDelivered ? "bg-green-100 text-green-600" : "bg-yellow-100 text-yellow-700"
+                  }`}
+                >
+                  {order.isDelivered ? "Delivered" : "Not Delivered"}
+                </span>
+                <p className="text-xl font-bold text-gray-800 mt-2">
+                  {formatCurrency(order.totalPrice, order.items?.[0]?.currency || "USD")}
+                </p>
+              </div>
+            </div>
 
-      {orders.length === 0 && (
-        <p className="text-gray-600 text-center mt-8">You have no orders yet.</p>
+            {/* Items */}
+            <div className="divide-y">
+              {order.items.map((item, index) => (
+                <div key={index} className="flex items-center gap-4 py-4">
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    className="w-16 h-16 object-cover rounded border"
+                  />
+                  <div className="flex-1">
+                    <p className="text-sm font-medium text-gray-800">{item.name}</p>
+                    <p className="text-sm text-gray-500">
+                      Qty: {item.quantity} | Price:{" "}
+                      {formatCurrency(item.price, item.currency)}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Payment & Action */}
+            <div className="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center mt-5 gap-3">
+              <div className="bg-gray-100 rounded px-3 py-2 text-sm text-gray-700">
+                Payment Method: <strong>{order.paymentMethod}</strong>
+              </div>
+
+              <Link
+                to={`/order/${order._id}`}
+                className="inline-block text-sm text-blue-600 font-medium hover:underline"
+              >
+                View Order Details →
+              </Link>
+            </div>
+          </div>
+        ))
       )}
     </div>
   );

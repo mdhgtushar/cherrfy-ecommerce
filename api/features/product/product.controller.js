@@ -2,7 +2,7 @@
 const axios = require('axios');
 const crypto = require('crypto');
 const productModel = require('./product.model');
-const GetAliProductInfo = require('../../util/GetAliProductInfo');
+const Setting = require('../settings/settings.model');
 
 const countries = [
   "US", "CA", "GB", "AU", "DE", "FR", "IT", "ES", "NL", "PL",
@@ -151,43 +151,97 @@ exports.createAliExpressProduct = async (req, res) => {
     return res.status(500).json({ message: 'Failed to fetch/save AliExpress data.', error: error });
   }
 };
-
+ 
 exports.getProductById = async (req, res) => {
-  // get the country code from query parameters
-  const countryCode = req.query.country?.toUpperCase(); // Make it case-insensitive
+  const countryCode = req.query.country?.toUpperCase();
+  const currencyCode = req.query.currency?.toUpperCase();
 
-  if (!countryCode) {
-    return res.status(400).json({ message: 'Country code is required.' });
+  if (!countryCode || !currencyCode) {
+    return res.status(400).json({ message: 'Country and currency code are required.' });
   }
+
   if (!countries.includes(countryCode)) {
     return res.status(400).json({ message: 'Invalid country code.' });
   }
+
   try {
     const productId = req.params.id;
     if (!productId) {
       return res.status(400).json({ message: 'Product ID is required.' });
     }
-    // Find the product by ID and include only the ali_data for the specified country
+
     const product = await productModel.findOne(
       { _id: productId },
-      { [`ali_data.${countryCode}`]: 1, productId: 1 } // Only return the ali_data for the specified country
+      {
+        [`ali_data.${countryCode}`]: 1,
+        productId: 1,
+      }
     );
+
     if (!product) {
       return res.status(404).json({ message: 'Product not found.' });
     }
-    return res.status(200).json(product.ali_data[countryCode] || { message: 'No data available for this country.' });
+
+    const aliData = product.ali_data?.[countryCode];
+    if (!aliData) {
+      return res.status(404).json({ message: 'No data for this country.' });
+    }
+
+    // === Currency Rate Fetch ===
+    const setting = await Setting.findOne({ key: 'currency' });
+    const rates = setting?.value?.rates;
+
+    const targetRateObj = Object.values(rates).find(
+      (obj) => obj.currency === currencyCode
+    );
+
+    if (!targetRateObj) {
+      return res.status(400).json({ message: 'Currency rate not found.' });
+    }
+
+    const rate = targetRateObj.rate;
+
+    const skus =
+      aliData?.ae_item_sku_info_dtos?.ae_item_sku_info_d_t_o || [];
+
+    if (!skus.length) {
+      return res.status(404).json({ message: 'No SKU data found.' });
+    }
+
+    const convertedSkus = skus.map((sku) => ({
+      ...sku,
+      original_price: sku.sku_price,
+      converted_currency: currencyCode,
+      sku_price: (parseFloat(sku.sku_price) * rate).toFixed(2),
+      offer_sale_price: (parseFloat(sku.offer_sale_price) * rate).toFixed(2),
+      offer_bulk_sale_price: (parseFloat(sku.offer_bulk_sale_price) * rate).toFixed(2),
+    }));
+
+    return res.status(200).json({
+      productId: product.productId,
+      product_id: product.productId,
+      name: aliData?.ae_item_base_info_dto?.subject || 'Unknown Product',
+      images: (aliData?.ae_multimedia_info_dto?.image_urls?.split(';') || []),
+      country: countryCode,
+      currency: currencyCode,
+      rate,
+      skus: convertedSkus,
+      property: aliData?.ae_item_properties?.ae_item_property || [],
+      description: aliData?.ae_item_description_dto?.description || '',
+    });
   } catch (error) {
-    console.error('Error fetching product:', error);
+    console.error('Error fetching product by ID:', error);
     return res.status(500).json({ message: 'Server error.' });
   }
 };
 
 
 exports.getAllProducts = async (req, res) => {
-  const countryCode = req.query.country?.toUpperCase(); // Make it case-insensitive
+  const countryCode = req.query.country?.toUpperCase();
+  const currencyCode = req.query.currency?.toUpperCase();
 
-  if (!countryCode) {
-    return res.status(400).json({ message: 'Country code is required.' });
+  if (!countryCode || !currencyCode) {
+    return res.status(400).json({ message: 'Country and currency code are required.' });
   }
 
   if (!countries.includes(countryCode)) {
@@ -195,18 +249,73 @@ exports.getAllProducts = async (req, res) => {
   }
 
   try {
-    // শুধু যেসব প্রোডাক্টে নির্দিষ্ট দেশের ali_data আছে সেগুলো আনো
-    const products = await productModel.find(
-      { [`ali_data.${countryCode}`]: { $exists: true } },
-      { [`ali_data.${countryCode}`]: 1, productId: 1 } // শুধু প্রয়োজনীয় ফিল্ড দেখাও
+    // Get currency rate from settings
+    const currencySetting = await Setting.findOne({ key: 'currency' });
+    const currencyRates = currencySetting?.value?.rates;
+
+    if (!currencyRates) {
+      return res.status(500).json({ message: 'Currency rates not found.' });
+    }
+
+    const matchedRate = Object.values(currencyRates).find(
+      (rateObj) => rateObj.currency === currencyCode
     );
 
-    return res.status(200).json(products);
+    if (!matchedRate || !matchedRate.rate) {
+      return res.status(400).json({ message: 'Currency rate not found for this currency.' });
+    }
+
+    const rate = matchedRate.rate;
+
+    // Fetch only products with ali_data for that country
+    const products = await productModel.find(
+      { [`ali_data.${countryCode}`]: { $exists: true } },
+      { [`ali_data.${countryCode}`]: 1, productId: 1 }
+    );
+
+    // Process to find minimum-priced SKU only
+    const updatedProducts = products.map((product) => {
+      const skuList =
+        product.ali_data?.[countryCode]?.ae_item_sku_info_dtos?.ae_item_sku_info_d_t_o || [];
+
+      if (!skuList.length) return null;
+
+      // Find the SKU with minimum offer_sale_price
+      const minSku = skuList.reduce((min, curr) =>
+        parseFloat(curr.offer_sale_price) < parseFloat(min.offer_sale_price) ? curr : min
+      );
+
+      const convertedSku = {
+        ...minSku,
+        original_price: minSku.sku_price,
+        sku_price: (parseFloat(minSku.sku_price) * rate).toFixed(2),
+        offer_sale_price: (parseFloat(minSku.offer_sale_price) * rate).toFixed(2),
+        offer_bulk_sale_price: (parseFloat(minSku.offer_bulk_sale_price) * rate).toFixed(2),
+        converted_currency: currencyCode,
+      };
+
+      return {
+        _id: product._id,
+        name: product.ali_data?.[countryCode]?.ae_item_base_info_dto?.subject || 'Unknown Product',
+        images: (product.ali_data?.[countryCode]?.ae_multimedia_info_dto?.image_urls?.split(';') || []).slice(0, 4),
+        productId: product.productId,
+        country: countryCode,
+        currency: currencyCode,
+        price: convertedSku.offer_sale_price,
+        rate,
+        sku: convertedSku,
+
+      };
+    });
+
+    // Filter out any nulls (if sku data missing)
+    return res.status(200).json(updatedProducts.filter(Boolean));
   } catch (error) {
-    console.error('Error fetching products:', error);
+    console.error('Product fetch error:', error);
     return res.status(500).json({ message: 'Server error.' });
   }
 };
+
 
 exports.deleteProduct = async (req, res) => {
   try {

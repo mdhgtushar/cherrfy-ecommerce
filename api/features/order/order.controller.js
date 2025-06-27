@@ -1,9 +1,10 @@
-const Order = require('./order.model');
+const Order = require('./order.model.js');
 
 // Create a new order
 exports.createOrder = async (req, res) => {
   try {
-    const order = new Order(req.body);
+    console.log(req.user);
+    const order = new Order({...req.body, user: req.user._id});
     await order.save();
     res.status(201).json(order);
   } catch (err) {
@@ -14,12 +15,13 @@ exports.createOrder = async (req, res) => {
 // Get all orders
 exports.getOrders = async (req, res) => {
   try {
-    const orders = await Order.find();
+    const orders = await Order.find({ user: req.user._id });
     res.json(orders);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
+
 
 // Get a single order by ID
 exports.getOrderById = async (req, res) => {

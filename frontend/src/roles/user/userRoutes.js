@@ -11,9 +11,9 @@ import LoginPage from './auth/LoginPage';
 import RegisterPage from './auth/RegisterPage';
 import SearchResultPage from './searchResult/SearchResultPage';
 import OrdersPage from './Order/OrderPage';
-import OrderDetails from './Order/OrderDetails'; 
-import ProfileLayout from './userLayout/profile/ProfileLayout'; 
-import Page404 from './site/Page404'; 
+import OrderDetails from './Order/OrderDetails';
+import ProfileLayout from './userLayout/profile/ProfileLayout';
+import Page404 from './site/Page404';
 import MyReviews from './review/MyReviews';
 import Settings from './profile/Settings';
 import UserOverview from './profile/UserOverview';
@@ -21,12 +21,14 @@ import ManageAccount from './profile/ManageAccount';
 import ReturnAndRefund from './profile/ReturnAndRefund';
 import WishlistAndStores from './profile/WishlistAndStores';
 import DisputeCenter from './profile/DisputeCenter';
+import PrivateRoute from './userLayout/PrivateRoute';
+import ProductDetails from './products/ProductDetails';
 export const userRoutes = [
   {
     element: <Layout />,
     children: [
       { path: "/", index: true, element: <MainPage /> },
-      { path: USER_PATHS.PRODUCTS, element: <ProductView /> },
+      { path: USER_PATHS.PRODUCTS, element: <ProductDetails /> },
       { path: USER_PATHS.SEARCH, element: <SearchResultPage /> },
       { path: USER_PATHS.ABOUT.slice(1), element: <About /> },   // slice(1) to remove '/'
       { path: USER_PATHS.CART.slice(1), element: <CartPage /> },
@@ -38,7 +40,7 @@ export const userRoutes = [
       { path: USER_PATHS.REGISTER.slice(1), element: <RegisterPage /> },
       { path: '*', element: <Page404 /> },
       {
-        element: <ProfileLayout />,
+        element: <PrivateRoute><ProfileLayout /></PrivateRoute>,
         path: USER_PATHS.PROFILE,
         children: [
           { path: USER_PATHS.PROFILE, element: <UserOverview /> },

@@ -4,7 +4,7 @@ import Countries from "../../../util/Countries";
 import { setSettingsSlice } from "../../../features/userSettingsSlice";
 import { useDispatch, useSelector } from "react-redux";
 const SettingsPopup = () => {
-  const { shipToCountry } = useSelector((state) => state.userSettings);
+  const { shipToCountry, currency } = useSelector((state) => state.userSettings);
   const dispatch = useDispatch();
   const [isLogOut, setIsLogOut] = useState(false);
   const [settings, setSettings] = useState({
@@ -45,7 +45,7 @@ const SettingsPopup = () => {
             <Settings className="mr-1 w-5 h-5 text-2xl" />
             <div className="text-sm">
               <div className="text-xs text-gray-500 hover:text-red-600 rounded-full text-black text-left">
-                {shipToCountry} - USD /
+                {shipToCountry} - {currency} /
               </div>
               <div className="font-semibold flex items-center">
                 <span>SETTINGS</span>
@@ -56,7 +56,7 @@ const SettingsPopup = () => {
       </div>
       {isLogOut && (
         <div
-          className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
+          className="fixed h-screen inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
           onClick={() => setIsLogOut(false)}
         >
           <div
@@ -85,17 +85,54 @@ const SettingsPopup = () => {
         {/* Currency */}
         <div>
           <label className="block font-medium mb-1">Currency</label>
-          <select
-            name="currency"
-            value={settings.currency}
+           
+          <select name="currency" id="currency"
             onChange={handleChange}
-            className="w-full border rounded p-2"
-          >
-            <option value="BDT">৳ BDT</option>
-            <option value="USD">$ USD</option>
-            <option value="EUR">€ EUR</option>
-            <option value="INR">₹ INR</option>
-          </select>
+            className="w-full border rounded p-2">
+  <option value="USD">United States (USD)</option>
+  <option value="CAD">Canada (CAD)</option>
+  <option value="GBP">United Kingdom (GBP)</option>
+  <option value="AUD">Australia (AUD)</option>
+  <option value="EUR">Germany (EUR)</option>
+  <option value="EUR">France (EUR)</option>
+  <option value="EUR">Italy (EUR)</option>
+  <option value="EUR">Spain (EUR)</option>
+  <option value="EUR">Netherlands (EUR)</option>
+  <option value="PLN">Poland (PLN)</option>
+  <option value="SEK">Sweden (SEK)</option>
+  <option value="NOK">Norway (NOK)</option>
+  <option value="EUR">Finland (EUR)</option>
+  <option value="DKK">Denmark (DKK)</option>
+  <option value="EUR">Ireland (EUR)</option>
+  <option value="EUR">Portugal (EUR)</option>
+  <option value="EUR">Belgium (EUR)</option>
+  <option value="CHF">Switzerland (CHF)</option>
+  <option value="EUR">Austria (EUR)</option>
+  <option value="CZK">Czech Republic (CZK)</option>
+  <option value="EUR">Slovakia (EUR)</option>
+  <option value="HUF">Hungary (HUF)</option>
+  <option value="RON">Romania (RON)</option>
+  <option value="BGN">Bulgaria (BGN)</option>
+  <option value="EUR">Greece (EUR)</option>
+  <option value="EUR">Slovenia (EUR)</option>
+  <option value="EUR">Croatia (EUR)</option>
+  <option value="EUR">Estonia (EUR)</option>
+  <option value="EUR">Latvia (EUR)</option>
+  <option value="EUR">Lithuania (EUR)</option>
+  <option value="EUR">Luxembourg (EUR)</option>
+  <option value="EUR">Malta (EUR)</option>
+  <option value="EUR">Cyprus (EUR)</option>
+  <option value="NZD">New Zealand (NZD)</option>
+  <option value="AED">United Arab Emirates (AED)</option>
+  <option value="ILS">Israel (ILS)</option>
+  <option value="TRY">Turkey (TRY)</option>
+  <option value="MXN">Mexico (MXN)</option>
+  <option value="BRL">Brazil (BRL)</option>
+  <option value="ARS">Argentina (ARS)</option>
+  <option value="ZAR">South Africa (ZAR)</option>
+  <option value="BDT">Bangladesh (BDT)</option>
+</select>
+
         </div>
 
         {/* Language */}

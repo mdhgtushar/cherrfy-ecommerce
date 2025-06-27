@@ -1,19 +1,39 @@
+// util/API.js
 import axios from 'axios';
 
+let onUnauthorized = null;
+
+export const setUnauthorizedHandler = (handler) => {
+  onUnauthorized = handler;
+};
+
 const API = axios.create({
-  // baseURL: 'https://api.cherrfy.com/api', // 🔗 Your main link here
-  baseURL: 'http://localhost:8080/api', // 🔗 Your main link here
+  // baseURL: 'http://localhost:8080/api',
+  baseURL: 'https://api.cherrfy.com/api',
   headers: {
     'Content-Type': 'application/json',
     'Access-Control-Allow-Origin': '*',
-    'Authorization': 'Bearer ' + localStorage.getItem('userToken'),
   },
 });
 
-// You can add interceptors here if needed
+API.interceptors.request.use((config) => {
+  const token = localStorage.getItem('userToken');
+  if (token) {
+    config.headers['Authorization'] = `Bearer ${token}`;
+  }
+  return config;
+});
+
 API.interceptors.response.use(
-  response => response,
-  error => Promise.reject(error)
+  (response) => response,
+  (error) => {
+    if (error.response && error.response.status === 401) {
+      if (onUnauthorized) {
+        onUnauthorized(); // Call the provided handler
+      }
+    }
+    return Promise.reject(error);
+  }
 );
 
 export default API;

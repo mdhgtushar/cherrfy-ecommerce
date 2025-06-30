@@ -16,7 +16,7 @@ export const userProfileInfo = createAsyncThunk(
      async (credentials, thunkAPI) => {
         // Replace with your API call
         try {
-            const res = await API.get("/user/auth/profile");
+            const res = await API.get("/user/profile");
             return res.data;
         } catch (err) {
             return thunkAPI.rejectWithValue(err.response.data.message);
@@ -78,8 +78,8 @@ const userSettingsSlice = createSlice({
             })
             .addCase(userProfileInfo.fulfilled, (state, action) => {
                 state.status = 'succeeded';
-                // Assuming action.payload contains user profile info
-                state.userProfile = action.payload;
+                // Access the nested data property from the API response
+                state.userProfile = action.payload.data;
             })
             .addCase(userProfileInfo.rejected, (state, action) => {
                 state.status = 'failed';

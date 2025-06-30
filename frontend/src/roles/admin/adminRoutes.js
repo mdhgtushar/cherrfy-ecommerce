@@ -38,6 +38,7 @@ import OrderLayout from "./adminLayout/order/OrderLayout";
 import RoleLayout from "./adminLayout/role/RoleLayout";
 import UserDashboard from "./workUpdate/UserDeshboard";
 import UserList from "./users/UserList"; 
+import DisputeManagement from "./dispute/DisputeManagement";
 import Page404 from "../user/site/Page404";
 
 export const adminRoutes = [
@@ -66,6 +67,7 @@ export const adminRoutes = [
       { path: ADMIN_PATHS.B2C.replace(ADMIN_PATHS.BASE + '/', ''), element: <B2CManagement /> },
       { path: ADMIN_PATHS.D2C.replace(ADMIN_PATHS.BASE + '/', ''), element: <D2CManagement /> },
       { path: ADMIN_PATHS.PRICING.replace(ADMIN_PATHS.BASE + '/', ''), element: <PricingAndProfitManagement /> },
+      { path: ADMIN_PATHS.DISPUTES.replace(ADMIN_PATHS.BASE + '/', ''), element: <DisputeManagement /> },
       {
         path: ADMIN_PATHS.PRODUCTS.BASE.replace(ADMIN_PATHS.BASE + '/', ''),
         element: <ProductLayout />,

@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { addToCart } from "../../../features/cartSlice";
+import { addToWishlist, removeFromWishlist } from '../../../features/wishlistSlice';
 
 // --- Self-contained SVG Icon Components for easy use ---
 const ChevronLeftIcon = (props) => (
@@ -13,19 +14,30 @@ const ChevronLeftIcon = (props) => (
 const ChevronRightIcon = (props) => (
   <svg {...props} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M9 5l7 7-7 7" /></svg>
 );
-const HeartIcon = (props) => (
-    <svg {...props} fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-);
 
+// Use the existing HeartIcon SVG for wishlist
+const HeartIcon = ({ filled = false, ...props }) => (
+  <svg {...props} fill={filled ? 'currentColor' : 'none'} stroke="currentColor" viewBox="0 0 24 24">
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+      fill={filled ? 'currentColor' : 'none'}
+      stroke={filled ? 'currentColor' : 'currentColor'}
+    />
+  </svg>
+);
 
 const ProductBox = memo(({ product }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { shipToCountry } = useSelector((state) => state.userSettings);
+  const wishlist = useSelector((state) => state.wishlist.items);
+  const isWishlisted = wishlist.some(item => item && item.product && item.product._id === product._id);
 
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
-  const [isWishlisted, setIsWishlisted] = useState(false);
 
 
   const handleImageNavigation = (direction, e) => {
@@ -42,9 +54,12 @@ const ProductBox = memo(({ product }) => {
   };
   
   const handleWishlistClick = (e) => {
-      e.preventDefault(); e.stopPropagation();
-      setIsWishlisted(!isWishlisted);
-      toast.success(!isWishlisted ? "Added to Wishlist!" : "Removed from Wishlist!");
+    e.preventDefault(); e.stopPropagation();
+    if (isWishlisted) {
+      dispatch(removeFromWishlist(product._id));
+    } else {
+      dispatch(addToWishlist(product._id));
+    }
   };
 
   const handleAddToCart = () => {
@@ -80,7 +95,9 @@ const ProductBox = memo(({ product }) => {
             {/* Top Bar: Wishlist & Sale Badge */}
             <div className="flex justify-between items-start opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-opacity duration-300 delay-100">
                 {product.originalPrice ? <div className="px-2 py-1 bg-red-500 text-white text-xs font-bold rounded">SALE</div> : <div />}
-                <button onClick={handleWishlistClick} className={`transition-colors ${isWishlisted ? 'text-red-500' : 'text-white'}`}><HeartIcon className="w-7 h-7"/></button>
+                <button onClick={handleWishlistClick} className={`transition-colors ${isWishlisted ? 'text-red-500' : 'text-white'}`}>
+                  <HeartIcon filled={isWishlisted} className="w-7 h-7" />
+                </button>
             </div>
 
             {/* Middle: Navigation Arrows */}

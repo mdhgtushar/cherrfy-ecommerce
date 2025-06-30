@@ -41,3 +41,20 @@
     @apply p-6 rounded-xl shadow-lg border border-gray-200 bg-[rgb(var(--color-bg))];
   }
 }
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #fca5a5; /* Tailwind red-300 */
+  border-radius: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #fff1f2; /* Tailwind pink-50 */
+  border-radius: 6px;
+}
+
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #fca5a5 #fff1f2;
+}

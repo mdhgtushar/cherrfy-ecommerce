@@ -6,6 +6,9 @@ import adminAuthReducer from "./adminAuthSlice";
 import userAuthReducer, { logout } from "./userAuthSlice";
 import userSettingsReducer from "./userSettingsSlice";  
 import currencyReducer from "./currencySlice"; 
+import disputeReducer from "./disputeSlice";
+import wishlistReducer from "./wishlistSlice";
+import followedStoresReducer from "./followedStoresSlice";
 import { setUnauthorizedHandler } from "../util/API";
 
 
@@ -16,7 +19,10 @@ const store = configureStore({
     userAuth: userAuthReducer,
     products: productReducer,
     userSettings: userSettingsReducer, 
-    currency: currencyReducer
+    currency: currencyReducer,
+    dispute: disputeReducer,
+    wishlist: wishlistReducer,
+    followedStores: followedStoresReducer
   },
 });
  

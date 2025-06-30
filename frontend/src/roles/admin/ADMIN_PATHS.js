@@ -1,4 +1,3 @@
-
 const ADMIN_BASE = '/manage-admin';
 const ADMIN_AUTH_BASE = '/admin/auth';
 
@@ -34,6 +33,7 @@ const ADMIN_AUTH_BASE = '/admin/auth';
   ANALYTICS: `${ADMIN_BASE}/analytics`,
   MEDIA: `${ADMIN_BASE}/media`,
   BACKUP: `${ADMIN_BASE}/backup`,
+  DISPUTES: `${ADMIN_BASE}/disputes`,
   AUTH: {
     BASE: ADMIN_AUTH_BASE,
     LOGIN: `${ADMIN_AUTH_BASE}/login`,

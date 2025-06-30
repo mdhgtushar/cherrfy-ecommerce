@@ -3,6 +3,53 @@ import { Settings } from "lucide-react";
 import Countries from "../../../util/Countries";
 import { setSettingsSlice } from "../../../features/userSettingsSlice";
 import { useDispatch, useSelector } from "react-redux";
+
+// Country code to name mapping
+const countryNames = {
+  "US": "United States",
+  "CA": "Canada", 
+  "GB": "United Kingdom",
+  "AU": "Australia",
+  "DE": "Germany",
+  "FR": "France",
+  "IT": "Italy",
+  "ES": "Spain",
+  "NL": "Netherlands",
+  "PL": "Poland",
+  "SE": "Sweden",
+  "NO": "Norway",
+  "FI": "Finland",
+  "DK": "Denmark",
+  "IE": "Ireland",
+  "PT": "Portugal",
+  "BE": "Belgium",
+  "CH": "Switzerland",
+  "AT": "Austria",
+  "CZ": "Czech Republic",
+  "SK": "Slovakia",
+  "HU": "Hungary",
+  "RO": "Romania",
+  "BG": "Bulgaria",
+  "GR": "Greece",
+  "SI": "Slovenia",
+  "HR": "Croatia",
+  "EE": "Estonia",
+  "LV": "Latvia",
+  "LT": "Lithuania",
+  "LU": "Luxembourg",
+  "MT": "Malta",
+  "CY": "Cyprus",
+  "NZ": "New Zealand",
+  "AE": "United Arab Emirates",
+  "IL": "Israel",
+  "TR": "Turkey",
+  "MX": "Mexico",
+  "BRL": "Brazil",
+  "AR": "Argentina",
+  "ZA": "South Africa",
+  "BD": "Bangladesh"
+};
+
 const SettingsPopup = () => {
   const { shipToCountry, currency } = useSelector((state) => state.userSettings);
   const dispatch = useDispatch();
@@ -32,6 +79,11 @@ const SettingsPopup = () => {
     dispatch(setSettingsSlice(settings));
     setIsLogOut(false);
   }
+
+  const getCountryName = (code) => {
+    return countryNames[code] || code;
+  };
+
   return (
     <div className="relative z-10">
       {/* <button
@@ -45,7 +97,7 @@ const SettingsPopup = () => {
             <Settings className="mr-1 w-5 h-5 text-2xl" />
             <div className="text-sm">
               <div className="text-xs text-gray-500 hover:text-red-600 rounded-full text-black text-left">
-                {shipToCountry} - {currency} /
+                {getCountryName(shipToCountry)} - {currency} /
               </div>
               <div className="font-semibold flex items-center">
                 <span>SETTINGS</span>
@@ -74,9 +126,9 @@ const SettingsPopup = () => {
             onChange={handleChange}
             className="w-full border rounded p-2"
           >
-            {Countries.map((country) => (
-              <option key={country} value={country} selected={settings.shipToCountry === country}>
-                {country}
+            {Countries.map((countryCode) => (
+              <option key={countryCode} value={countryCode} selected={settings.shipToCountry === countryCode}>
+                {getCountryName(countryCode)}
               </option>
             ))}
           </select>

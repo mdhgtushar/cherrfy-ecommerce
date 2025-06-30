@@ -11,10 +11,19 @@ const OrdersPage = () => {
 
   const getMyOrders = async () => {
     try {
+      console.log('Fetching orders...');
       const result = await API.get(`/order`);
-      setOrders(result.data);
+      console.log('Orders API response:', result);
+      
+      // Handle the new response format with nested data
+      const ordersData = result.data.data || result.data;
+      console.log('Orders data:', ordersData);
+      
+      setOrders(Array.isArray(ordersData) ? ordersData : []);
     } catch (error) {
       console.error("Failed to fetch orders:", error);
+      console.error("Error response:", error.response);
+      setOrders([]);
     }
   };
 
@@ -35,7 +44,7 @@ const OrdersPage = () => {
 
       {orders.length === 0 ? (
         <div className="text-center py-20 bg-white shadow rounded-lg">
-          <p className="text-gray-500 text-lg">You haven’t placed any orders yet.</p>
+          <p className="text-gray-500 text-lg">You haven't placed any orders yet.</p>
           <Link
             to="/"
             className="inline-block mt-4 text-sm px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"

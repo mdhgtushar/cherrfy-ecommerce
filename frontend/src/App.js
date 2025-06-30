@@ -2,11 +2,22 @@ import { adminRoutes } from "./roles/admin/adminRoutes";
 import { userRoutes } from "./roles/user/userRoutes";
 import { vandorRoutes } from "./roles/vendor/vendorRoutes";
 import { Route, Routes } from "react-router-dom";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { checkToken as checkUserToken } from "./features/userAuthSlice";
+import { checkToken as checkAdminToken } from "./features/adminAuthSlice";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
  
 function App() { 
+  const dispatch = useDispatch();
+
+  // Check and restore tokens on app startup
+  useEffect(() => {
+    dispatch(checkUserToken());
+    dispatch(checkAdminToken());
+  }, [dispatch]);
 
   const renderRoutes = (routes) =>
     routes.map((route, index) => {

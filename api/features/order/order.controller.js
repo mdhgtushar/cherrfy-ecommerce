@@ -16,9 +16,17 @@ exports.createOrder = async (req, res) => {
 exports.getOrders = async (req, res) => {
   try {
     const orders = await Order.find({ user: req.user._id });
-    res.json(orders);
+    res.json({
+      success: true,
+      message: 'Orders retrieved successfully',
+      data: orders,
+      count: orders.length
+    });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ 
+      success: false,
+      error: err.message 
+    });
   }
 };
 
@@ -28,6 +36,12 @@ exports.getOrderById = async (req, res) => {
   try {
     const order = await Order.findById(req.params.id);
     if (!order) return res.status(404).json({ error: 'Order not found' });
+    
+    // Check if user owns the order or is admin
+    if (order.user.toString() !== req.user._id.toString() && req.userRole !== 'admin') {
+      return res.status(403).json({ error: 'Not authorized to access this order' });
+    }
+    
     res.json(order);
   } catch (err) {
     res.status(500).json({ error: err.message });

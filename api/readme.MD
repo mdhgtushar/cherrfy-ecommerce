@@ -1,76 +1,224 @@
-# Cherrfy Ecommerce API
+# Cherrfy E-commerce API
 
-Welcome to the Cherrfy Ecommerce API documentation. This API powers the backend for the Cherrfy ecommerce platform.
+A robust and scalable REST API for the Cherrfy e-commerce platform, built with Node.js, Express, and MongoDB.
 
-## Table of Contents
+## 🏗️ Architecture
 
-- [Overview](#overview)
-- [Getting Started](#getting-started)
-- [Authentication](#authentication)
-- [Endpoints](#endpoints)
-- [Error Handling](#error-handling)
-- [Contributing](#contributing)
-- [License](#license)
-
-## Overview
-
-The Cherrfy Ecommerce API provides endpoints to manage products, orders, users, and more for the Cherrfy platform.
-
-## Getting Started
-
-1. **Clone the repository:**
-    ```bash
-    git clone https://github.com/your-org/cherrfy-ecommerce.git
-    ```
-2. **Install dependencies:**
-    ```bash
-    cd api
-    npm install
-    ```
-3. **Configure environment variables:**  
-    Copy `.env.example` to `.env` and update as needed.
-
-4. **Run the API:**
-    ```bash
-    npm start
-    ```
-
-## Authentication
-
-Most endpoints require authentication via JWT tokens.  
-Include the token in the `Authorization` header:
+The API follows a modular, feature-based architecture with clear separation of concerns:
 
 ```
-Authorization: Bearer <your_token>
+api/
+├── config/                 # Configuration files
+│   ├── app.config.js      # Global application settings
+│   └── cors.config.js     # CORS configuration
+├── features/              # Feature modules
+│   ├── user/             # User management
+│   ├── admin/            # Admin management
+│   ├── product/          # Product catalog
+│   ├── order/            # Order management
+│   ├── logistic/         # Shipping & logistics
+│   ├── settings/         # System settings
+│   └── routes.js         # Combined feature routes
+├── middleware/           # Custom middleware
+│   ├── auth.middleware.js # Authentication & authorization
+│   └── errorHandler.js   # Global error handling
+├── utils/                # Utility functions
+│   ├── db.js            # Database connection
+│   ├── generateToken.js # JWT utilities
+│   └── validateInput.js # Input validation
+└── index.js             # Server entry point
 ```
 
-## Endpoints
+## 🚀 Features
 
-| Method | Endpoint           | Description                |
-|--------|--------------------|----------------------------|
-| GET    | `/products`        | List all products          |
-| POST   | `/products`        | Create a new product       |
-| GET    | `/orders`          | List all orders            |
-| POST   | `/orders`          | Create a new order         |
-| GET    | `/users`           | List all users             |
-| POST   | `/auth/login`      | User login                 |
+### Authentication & Authorization
+- JWT-based authentication
+- Role-based access control (User, Admin, Vendor)
+- Secure password hashing with bcrypt
+- Token generation and verification utilities
 
-> _See the [API Reference](docs/api.md) for full details._
+### Error Handling
+- Global error handler with proper logging
+- Custom API error class
+- Async error wrapper for controllers
+- 404 handler for undefined routes
 
-## Error Handling
+### Security
+- Rate limiting to prevent abuse
+- CORS configuration for cross-origin requests
+- Input validation and sanitization
+- Secure headers and middleware
 
-All errors are returned in JSON format:
+### Database
+- MongoDB with Mongoose ODM
+- Connection pooling and error handling
+- Graceful shutdown handling
 
-```json
-{
-  "error": "Error message here"
-}
+## 📋 Environment Variables
+
+Create a `.env` file in the root directory:
+
+```env
+# Server Configuration
+PORT=8080
+NODE_ENV=development
+
+# Database Configuration
+MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/database
+
+# JWT Configuration
+JWT_SECRET=your-super-secret-jwt-key-here
+JWT_EXPIRES_IN=1d
+
+# CORS Configuration
+CORS_ORIGIN=http://localhost:3000
+
+# Rate Limiting
+RATE_LIMIT_WINDOW_MS=900000
+RATE_LIMIT_MAX=100
 ```
 
-## Contributing
+## 🛠️ Installation & Setup
 
-Contributions are welcome! Please open issues or submit pull requests.
+1. **Install dependencies:**
+   ```bash
+   npm install
+   ```
 
-## License
+2. **Set up environment variables:**
+   ```bash
+   cp .env.example .env
+   # Edit .env with your configuration
+   ```
 
-This project is licensed under the MIT License.
+3. **Start development server:**
+   ```bash
+   npm run dev
+   ```
+
+4. **Start production server:**
+   ```bash
+   npm start
+   ```
+
+## 📚 API Endpoints
+
+### Authentication
+- `POST /api/user/register` - Register new user
+- `POST /api/user/login` - User login
+- `POST /api/admin/login` - Admin login
+- `POST /api/admin/register` - Register new admin
+
+### User Management
+- `GET /api/user/profile` - Get user profile
+- `PUT /api/user/profile` - Update user profile
+- `PUT /api/user/settings` - Update user settings
+
+### Admin Management
+- `GET /api/admin/` - Get all admins (admin only)
+- `GET /api/admin/:id` - Get admin by ID (admin only)
+- `PUT /api/admin/:id` - Update admin (admin only)
+- `DELETE /api/admin/:id` - Delete admin (admin only)
+
+### Products (To be implemented)
+- `GET /api/product/` - Get all products
+- `GET /api/product/:id` - Get product by ID
+- `POST /api/product/` - Create product (admin only)
+- `PUT /api/product/:id` - Update product (admin only)
+- `DELETE /api/product/:id` - Delete product (admin only)
+
+### Orders (To be implemented)
+- `GET /api/order/` - Get user orders
+- `GET /api/order/:id` - Get order by ID
+- `POST /api/order/` - Create new order
+- `PUT /api/order/:id` - Update order (admin only)
+
+## 🔧 Development
+
+### Code Structure
+
+Each feature follows this structure:
+```
+feature/
+├── feature.controller.js  # Business logic
+├── feature.model.js       # Database model
+├── feature.routes.js      # Route definitions
+└── index.js              # Feature exports
+```
+
+### Adding New Features
+
+1. Create feature directory in `features/`
+2. Create controller, model, and routes files
+3. Add routes to `features/routes.js`
+4. Update this README with new endpoints
+
+### Middleware Usage
+
+```javascript
+const { protect, admin, authorize } = require('../middleware/auth.middleware');
+const { asyncHandler } = require('../middleware/errorHandler');
+
+// Protected route
+router.get('/profile', protect, asyncHandler(controller.getProfile));
+
+// Admin only route
+router.post('/admin', protect, admin, asyncHandler(controller.adminAction));
+
+// Resource ownership check
+router.put('/:id', protect, authorize('user'), asyncHandler(controller.update));
+```
+
+### Error Handling
+
+```javascript
+const { ApiError } = require('../middleware/errorHandler');
+
+// Throw custom errors
+throw new ApiError('Resource not found', 404);
+
+// Use async handler for automatic error catching
+const controller = asyncHandler(async (req, res) => {
+  // Your controller logic
+});
+```
+
+## 🧪 Testing
+
+```bash
+# Run tests
+npm test
+
+# Run tests with coverage
+npm run test:coverage
+```
+
+## 📦 Production Deployment
+
+1. Set `NODE_ENV=production`
+2. Configure production MongoDB URI
+3. Set strong JWT secret
+4. Configure CORS for production domains
+5. Set up proper logging
+6. Use PM2 or similar process manager
+
+## 🔒 Security Considerations
+
+- All passwords are hashed using bcrypt
+- JWT tokens have expiration times
+- Rate limiting prevents abuse
+- Input validation prevents injection attacks
+- CORS is properly configured
+- Error messages don't expose sensitive information
+
+## 🤝 Contributing
+
+1. Follow the existing code structure
+2. Use the provided middleware and utilities
+3. Add proper error handling
+4. Update documentation for new features
+5. Test your changes thoroughly
+
+## 📄 License
+
+This project is licensed under the ISC License.

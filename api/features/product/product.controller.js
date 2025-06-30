@@ -1,4 +1,3 @@
-
 const axios = require('axios');
 const crypto = require('crypto');
 const productModel = require('./product.model');
@@ -241,11 +240,20 @@ exports.getAllProducts = async (req, res) => {
   const currencyCode = req.query.currency?.toUpperCase();
 
   if (!countryCode || !currencyCode) {
-    return res.status(400).json({ message: 'Country and currency code are required.' });
+    return res.status(400).json({ 
+      success: false,
+      message: 'Country and currency code are required.',
+      error: 'Missing required parameters'
+    });
   }
 
   if (!countries.includes(countryCode)) {
-    return res.status(400).json({ message: 'Invalid country code.' });
+    return res.status(400).json({ 
+      success: false,
+      message: 'Invalid country code.',
+      error: 'Country not supported',
+      supportedCountries: countries
+    });
   }
 
   try {
@@ -254,7 +262,11 @@ exports.getAllProducts = async (req, res) => {
     const currencyRates = currencySetting?.value?.rates;
 
     if (!currencyRates) {
-      return res.status(500).json({ message: 'Currency rates not found.' });
+      return res.status(500).json({ 
+        success: false,
+        message: 'Currency rates not found. Please contact administrator.',
+        error: 'Currency settings missing'
+      });
     }
 
     const matchedRate = Object.values(currencyRates).find(
@@ -262,7 +274,12 @@ exports.getAllProducts = async (req, res) => {
     );
 
     if (!matchedRate || !matchedRate.rate) {
-      return res.status(400).json({ message: 'Currency rate not found for this currency.' });
+      return res.status(400).json({ 
+        success: false,
+        message: `Currency rate not found for ${currencyCode}.`,
+        error: 'Currency not supported',
+        availableCurrencies: Object.values(currencyRates).map(r => r.currency)
+      });
     }
 
     const rate = matchedRate.rate;
@@ -272,6 +289,17 @@ exports.getAllProducts = async (req, res) => {
       { [`ali_data.${countryCode}`]: { $exists: true } },
       { [`ali_data.${countryCode}`]: 1, productId: 1 }
     );
+
+    if (!products || products.length === 0) {
+      return res.status(200).json({
+        success: true,
+        message: 'No products found for this country.',
+        data: [],
+        count: 0,
+        country: countryCode,
+        currency: currencyCode
+      });
+    }
 
     // Process to find minimum-priced SKU only
     const updatedProducts = products.map((product) => {
@@ -304,15 +332,28 @@ exports.getAllProducts = async (req, res) => {
         price: convertedSku.offer_sale_price,
         rate,
         sku: convertedSku,
-
       };
     });
 
     // Filter out any nulls (if sku data missing)
-    return res.status(200).json(updatedProducts.filter(Boolean));
+    const validProducts = updatedProducts.filter(Boolean);
+
+    return res.status(200).json({
+      success: true,
+      message: 'Products loaded successfully',
+      data: validProducts,
+      count: validProducts.length,
+      country: countryCode,
+      currency: currencyCode,
+      rate: rate
+    });
   } catch (error) {
     console.error('Product fetch error:', error);
-    return res.status(500).json({ message: 'Server error.' });
+    return res.status(500).json({ 
+      success: false,
+      message: 'Failed to load products. Please try again.',
+      error: 'Server error'
+    });
   }
 };
 
@@ -329,4 +370,29 @@ exports.deleteProduct = async (req, res) => {
     console.error('Error deleting product:', error);
     return res.status(500).json({ message: 'Server error.' });
   }
-}
+};
+
+exports.updateProduct = async (req, res) => {
+  try {
+    const productId = req.params.id;
+    const updateData = req.body;
+    
+    const updatedProduct = await productModel.findByIdAndUpdate(
+      productId,
+      updateData,
+      { new: true, runValidators: true }
+    );
+    
+    if (!updatedProduct) {
+      return res.status(404).json({ message: 'Product not found.' });
+    }
+    
+    return res.status(200).json({
+      message: 'Product updated successfully.',
+      data: updatedProduct
+    });
+  } catch (error) {
+    console.error('Error updating product:', error);
+    return res.status(500).json({ message: 'Server error.' });
+  }
+};

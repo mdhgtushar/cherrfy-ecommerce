@@ -18,9 +18,15 @@
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
     "dotenv": "^16.5.0",
-    "express": "^5.1.0",
+    "express": "^4.18.2",
+    "express-async-handler": "^1.2.0",
+    "express-rate-limit": "^7.5.1",
     "jsonwebtoken": "^9.0.2",
+    "lucide-react": "^0.525.0",
     "mongoose": "^8.13.2",
     "puppeteer": "^24.8.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
   }
 }

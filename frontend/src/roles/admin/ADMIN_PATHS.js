@@ -1,13 +1,17 @@
 const ADMIN_BASE = '/manage-admin';
 const ADMIN_AUTH_BASE = '/admin/auth';
 
- const ADMIN_PATHS = {
+const ADMIN_PATHS = {
   BASE: ADMIN_BASE,
   DASHBOARD: `${ADMIN_BASE}/dashboard`,
   ABOUT: `${ADMIN_BASE}/about`,
   ADMIN: {
     BASE: `${ADMIN_BASE}/admin`,
     LIST: `${ADMIN_BASE}/admin/adminList`,
+    ROLES: `${ADMIN_BASE}/admin/roles`,
+    SECURITY: `${ADMIN_BASE}/admin/security`,
+    ACTIVITY: `${ADMIN_BASE}/admin/activity`,
+    CREATE: `${ADMIN_BASE}/admin/create`,
   },
   SETTINGS: `${ADMIN_BASE}/settings`,
   PRODUCTS: {
@@ -27,6 +31,15 @@ const ADMIN_AUTH_BASE = '/admin/auth';
   D2C: `${ADMIN_BASE}/d2c`,
   PRICING: `${ADMIN_BASE}/pricing`,
   ORDERS: `${ADMIN_BASE}/orders`,
+  ORDERS_PAGES: {
+    ALL: `${ADMIN_BASE}/orders`,
+    DETAILS: `${ADMIN_BASE}/orders/details`,
+    MANUAL: `${ADMIN_BASE}/orders/manual`,
+    ALIEXPRESS: `${ADMIN_BASE}/orders/aliexpress`,
+    RECOVERY: `${ADMIN_BASE}/orders/recovery`,
+    REFUNDS: `${ADMIN_BASE}/orders/refunds`,
+    STATUS_LOGS: `${ADMIN_BASE}/orders/status-logs`,
+  },
   SHIPPING: `${ADMIN_BASE}/shipping`,
   CAMPAIGNS: `${ADMIN_BASE}/campaigns`,
   MARKETING: `${ADMIN_BASE}/marketing`,

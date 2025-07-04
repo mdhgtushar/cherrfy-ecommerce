@@ -28,7 +28,7 @@ export const fetchProductById = createAsyncThunk(
 export const fetchAliProduct = createAsyncThunk(
     "products/fetchAliProduct",
     async (id) => {
-        const response = await Api.get("/product/ali/" + id);
+        const response = await Api.get(`/product/aliexpress/${id}`);
         return response.data;
     }
 );
@@ -43,7 +43,7 @@ export const fetchLogistic = createAsyncThunk(
 export const SaveAliProduct = createAsyncThunk(
     "products/saveAliProduct",
     async (id) => {
-        const response = await Api.get("/product/ali/create/" + id);
+        const response = await Api.post(`/product/aliexpress/${id}`);
         return response.data;
     }
 );

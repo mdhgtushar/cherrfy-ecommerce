@@ -1,5 +1,7 @@
 import { Navigate } from "react-router-dom";
 import ADMIN_PATHS from "./ADMIN_PATHS";
+import React from 'react';
+import { Routes, Route } from 'react-router-dom';
 
 // Layouts
 import AdminLayout from "./adminLayout/AdminLayout";
@@ -37,67 +39,104 @@ import OrderManagementMenu from "./order/OrderManagementMenu";
 import OrderLayout from "./adminLayout/order/OrderLayout";
 import RoleLayout from "./adminLayout/role/RoleLayout";
 import UserDashboard from "./workUpdate/UserDeshboard";
-import UserList from "./users/UserList"; 
+import UserList from "./users/UserList";
 import DisputeManagement from "./dispute/DisputeManagement";
 import Page404 from "../user/site/Page404";
+import AllOrders from './order/AllOrders';
+import OrderDetails from './order/OrderDetails';
+import ManualOrder from './order/ManualOrder';
+import AliExpressForwarding from './order/AliExpressForwarding';
+import FailedOrders from './order/FailedOrders';
+import Refunds from './order/Refunds';
+import StatusLogs from './order/StatusLogs';
+import UserLayout from './users/UserLayout';
+import CreateUser from './users/CreateUser';
+import UserDetails from './users/UserDetails';
+import RolesPermissions from './users/RolesPermissions';
+import AdminUsers from './admin/AdminUsers';
+import SecuritySettings from './admin/SecuritySettings';
+import ActivityLogs from './admin/ActivityLogs';
+import CreateAdmin from './admin/CreateAdmin';
+import CourierIntegrationLogs from "./shipping/CourierIntegrationLogs.jsx";
+import CampaignsDiscounts from "./campaigns/CampaignsDiscounts";
+import AnalyticsReports from "./analytics/AnalyticsReports";
 
 export const adminRoutes = [
+ 
   {
-    path: ADMIN_PATHS.BASE, // "/manage-admin"
+    path: "/manage-admin",
     element: <AdminLayout />,
     children: [
-      { index: true, element: <Dashboard /> }, // Default dashboard
-      { path: ADMIN_PATHS.DASHBOARD.replace(ADMIN_PATHS.BASE + '/', ''), element: <Dashboard /> }, // Only "dashboard"
-      { path: ADMIN_PATHS.ABOUT.replace(ADMIN_PATHS.BASE + '/', ''), element: <About /> },
-      { path: ADMIN_PATHS.WORKUPDATE.replace(ADMIN_PATHS.BASE + '/', ''), element: <UserDashboard /> },
-      { path: ADMIN_PATHS.SETTINGS.replace(ADMIN_PATHS.BASE + '/', ''), element: <ProjectForm /> },
+      { path: "dashboard", element: <Dashboard /> },
+      { path: "about", element: <About /> },
+      { path: "workupdate", element: <UserDashboard /> },
+      { path: "settings", element: <ProjectForm /> },
       {
-        path: ADMIN_PATHS.ADMIN.BASE.replace(ADMIN_PATHS.BASE + '/', ''),
+        path: "admin",
         element: <RoleLayout />,
         children: [
-          { path: ADMIN_PATHS.ADMIN.BASE.replace(ADMIN_PATHS.ADMIN.BASE + '/', ''), element: <AdminList /> },
-          { path: ADMIN_PATHS.ADMIN.LIST.replace(ADMIN_PATHS.ADMIN.BASE + '/', ''), element: <AdminList /> },
-        ]
+          { path: "", element: <AdminList /> },
+          { path: "users", element: <AdminUsers /> },
+          { path: "roles", element: <RolesPermissions /> },
+          { path: "security", element: <SecuritySettings /> },
+          { path: "activity", element: <ActivityLogs /> },
+          { path: "create", element: <CreateAdmin /> },
+        ],
       },
-      { path: ADMIN_PATHS.USERS.replace(ADMIN_PATHS.BASE + '/', ''), element: <UserList /> },
-      { path: ADMIN_PATHS.BACKUP.replace(ADMIN_PATHS.BASE + '/', ''), element: <BackupRestorePage /> },
-      { path: ADMIN_PATHS.MEDIA.replace(ADMIN_PATHS.BASE + '/', ''), element: <FileMediaManager /> },
-      { path: ADMIN_PATHS.MARKETING.replace(ADMIN_PATHS.BASE + '/', ''), element: <MarketingContentPage /> },
-      { path: ADMIN_PATHS.ALIEXPRESS.replace(ADMIN_PATHS.BASE + '/', ''), element: <AliExpressApiSys /> },
-      { path: ADMIN_PATHS.B2C.replace(ADMIN_PATHS.BASE + '/', ''), element: <B2CManagement /> },
-      { path: ADMIN_PATHS.D2C.replace(ADMIN_PATHS.BASE + '/', ''), element: <D2CManagement /> },
-      { path: ADMIN_PATHS.PRICING.replace(ADMIN_PATHS.BASE + '/', ''), element: <PricingAndProfitManagement /> },
-      { path: ADMIN_PATHS.DISPUTES.replace(ADMIN_PATHS.BASE + '/', ''), element: <DisputeManagement /> },
       {
-        path: ADMIN_PATHS.PRODUCTS.BASE.replace(ADMIN_PATHS.BASE + '/', ''),
+        path: "users",
+        element: <UserLayout />,
+        children: [
+          { path: "", element: <UserList /> },
+          { path: "create", element: <CreateUser /> },
+          { path: "details", element: <UserDetails /> },
+          { path: "roles", element: <RolesPermissions /> },
+        ],
+      },
+      { path: "backup", element: <BackupRestorePage /> },
+      { path: "media", element: <FileMediaManager /> },
+      { path: "marketing", element: <MarketingContentPage /> },
+      { path: "aliexpress", element: <AliExpressApiSys /> },
+      { path: "b2c", element: <B2CManagement /> },
+      { path: "d2c", element: <D2CManagement /> },
+      { path: "pricing", element: <PricingAndProfitManagement /> },
+      { path: "disputes", element: <DisputeManagement /> },
+      {
+        path: "products",
         element: <ProductLayout />,
         children: [
-          { path: ADMIN_PATHS.PRODUCTS.BASE.replace(ADMIN_PATHS.PRODUCTS.BASE + '/', ''), element: <ProductManagement /> },
-          // { path: ADMIN_PATHS.PRODUCTS.VIEWER.replace(ADMIN_PATHS.PRODUCTS.BASE + '/', ''), element: <AliExpressViewer /> },
-          // { path: ADMIN_PATHS.PRODUCTS.EDITOR.replace(ADMIN_PATHS.PRODUCTS.BASE + '/', ''), element: <AliExpressEdit /> },
-          { path: ADMIN_PATHS.PRODUCTS.SOURCE.replace(ADMIN_PATHS.PRODUCTS.BASE + '/', ''), element: <ChooseSource /> },
-          { path: ADMIN_PATHS.PRODUCTS.ADD.replace(ADMIN_PATHS.PRODUCTS.BASE + '/', ''), element: <ManualCreatePage /> },
-          { path: ADMIN_PATHS.PRODUCTS.ALIEXPRESS.replace(ADMIN_PATHS.PRODUCTS.BASE + '/', ''), element: <AliExpressAdd /> },
-          { path: ADMIN_PATHS.PRODUCTS.LIST.replace(ADMIN_PATHS.PRODUCTS.BASE + '/', ''), element: <ProductListPage /> },
-          // { path: ADMIN_PATHS.PRODUCTS.EDIT.replace(ADMIN_PATHS.PRODUCTS.BASE + '/', ''), element: <EditProduct /> },
+          { path: "", element: <ProductManagement /> },
+          { path: "source", element: <ChooseSource /> },
+          { path: "addProduct", element: <ManualCreatePage /> },
+          { path: "addProduct/aliexpress", element: <AliExpressAdd /> },
+          { path: "list", element: <ProductListPage /> },
         ],
       },
       {
-        path: ADMIN_PATHS.ORDERS.replace(ADMIN_PATHS.BASE + '/', ''),
+        path: "orders",
         element: <OrderLayout />,
         children: [
-          { path: ADMIN_PATHS.ORDERS.replace(ADMIN_PATHS.ORDERS + '/', ''), element: <OrderManagementMenu /> },
+          { path: "", element: <AllOrders /> },
+          { path: "details", element: <OrderDetails /> },
+          { path: "manual", element: <ManualOrder /> },
+          { path: "aliexpress", element: <AliExpressForwarding /> },
+          { path: "recovery", element: <FailedOrders /> },
+          { path: "refunds", element: <Refunds /> },
+          { path: "status-logs", element: <StatusLogs /> },
         ],
       },
+      { path: "shipping", element: <CourierIntegrationLogs /> },
+      { path: "campaigns", element: <CampaignsDiscounts /> },
+      { path: "analytics", element: <AnalyticsReports /> },
       { path: "*", element: <Page404 /> },
     ],
   },
   {
-    path: ADMIN_PATHS.AUTH.BASE, // "/admin/auth"
+    path: "/admin/auth",
     children: [
-      { path: ADMIN_PATHS.AUTH.LOGIN.replace(ADMIN_PATHS.AUTH.BASE + '/', ''), element: <LoginPage /> },
-      { path: ADMIN_PATHS.AUTH.REGISTER.replace(ADMIN_PATHS.AUTH.BASE + '/', ''), element: <Register /> },
-      { path: "*", element: <Navigate to={ADMIN_PATHS.AUTH.LOGIN} /> },
+      { path: "login", element: <LoginPage /> },
+      { path: "register", element: <Register /> },
+      { path: "*", element: <Navigate to="/admin/auth/login" /> },
     ],
   },
 ];

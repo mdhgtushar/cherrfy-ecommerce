@@ -2,17 +2,15 @@ const fs = require('fs');
 const path = require('path');
 const axios = require('axios');
 const crypto = require('crypto');
+const config = require('../../config/app.config');
 
 // === CONFIG ===
-const appKey = '510834';
-const appSecret = 'FVRr5J6Abj8XK4ANH7Hh7TFNuUWNRvad';
-const tokenPath = path.join(__dirname, '../token/token.json');
-const logFile = path.join(__dirname, '../freight-query.log');
+const appKey = config.appKey;
+const appSecret = config.appSecret;
+const accessToken = config.accessToken;
 
-// --- Helper Functions ---
-function logEvent(message) {
-    fs.appendFileSync(logFile, `[${new Date().toISOString()}] ${message}\n`);
-}
+
+
 
 function generateSignature(params, appSecret) {
     const sortedKeys = Object.keys(params).sort();
@@ -29,25 +27,22 @@ function generateSignature(params, appSecret) {
 // --- Main Controller ---
 const freightQuery = async (req, res) => {
     if (req.method !== 'POST') {
-        logEvent("❌ Received non-POST request");
+        
         return res.status(405).json({ error: 'Method Not Allowed' });
     }
-
-    const accessToken = '50000100d16Aa7nunrCY4gWGhqcw17bc6efbTiXEfxgKTVcfGPp0HxzEF4xQJ5K5O4Vt';
 
     try {
         const { product_id, country, sku_id, quantity, currency = 'USD', language = 'en_US', locale = 'en_US' } = req.body;
 
         for (const field of ['product_id', 'country', 'sku_id', 'quantity']) {
             if (!req.body[field]) {
-                logEvent(`❌ Missing POST param: ${field}`);
+                
                 return res.status(400).json({ error: `Missing required field: ${field}` });
             }
         }
 
         const intQuantity = parseInt(quantity);
         if (isNaN(intQuantity) || intQuantity < 1 || intQuantity > 12) {
-            logEvent(`❌ Invalid quantity: ${quantity}`);
             return res.status(400).json({ error: 'Quantity must be between 1 and 12' });
         }
 
@@ -85,7 +80,6 @@ const freightQuery = async (req, res) => {
         const freightData = result || { error: 'No delivery options returned' };
 
         const end = Date.now();
-        logEvent(`✅ Freight fetched for quantity ${intQuantity} in ${(end - start) / 1000}s`);
 
         res.json({
             product_id,
@@ -97,7 +91,6 @@ const freightQuery = async (req, res) => {
 
     } catch (error) {
         console.error('Error in freightQuery:', error);
-        logEvent(`❌ Error: ${error.message}`);
         return res.status(500).json({ error: error.message });
     }
 };

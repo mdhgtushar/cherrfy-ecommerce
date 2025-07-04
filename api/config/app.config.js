@@ -31,5 +31,10 @@ module.exports = {
   upload: {
     maxFileSize: 5 * 1024 * 1024, // 5MB
     allowedTypes: ['image/jpeg', 'image/png', 'image/gif']
-  }
+  },
+  
+  // AliExpress API Configuration
+  appKey: process.env.ALIEXPRESS_APP_KEY || '510834',
+  appSecret: process.env.ALIEXPRESS_APP_SECRET || 'FVRr5J6Abj8XK4ANH7Hh7TFNuUWNRvad',
+  accessToken: process.env.ALIEXPRESS_ACCESS_TOKEN || '50000100527WgXaoLfT6nAQZmqcddluFmxCRQEW15e978a0bDvCpV0jkGRVX8LtQ5Bsv'
 }; 

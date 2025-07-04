@@ -9,6 +9,7 @@ import currencyReducer from "./currencySlice";
 import disputeReducer from "./disputeSlice";
 import wishlistReducer from "./wishlistSlice";
 import followedStoresReducer from "./followedStoresSlice";
+import orderReducer from './orderSlice';
 import { setUnauthorizedHandler } from "../util/API";
 
 
@@ -22,7 +23,8 @@ const store = configureStore({
     currency: currencyReducer,
     dispute: disputeReducer,
     wishlist: wishlistReducer,
-    followedStores: followedStoresReducer
+    followedStores: followedStoresReducer,
+    order: orderReducer
   },
 });
  

@@ -23,6 +23,7 @@ const ADMIN_PATHS = {
     ALIEXPRESS: `${ADMIN_BASE}/products/addProduct/aliexpress`,
     LIST: `${ADMIN_BASE}/products/productList`,
     EDIT: `${ADMIN_BASE}/products/editProduct/`,
+    VIEW: '/admin/products/view/',
   },
   ALIEXPRESS: `${ADMIN_BASE}/aliexpress`,
   USERS: `${ADMIN_BASE}/users`,

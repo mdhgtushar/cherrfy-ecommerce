@@ -1,7 +1,7 @@
 import React from 'react';
 import { UserCircle, ChevronDown } from 'lucide-react';
 
-export default function AdminHeader({ title = "Dashboard" }) {
+export default function AdminHeader({ title = "Manage admin" }) {
   // Dummy user data; replace with real user info if available
   const user = { name: "Admin User", avatar: null };
 

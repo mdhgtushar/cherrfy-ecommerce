@@ -48,6 +48,14 @@ export const SaveAliProduct = createAsyncThunk(
     }
 );
 
+export const updateProduct = createAsyncThunk(
+    "products/updateProduct",
+    async ({ id, data }) => {
+        const response = await Api.put(`/product/${id}`, data);
+        return response.data;
+    }
+);
+
 
 export const deleteProduct = createAsyncThunk(
     "products/deleteProduct",
@@ -134,6 +142,22 @@ const productSlice = createSlice({
                 state.selectedProduct.logistic = action.payload;
             })
             .addCase(fetchLogistic.rejected, (state, action) => {
+                state.status = "failed";
+                state.error = action.error.message;
+            })
+            .addCase(updateProduct.pending, (state) => {
+                state.status = "loading";
+            })
+            .addCase(updateProduct.fulfilled, (state, action) => {
+                state.status = "succeeded";
+                // Update the product in the products array
+                const updated = action.payload.data;
+                state.products = state.products.map((product) =>
+                    product._id === updated._id ? updated : product
+                );
+                state.selectedProduct = updated;
+            })
+            .addCase(updateProduct.rejected, (state, action) => {
                 state.status = "failed";
                 state.error = action.error.message;
             });

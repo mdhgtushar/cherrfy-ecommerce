@@ -18,6 +18,8 @@ import ProjectForm from "./site/ProjectForm";
 // import AliExpressProductForm from "../products/AliExpressProductForm";
 // import ProductListPage from "../products/ProductListPage";
 // import EditProduct from "../products/EditProduct";
+import EditProduct from "./products/edit/EditProduct";
+import ImportProductPage from "./products/import/ImportProductPage";
 
 // Auth Pages
 import LoginPage from "./auth/Login";
@@ -60,6 +62,7 @@ import CreateAdmin from './admin/CreateAdmin';
 import CourierIntegrationLogs from "./shipping/CourierIntegrationLogs.jsx";
 import CampaignsDiscounts from "./campaigns/CampaignsDiscounts";
 import AnalyticsReports from "./analytics/AnalyticsReports";
+import ProductViewPage from "./products/list/ProductViewPage";
 
 export const adminRoutes = [
  
@@ -109,7 +112,9 @@ export const adminRoutes = [
           { path: "source", element: <ChooseSource /> },
           { path: "addProduct", element: <ManualCreatePage /> },
           { path: "addProduct/aliexpress", element: <AliExpressAdd /> },
-          { path: "list", element: <ProductListPage /> },
+          { path: "editProduct/:id", element: <EditProduct /> },
+          { path: "view/:id", element: <ProductViewPage /> },
+          { path: "import", element: <ImportProductPage /> },
         ],
       },
       {

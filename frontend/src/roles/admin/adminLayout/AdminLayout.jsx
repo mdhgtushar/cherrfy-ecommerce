@@ -19,7 +19,7 @@ const AdminLayout = () => {
       <Sidebar />
       {/* Main content */}
       <div className="flex-1 flex flex-col min-h-screen md:ml-72">
-        <AdminHeader title="Dashboard" />
+        <AdminHeader title="Manage admin" />
         <main className="flex-1 p-6 md:p-10 bg-white rounded-xl shadow-md mt-6 mx-2 md:mx-8 mb-6 border border-gray-200">
           <Outlet />
         </main>

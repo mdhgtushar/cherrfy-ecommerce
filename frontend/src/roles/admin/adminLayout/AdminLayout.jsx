@@ -9,10 +9,12 @@ const AdminLayout = () => {
   const { user } = useSelector((state) => state.adminAuth);
   const navigate = useNavigate();
   useEffect(() => {
+    console.log('AdminLayout: User state:', user);
     if (!user) {
+      console.log('AdminLayout: No user found, redirecting to login');
       navigate(ADMIN_PATHS.AUTH.LOGIN);
     }
-  }, []);
+  }, [user, navigate]);
   return (
     <div className="flex min-h-screen bg-gray-100">
       {/* Sidebar (hidden on mobile) */}

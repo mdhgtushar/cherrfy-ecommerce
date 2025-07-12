@@ -52,7 +52,7 @@ const UserDashboard = () => {
   ];
 
   return (
-    <div className="max-w-5xl mx-auto p-6">
+    <div className="mx-auto p-6">
       <h1 className="text-3xl font-bold mb-6">User Dashboard</h1>
       <div className="space-y-6">
         {sections.map((section, idx) => (

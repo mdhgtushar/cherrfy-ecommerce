@@ -23,7 +23,7 @@ const ProjectForm = () => {
   };
 
   return (
-    <div className="max-w-3xl p-6 bg-white rounded-2xl">
+    <div className="p-6 bg-white rounded-2xl">
       <h2 className="text-2xl font-semibold mb-6 text-center">Cherrfy Details</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         <InputField label="Project name:" name="projectName" value={formData.projectName} onChange={handleChange} />

@@ -21,7 +21,11 @@ import {
   RefreshCw,
   HelpCircle,
   Shield,
-  Activity
+  Activity,
+  Truck,
+  ExternalLink,
+  Database,
+  Zap
 } from 'lucide-react';
 import ADMIN_PATHS from '../ADMIN_PATHS';
 
@@ -118,6 +122,32 @@ export default function AdminHeader() {
           { label: 'Sales Report', icon: DollarSign, action: () => navigate(ADMIN_PATHS.ANALYTICS) },
           { label: 'User Analytics', icon: Users, action: () => navigate(ADMIN_PATHS.ANALYTICS) },
           { label: 'Export Data', icon: BarChart3, action: () => navigate(ADMIN_PATHS.ANALYTICS) }
+        ]
+      };
+    }
+    
+    if (path.includes('/aliexpress-integration') || path.includes('/aliexpress')) {
+      return {
+        title: 'AliExpress Integration',
+        subtitle: 'Connect and manage your AliExpress integration',
+        icon: <Package className="w-6 h-6 text-blue-600" />,
+        quickActions: [
+          { label: 'Refresh', icon: RefreshCw, action: () => window.location.reload() },
+          { label: 'API Docs', icon: ExternalLink, action: () => window.open('https://developers.aliexpress.com/en/doc.htm', '_blank') },
+          { label: 'Settings', icon: Settings, action: () => navigate(ADMIN_PATHS.SETTINGS) }
+        ]
+      };
+    }
+    
+    if (path.includes('/courier-integration') || path.includes('/shipping')) {
+      return {
+        title: 'Courier Integration & API Logs',
+        subtitle: 'Connect and manage your courier/shipping integrations',
+        icon: <Truck className="w-6 h-6 text-purple-600" />,
+        quickActions: [
+          { label: 'Refresh', icon: RefreshCw, action: () => window.location.reload() },
+          { label: 'API Docs', icon: ExternalLink, action: () => window.open('https://developers.courier.com', '_blank') },
+          { label: 'Settings', icon: Settings, action: () => navigate(ADMIN_PATHS.SETTINGS) }
         ]
       };
     }
@@ -249,7 +279,7 @@ export default function AdminHeader() {
                 {user.avatar ? (
                   <img src={user.avatar} alt="avatar" className="w-8 h-8 rounded-full object-cover border border-gray-200" />
                 ) : (
-                  <UserCircle className="w-8 h-8 text-blue-400" />
+                  <UserCircle className="w-8 h-8 text-gray-400" />
                 )}
                 <div className="text-left">
                   <p className="text-sm font-medium text-gray-900">{user.name}</p>
@@ -262,27 +292,22 @@ export default function AdminHeader() {
               {showUserMenu && (
                 <div className="absolute right-0 mt-2 w-56 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
                   <div className="p-4 border-b border-gray-200">
-                    <p className="font-medium text-gray-900">{user.name}</p>
-                    <p className="text-sm text-gray-500">{user.role}</p>
+                    <p className="text-sm font-medium text-gray-900">{user.name}</p>
+                    <p className="text-xs text-gray-500">{user.role}</p>
                     <p className="text-xs text-gray-400 mt-1">Last login: {user.lastLogin}</p>
                   </div>
                   <div className="p-2">
-                    <button className="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded flex items-center gap-2">
+                    <button className="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg flex items-center gap-2">
                       <UserCircle className="w-4 h-4" />
                       Profile
                     </button>
-                    <button className="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded flex items-center gap-2">
+                    <button className="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg flex items-center gap-2">
                       <Settings className="w-4 h-4" />
                       Settings
                     </button>
-                    <button className="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded flex items-center gap-2">
-                      <HelpCircle className="w-4 h-4" />
-                      Help & Support
-                    </button>
-                    <hr className="my-2" />
                     <button 
                       onClick={handleLogout}
-                      className="w-full text-left px-3 py-2 text-sm text-red-600 hover:bg-red-50 rounded flex items-center gap-2"
+                      className="w-full text-left px-3 py-2 text-sm text-red-600 hover:bg-red-50 rounded-lg flex items-center gap-2"
                     >
                       <LogOut className="w-4 h-4" />
                       Logout
@@ -301,38 +326,27 @@ export default function AdminHeader() {
               <button
                 key={index}
                 onClick={action.action}
-                className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+                className="px-3 py-1.5 text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors flex items-center gap-2"
               >
                 <action.icon className="w-4 h-4" />
                 {action.label}
               </button>
             ))}
           </div>
-
+          
           {/* System Status */}
-          <div className="flex items-center gap-4 text-sm">
+          <div className="flex items-center gap-4 text-sm text-gray-500">
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-              <span className="text-gray-600">System Online</span>
+              <span>System Online</span>
             </div>
             <div className="flex items-center gap-2">
-              <Clock className="w-4 h-4 text-gray-400" />
-              <span className="text-gray-600">Uptime: 99.8%</span>
+              <Database className="w-4 h-4" />
+              <span>API: 99.9%</span>
             </div>
           </div>
         </div>
       </div>
-
-      {/* Click outside to close dropdowns */}
-      {(showUserMenu || showNotifications) && (
-        <div 
-          className="fixed inset-0 z-40" 
-          onClick={() => {
-            setShowUserMenu(false);
-            setShowNotifications(false);
-          }}
-        />
-      )}
     </header>
   );
 } 

@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchProducts } from "../../../features/productSlice";
 import ProductList from "./list/ProductList";
 import Loader from "../../../components/Loader";
+import { Link } from "react-router-dom";
+import ADMIN_PATHS from "../ADMIN_PATHS";
 
 export default function ProductManagement() {
   const dispatch = useDispatch();
@@ -41,7 +43,33 @@ export default function ProductManagement() {
   }
 
   return (
-    <div className="p-6">
+    <div className="p-6 space-y-6">
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          <h2 className="text-2xl font-bold text-slate-900">Product Management</h2>
+          <p className="text-slate-600">Manage, add, import, and edit your products</p>
+        </div>
+        <div className="flex items-center space-x-3">
+          <Link
+            to={ADMIN_PATHS.PRODUCTS.ADD}
+            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors flex items-center space-x-2"
+          >
+            <span>Add Product</span>
+          </Link>
+          <Link
+            to={ADMIN_PATHS.PRODUCTS.ALIEXPRESS}
+            className="px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg transition-colors flex items-center space-x-2"
+          >
+            <span>Import from AliExpress</span>
+          </Link>
+          <Link
+            to={ADMIN_PATHS.PRODUCTS.IMPORT}
+            className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors flex items-center space-x-2"
+          >
+            <span>Bulk Import</span>
+          </Link>
+        </div>
+      </div>
       <ProductList products={products} />
     </div>
   );

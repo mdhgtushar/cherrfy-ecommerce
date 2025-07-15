@@ -27,13 +27,10 @@ const AliExpressEdit = () => {
 
   // Auto-load product data if productId is provided in URL
   useEffect(() => {
-    console.log("AliExpressEdit: productId from URL:", productId);
-    console.log("AliExpressEdit: selectedProduct:", selectedProduct);
-    
-    if (productId && !selectedProduct.productId) {
-      console.log("AliExpressEdit: Fetching product data for:", productId);
+    if (productId) {
       fetchProductData();
     }
+    // eslint-disable-next-line
   }, [productId]);
 
   // Update editing data when selectedProduct changes
@@ -140,19 +137,6 @@ const AliExpressEdit = () => {
     setIsEditing(true);
   };
 
-  // Helper: Styled checkbox
-  const ApplyToAllCheckbox = (
-    <label className="flex items-center gap-2 cursor-pointer select-none font-medium">
-      <input
-        type="checkbox"
-        checked={applyToAllCountries}
-        onChange={() => setApplyToAllCountries((prev) => !prev)}
-        className="form-checkbox h-5 w-5 text-blue-600 rounded focus:ring-blue-500 border-gray-300"
-      />
-      <span>Apply to all countries</span>
-    </label>
-  );
-
   // Modified handleSaveSku to support apply to all countries
   const handleSaveSku = async (country, skuIndex) => {
     if (!productId.trim()) {
@@ -162,6 +146,7 @@ const AliExpressEdit = () => {
     try {
       let ali_data;
       if (applyToAllCountries) {
+        // Update the SKU at skuIndex for all countries
         ali_data = { ...editingData };
         Object.keys(ali_data).forEach((ctry) => {
           if (ali_data[ctry]?.ae_item_sku_info_dtos?.ae_item_sku_info_d_t_o?.[skuIndex]) {
@@ -177,6 +162,7 @@ const AliExpressEdit = () => {
           }
         });
       } else {
+        // Only update for selected country
         const updatedCountryData = {
           ...editingData[country],
           ae_item_sku_info_dtos: {
@@ -197,51 +183,13 @@ const AliExpressEdit = () => {
       } else {
         toast.success(applyToAllCountries ? "SKU updated for all countries." : "SKU updated successfully.");
         setEditingSkuIndex(null);
+        fetchProductData(); // Always refresh data after save
       }
     } catch (error) {
       toast.error("Error saving SKU changes.");
     }
   };
 
-  // Modified handleSaveProperties to support apply to all countries
-  const handleSaveProperties = async (country) => {
-    if (!productId.trim()) {
-      toast.error("Please enter a Product ID first.");
-      return;
-    }
-    try {
-      let ali_data;
-      if (applyToAllCountries) {
-        ali_data = { ...editingData };
-        Object.keys(ali_data).forEach((ctry) => {
-          if (ali_data[ctry]?.ae_item_properties) {
-            ali_data[ctry] = {
-              ...ali_data[ctry],
-              ae_item_properties: { ...editingData[country].ae_item_properties }
-            };
-          }
-        });
-      } else {
-        ali_data = {
-          ...editingData,
-          [country]: {
-            ...editingData[country],
-            ae_item_properties: { ...editingData[country].ae_item_properties }
-          }
-        };
-      }
-      const response = await dispatch(updateAllCountriesData({ productId, ali_data }));
-      if (response.error) {
-        toast.error(response.error.message || "Failed to save property changes.");
-      } else {
-        toast.success(applyToAllCountries ? "Properties updated for all countries." : "Properties updated successfully.");
-      }
-    } catch (error) {
-      toast.error("Error saving property changes.");
-    }
-  };
-
-  // Modified handleSaveCountriesData to support apply to all countries
   const handleSaveCountriesData = async (country) => {
     if (!productId.trim()) {
       toast.error("Please enter a Product ID first.");
@@ -253,7 +201,7 @@ const AliExpressEdit = () => {
         ali_data = { ...editingData };
         Object.keys(ali_data).forEach((ctry) => {
           ali_data[ctry] = {
-            ...editingData[ctry],
+            ...ali_data[ctry],
             ae_item_base_info_dto: { ...editingData[country].ae_item_base_info_dto },
             ae_item_description_dto: { ...editingData[country].ae_item_description_dto }
           };
@@ -273,6 +221,7 @@ const AliExpressEdit = () => {
         toast.error(response.error.message || "Failed to save country data changes.");
       } else {
         toast.success(applyToAllCountries ? "Country data updated for all countries." : "Country data updated successfully.");
+        fetchProductData();
       }
     } catch (error) {
       toast.error("Error saving country data changes.");
@@ -280,7 +229,7 @@ const AliExpressEdit = () => {
   };
 
   const renderOverview = () => (
-    <div className="space-y-6">
+    <div className="space-y-6">ddd
       <div className="bg-white rounded-xl p-6 shadow-sm border">
         <h3 className="text-lg font-semibold text-gray-900 mb-4">Product Information</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -430,6 +379,19 @@ const AliExpressEdit = () => {
     </div>
   );
 
+  // Helper: Styled checkbox
+  const ApplyToAllCheckbox = (
+    <label className="flex items-center gap-2 cursor-pointer select-none font-medium">
+      <input
+        type="checkbox"
+        checked={applyToAllCountries}
+        onChange={() => setApplyToAllCountries((prev) => !prev)}
+        className="form-checkbox h-5 w-5 text-blue-600 rounded focus:ring-blue-500 border-gray-300"
+      />
+      <span>Apply to all countries</span>
+    </label>
+  );
+
   const renderSkus = () => (
     <div className="space-y-6">
       <div className="bg-white rounded-xl p-6 shadow-sm border">
@@ -440,7 +402,6 @@ const AliExpressEdit = () => {
               value={selectedCountry}
               onChange={(e) => setSelectedCountry(e.target.value)}
               className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              disabled={applyToAllCountries}
             >
               {Countries.map(country => (
                 <option key={country} value={country}>{country}</option>
@@ -448,60 +409,64 @@ const AliExpressEdit = () => {
             </select>
           </div>
         </div>
-        {editingData[selectedCountry]?.ae_item_sku_info_dtos?.ae_item_sku_info_d_t_o?.map((sku, index) => (
-          <div key={index} className="border border-gray-200 rounded-lg p-4 mb-4">
-            <h4 className="font-medium text-gray-900 mb-3">SKU {index + 1}</h4>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">SKU ID</label>
-                <input
-                  type="text"
-                  value={sku.sku_id || ""}
-                  onChange={(e) => handleSkuChange(selectedCountry, index, "sku_id", e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  disabled={editingSkuIndex !== index}
-                />
+        {editingData[selectedCountry]?.ae_item_sku_info_dtos?.ae_item_sku_info_d_t_o?.length ? (
+          editingData[selectedCountry].ae_item_sku_info_dtos.ae_item_sku_info_d_t_o.map((sku, index) => (
+            <div key={index} className="border border-gray-200 rounded-lg p-4 mb-4">
+              <h4 className="font-medium text-gray-900 mb-3">SKU {index + 1}</h4>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">SKU ID</label>
+                  <input
+                    type="text"
+                    value={sku.sku_id || ""}
+                    onChange={(e) => handleSkuChange(selectedCountry, index, "sku_id", e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    disabled={editingSkuIndex !== index}
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Sale Price</label>
+                  <input
+                    type="number"
+                    value={sku.offer_sale_price || ""}
+                    onChange={(e) => handleSkuChange(selectedCountry, index, "offer_sale_price", e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    disabled={editingSkuIndex !== index}
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Stock</label>
+                  <input
+                    type="number"
+                    value={sku.sku_available_stock || ""}
+                    onChange={(e) => handleSkuChange(selectedCountry, index, "sku_available_stock", e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    disabled={editingSkuIndex !== index}
+                  />
+                </div>
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Sale Price</label>
-                <input
-                  type="number"
-                  value={sku.offer_sale_price || ""}
-                  onChange={(e) => handleSkuChange(selectedCountry, index, "offer_sale_price", e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  disabled={editingSkuIndex !== index}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Stock</label>
-                <input
-                  type="number"
-                  value={sku.sku_available_stock || ""}
-                  onChange={(e) => handleSkuChange(selectedCountry, index, "sku_available_stock", e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  disabled={editingSkuIndex !== index}
-                />
+              <div className="mt-4 flex gap-2">
+                {editingSkuIndex === index ? (
+                  <button
+                    onClick={() => handleSaveSku(selectedCountry, index)}
+                    className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+                  >
+                    Save
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => setEditingSkuIndex(index)}
+                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                  >
+                    Edit
+                  </button>
+                )}
               </div>
             </div>
-            <div className="mt-4 flex gap-2">
-              {editingSkuIndex === index ? (
-                <button
-                  onClick={() => handleSaveSku(selectedCountry, index)}
-                  className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
-                >
-                  Save
-                </button>
-              ) : (
-                <button
-                  onClick={() => setEditingSkuIndex(index)}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-                >
-                  Edit
-                </button>
-              )}
-            </div>
-          </div>
-        ))}
+          ))
+        ) : (
+          <div className="text-gray-500">No SKUs found for this country.</div>
+        )}
       </div>
     </div>
   );
@@ -509,21 +474,8 @@ const AliExpressEdit = () => {
   const renderProperties = () => (
     <div className="space-y-6">
       <div className="bg-white rounded-xl p-6 shadow-sm border">
-        <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-4 gap-2 md:gap-0">
-          {ApplyToAllCheckbox}
-          <div>
-            <select
-              value={selectedCountry}
-              onChange={(e) => setSelectedCountry(e.target.value)}
-              className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              disabled={applyToAllCountries}
-            >
-              {Countries.map(country => (
-                <option key={country} value={country}>{country}</option>
-              ))}
-            </select>
-          </div>
-        </div>
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">Properties for {selectedCountry}</h3>
+        
         {editingData[selectedCountry]?.ae_item_properties?.ae_item_property?.map((prop, index) => (
           <div key={index} className="border border-gray-200 rounded-lg p-4 mb-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -559,14 +511,6 @@ const AliExpressEdit = () => {
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
-            </div>
-            <div className="mt-4 flex gap-2">
-              <button
-                onClick={() => handleSaveProperties(selectedCountry)}
-                className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
-              >
-                Save
-              </button>
             </div>
           </div>
         ))}

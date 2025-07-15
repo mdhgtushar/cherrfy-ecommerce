@@ -272,7 +272,7 @@ const ProductList = ({ products = [] }) => {
                 View
               </Link>
               <Link
-                to={`${ADMIN_PATHS.PRODUCTS.EDIT + product._id}`}
+                to={`/manage-admin/products/edit/aliexpress?productId=${product.productId}`}
                 className="px-3 py-1.5 bg-slate-600 hover:bg-slate-700 text-white rounded-lg text-sm font-medium transition-colors"
               >
                 Edit
@@ -403,7 +403,7 @@ const ProductList = ({ products = [] }) => {
                       View
                     </Link>
                     <Link
-                      to={`${ADMIN_PATHS.PRODUCTS.EDIT + product._id}`}
+                      to={`/manage-admin/products/edit/aliexpress?productId=${product.productId}`}
                       className="px-3 py-1.5 bg-slate-600 hover:bg-slate-700 text-white rounded-lg text-sm font-medium transition-colors"
                     >
                       Edit

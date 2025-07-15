@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom';
-import { fetchProductById, clearSelectedProduct } from '../../../../features/productSlice';
+import { fetchProductById, clearSelectedProduct, getAllCountriesData } from '../../../../features/productSlice';
 import ProductForm from './ProductForm';
+import AliExpressEdit from './AliExpressEdit';
 
 const EditProduct = () => {
   const { id } = useParams();
@@ -10,12 +11,74 @@ const EditProduct = () => {
   const navigate = useNavigate();
   const product = useSelector((state) => state.products.selectedProduct || {});
   const status = useSelector((state) => state.products.status);
+  const user = useSelector((state) => state.userAuth.user);
+  const token = useSelector((state) => state.userAuth.token);
   const [activeTab, setActiveTab] = useState('basic');
+  const [editMode, setEditMode] = useState('regular'); // 'regular' or 'aliexpress'
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Check if user is authenticated
+  useEffect(() => {
+    if (!token && !localStorage.getItem('userToken')) {
+      console.log('EditProduct: User not authenticated');
+      // You could redirect to login here if needed
+    }
+  }, [token]);
+
+  // Set token in localStorage if user is logged in
+  useEffect(() => {
+    if (token && !localStorage.getItem('userToken')) {
+      console.log('EditProduct: Setting user token in localStorage');
+      localStorage.setItem('userToken', token);
+    } else if (token) {
+      console.log('EditProduct: User token already exists');
+      localStorage.setItem('userToken', token);
+    }
+  }, [token]);
 
   useEffect(() => {
-    if (id) dispatch(fetchProductById({ id, country: 'US', currency: 'USD' }));
+    if (id) {
+      console.log('EditProduct: Fetching product with id:', id);
+      console.log('EditProduct: User token:', localStorage.getItem('userToken'));
+      
+      // First, try to get the product using getAllCountriesData to check if it's an AliExpress product
+      dispatch(getAllCountriesData(id))
+        .then((response) => {
+          if (response.payload && response.payload.data && response.payload.data.ali_data) {
+            console.log('EditProduct: Product is AliExpress, using ali_data');
+            setEditMode('aliexpress');
+          } else {
+            console.log('EditProduct: Product is regular, fetching with country data');
+            // If not AliExpress, fetch with country data
+            dispatch(fetchProductById({ id, country: 'US', currency: 'USD' }));
+          }
+        })
+        .catch((error) => {
+          console.log('EditProduct: getAllCountriesData failed, trying regular fetch');
+          // If getAllCountriesData fails, try regular fetch
+          dispatch(fetchProductById({ id, country: 'US', currency: 'USD' }));
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    }
     return () => dispatch(clearSelectedProduct());
   }, [id, dispatch]);
+
+  // Detect if this is an AliExpress product
+  useEffect(() => {
+    console.log('EditProduct: Product data:', product);
+    console.log('EditProduct: Product has ali_data:', !!product.ali_data);
+    console.log('EditProduct: Product productId:', product.productId);
+    
+    if (product && product.ali_data) {
+      console.log('EditProduct: Setting editMode to aliexpress');
+      setEditMode('aliexpress');
+    } else if (product && product.productId) {
+      console.log('EditProduct: Setting editMode to regular');
+      setEditMode('regular');
+    }
+  }, [product]);
 
   const handleSave = () => {
     navigate(-1);
@@ -29,7 +92,22 @@ const EditProduct = () => {
     { id: 'description', label: 'Description', icon: '📄' },
   ];
 
-  if (status === 'loading') {
+  if (status === 'loading' || isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center">
+        <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full mx-4">
+          <div className="flex flex-col items-center space-y-4">
+            <div className="w-16 h-16 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin"></div>
+            <h3 className="text-lg font-semibold text-slate-700">Loading Product...</h3>
+            <p className="text-sm text-slate-500 text-center">Please wait while we fetch the product details</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Wait for product data to be loaded
+  if (status === 'idle' || !product) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center">
         <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full mx-4">
@@ -52,19 +130,40 @@ const EditProduct = () => {
               <span className="text-2xl">⚠️</span>
             </div>
             <h3 className="text-lg font-semibold text-slate-700">Product Not Found</h3>
-            <p className="text-sm text-slate-500 text-center">The product you're looking for doesn't exist or has been removed.</p>
-            <button
-              onClick={() => navigate(-1)}
-              className="mt-4 px-6 py-2 bg-slate-600 hover:bg-slate-700 text-white rounded-lg transition-colors"
-            >
-              Go Back
-            </button>
+            <p className="text-sm text-slate-500 text-center">
+              The product with ID <strong>{id}</strong> doesn't exist in the database.
+            </p>
+            <p className="text-sm text-slate-500 text-center">
+              You need to create the product first using the AliExpress Product Viewer.
+            </p>
+            <div className="flex space-x-3 mt-4">
+              <button
+                onClick={() => navigate('/manage-admin/products/create')}
+                className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+              >
+                Create Product
+              </button>
+              <button
+                onClick={() => navigate(-1)}
+                className="px-6 py-2 bg-slate-600 hover:bg-slate-700 text-white rounded-lg transition-colors"
+              >
+                Go Back
+              </button>
+            </div>
           </div>
         </div>
       </div>
     );
   }
 
+  // If it's an AliExpress product, show the AliExpress edit interface
+  if (editMode === 'aliexpress') {
+    console.log('EditProduct: Rendering AliExpressEdit component');
+    return <AliExpressEdit />;
+  }
+
+  console.log('EditProduct: Rendering regular ProductForm component');
+  // Regular product editing interface
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
       <div className="max-w-7xl mx-auto p-6">

@@ -61,7 +61,6 @@ exports.getAliExpressProduct = async (req, res) => {
 
       const response = await axios.get(url);
       const data = response.data?.aliexpress_ds_product_get_response?.result;
-
       if (data) {
         result[country] = data;
       }
@@ -73,7 +72,7 @@ exports.getAliExpressProduct = async (req, res) => {
 
     return res.status(200).json(result);
   } catch (error) {
-    console.error('AliExpress API Error:', error.response?.data || error.message);
+    console.error('AliExpress API Error:', error.response?.data || error.message); // Log error details
     return res.status(500).json({ message: 'Failed to fetch product info.', error: error });
   }
 };
@@ -169,18 +168,41 @@ exports.getProductById = async (req, res) => {
       return res.status(400).json({ message: 'Product ID is required.' });
     }
 
-    const product = await productModel.findOne(
-      { _id: productId },
-      {
-        [`ali_data.${countryCode}`]: 1,
-        productId: 1,
-      }
-    );
+    console.log('getProductById called with productId:', productId);
+    console.log('getProductById called with countryCode:', countryCode);
+    console.log('getProductById called with currencyCode:', currencyCode);
+
+    // Try to find by productId first, then by _id
+    let product = await productModel.findOne({ productId: productId });
+    
+    if (!product) {
+      console.log('Product not found by productId, trying _id...');
+      // If not found by productId, try by _id
+      product = await productModel.findById(productId);
+    }
 
     if (!product) {
+      console.log('Product not found by either productId or _id');
       return res.status(404).json({ message: 'Product not found.' });
     }
 
+    console.log('Product found:', {
+      productId: product.productId,
+      _id: product._id,
+      hasAliData: !!product.ali_data
+    });
+
+    // If this is an AliExpress product (has ali_data), return the full data
+    if (product.ali_data) {
+      console.log('Returning full ali_data for AliExpress product');
+      return res.status(200).json({
+        productId: product.productId,
+        _id: product._id,
+        ali_data: product.ali_data
+      });
+    }
+
+    // For regular products, return country-specific data
     const aliData = product.ali_data?.[countryCode];
     if (!aliData) {
       return res.status(404).json({ message: 'No data for this country.' });
@@ -377,6 +399,9 @@ exports.updateProduct = async (req, res) => {
     const productId = req.params.id;
     const updateData = req.body;
     
+    console.log('updateProduct called with productId:', productId);
+    console.log('updateProduct called with updateData:', updateData);
+    
     const updatedProduct = await productModel.findByIdAndUpdate(
       productId,
       updateData,
@@ -384,9 +409,11 @@ exports.updateProduct = async (req, res) => {
     );
     
     if (!updatedProduct) {
+      console.log('updateProduct: Product not found');
       return res.status(404).json({ message: 'Product not found.' });
     }
     
+    console.log('updateProduct: Product updated successfully');
     return res.status(200).json({
       message: 'Product updated successfully.',
       data: updatedProduct
@@ -394,5 +421,186 @@ exports.updateProduct = async (req, res) => {
   } catch (error) {
     console.error('Error updating product:', error);
     return res.status(500).json({ message: 'Server error.' });
+  }
+};
+
+// New function to get all countries' data for editing
+exports.getAllCountriesData = async (req, res) => {
+  try {
+    const productId = req.params.id;
+    
+    console.log('getAllCountriesData called with productId:', productId);
+    
+    if (!productId) {
+      return res.status(400).json({ message: 'Product ID is required.' });
+    }
+
+    // Try to find by productId first, then by _id
+    let product = await productModel.findOne({ productId: productId });
+    
+    if (!product) {
+      console.log('Product not found by productId, trying _id...');
+      // If not found by productId, try by _id
+      product = await productModel.findById(productId);
+    }
+    
+    if (!product) {
+      console.log('Product not found by either productId or _id');
+      return res.status(404).json({ message: 'Product not found.' });
+    }
+
+    console.log('Product found:', {
+      productId: product.productId,
+      _id: product._id,
+      hasAliData: !!product.ali_data
+    });
+
+    if (!product.ali_data) {
+      return res.status(404).json({ message: 'No AliExpress data found for this product.' });
+    }
+
+    return res.status(200).json({
+      message: 'All countries data fetched successfully.',
+      data: {
+        productId: product.productId,
+        _id: product._id,
+        ali_data: product.ali_data
+      }
+    });
+  } catch (error) {
+    console.error('Error fetching all countries data:', error);
+    return res.status(500).json({ message: 'Server error.' });
+  }
+};
+
+// New function to update all countries' data at once
+exports.updateAllCountriesData = async (req, res) => {
+  try {
+    const productId = req.params.id;
+    const { ali_data } = req.body;
+    
+    console.log('updateAllCountriesData called with productId:', productId);
+    console.log('updateAllCountriesData called with ali_data keys:', ali_data ? Object.keys(ali_data) : 'No ali_data');
+    
+    // Try to find by productId first, then by _id
+    let product = await productModel.findOne({ productId: productId });
+    
+    if (!product) {
+      console.log('updateAllCountriesData: Product not found by productId, trying _id...');
+      product = await productModel.findById(productId);
+    }
+    
+    if (!product) {
+      console.log('updateAllCountriesData: Product not found by either method');
+      return res.status(404).json({ message: 'Product not found.' });
+    }
+    
+    console.log('updateAllCountriesData: Product found, updating ali_data');
+    
+    // Update the ali_data field
+    product.ali_data = ali_data;
+    await product.save();
+    
+    console.log('updateAllCountriesData: Product updated successfully');
+    return res.status(200).json({
+      message: 'All countries data updated successfully.',
+      data: product
+    });
+  } catch (error) {
+    console.error('Error updating all countries data:', error);
+    return res.status(500).json({ message: 'Server error.' });
+  }
+};
+
+// New function to refresh all countries' data from AliExpress API
+exports.refreshAllCountriesData = async (req, res) => {
+  const productId = req.params.id;
+
+  if (!productId) {
+    return res.status(400).json({ message: 'Product ID is required.' });
+  }
+
+  const appKey = '510834';
+  const appSecret = 'FVRr5J6Abj8XK4ANH7Hh7TFNuUWNRvad';
+  const accessToken = '50000100d16Aa7nunrCY4gWGhqcw17bc6efbTiXEfxgKTVcfGPp0HxzEF4xQJ5K5O4Vt';
+  const apiUrl = 'https://api-sg.aliexpress.com/sync';
+  const method = 'aliexpress.ds.product.get';
+  const aliexpressCategoryId = '200135143';
+
+  const aliData = {};
+
+  try {
+    for (const country of countries) {
+      const timestamp = Date.now();
+      const params = {
+        method,
+        app_key: appKey,
+        access_token: accessToken,
+        timestamp,
+        product_id: productId,
+        ship_to_country: country,
+        sign_method: 'sha256',
+        aliexpress_category_id: aliexpressCategoryId
+      };
+
+      const sortedKeys = Object.keys(params).sort();
+      const signString = sortedKeys.map(key => key + params[key]).join('');
+      const sign = crypto
+        .createHmac('sha256', appSecret)
+        .update(signString)
+        .digest('hex')
+        .toUpperCase();
+
+      params.sign = sign;
+      const query = new URLSearchParams(params).toString();
+      const url = `${apiUrl}?${query}`;
+
+      const response = await axios.get(url);
+      const data = response.data?.aliexpress_ds_product_get_response?.result;
+
+      if (data) {
+        aliData[country] = data;
+      }
+    }
+
+    if (Object.keys(aliData).length === 0) {
+      return res.status(404).json({ message: 'No product data found for any country.' });
+    }
+
+    // Try to find by productId first, then by _id
+    let product = await productModel.findOne({ productId: productId });
+    
+    if (!product) {
+      // If not found by productId, try by _id
+      product = await productModel.findById(productId);
+    }
+    
+    if (!product) {
+      return res.status(404).json({ message: 'Product not found.' });
+    }
+
+    // Update existing product with fresh data
+    const updatedProduct = await productModel.findByIdAndUpdate(
+      product._id,
+      { ali_data: aliData },
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedProduct) {
+      return res.status(404).json({ message: 'Product not found.' });
+    }
+
+    return res.status(200).json({
+      message: 'All countries data refreshed successfully.',
+      data: {
+        productId: updatedProduct.productId,
+        _id: updatedProduct._id,
+        ali_data: updatedProduct.ali_data
+      }
+    });
+
+  } catch (error) {
+    console.error('AliExpress Refresh Error:', error.response?.data || error.message);
+    return res.status(500).json({ message: 'Failed to refresh AliExpress data.', error: error });
   }
 };

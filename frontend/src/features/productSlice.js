@@ -17,6 +17,14 @@ export const fetchProducts = createAsyncThunk(
     }
 );
 
+export const getAllProducts = createAsyncThunk(
+    "products/getAllProducts",
+    async ({ country, currency }) => {
+        const response = await Api.get("/product/?country=" + country + "&currency=" + currency);
+        return response.data;
+    }
+);
+
 export const fetchProductById = createAsyncThunk(
     "products/fetchProductById",
     async ({ id, country, currency }) => {
@@ -65,6 +73,31 @@ export const deleteProduct = createAsyncThunk(
     }
 );
 
+// New async thunks for edit functionality
+export const getAllCountriesData = createAsyncThunk(
+    "products/getAllCountriesData",
+    async (productId) => {
+        const response = await Api.get(`/product/edit/${productId}/all-countries`);
+        return response.data;
+    }
+);
+
+export const updateAllCountriesData = createAsyncThunk(
+    "products/updateAllCountriesData",
+    async ({ productId, ali_data }) => {
+        const response = await Api.put(`/product/edit/${productId}/all-countries`, { ali_data });
+        return response.data;
+    }
+);
+
+export const refreshAllCountriesData = createAsyncThunk(
+    "products/refreshAllCountriesData",
+    async (productId) => {
+        const response = await Api.post(`/product/edit/${productId}/refresh`);
+        return response.data;
+    }
+);
+
 
 const productSlice = createSlice({
     name: "products",
@@ -86,6 +119,18 @@ const productSlice = createSlice({
                 state.status = "succeeded";
             })
             .addCase(fetchProducts.rejected, (state, action) => {
+                state.status = "failed";
+                state.error = action.error.message;
+            })
+
+            .addCase(getAllProducts.pending, (state) => {
+                state.status = "loading";
+            })
+            .addCase(getAllProducts.fulfilled, (state, action) => {
+                state.products = action.payload.data || [];
+                state.status = "succeeded";
+            })
+            .addCase(getAllProducts.rejected, (state, action) => {
                 state.status = "failed";
                 state.error = action.error.message;
             })
@@ -158,6 +203,42 @@ const productSlice = createSlice({
                 state.selectedProduct = updated;
             })
             .addCase(updateProduct.rejected, (state, action) => {
+                state.status = "failed";
+                state.error = action.error.message;
+            })
+            .addCase(getAllCountriesData.pending, (state) => {
+                state.status = "loading";
+            })
+            .addCase(getAllCountriesData.fulfilled, (state, action) => {
+                state.status = "succeeded";
+                state.error = "";
+                state.selectedProduct = action.payload.data;
+            })
+            .addCase(getAllCountriesData.rejected, (state, action) => {
+                state.status = "failed";
+                state.error = action.error.message;
+            })
+            .addCase(updateAllCountriesData.pending, (state) => {
+                state.status = "loading";
+            })
+            .addCase(updateAllCountriesData.fulfilled, (state, action) => {
+                state.status = "succeeded";
+                state.error = "";
+                state.selectedProduct = action.payload.data;
+            })
+            .addCase(updateAllCountriesData.rejected, (state, action) => {
+                state.status = "failed";
+                state.error = action.error.message;
+            })
+            .addCase(refreshAllCountriesData.pending, (state) => {
+                state.status = "loading";
+            })
+            .addCase(refreshAllCountriesData.fulfilled, (state, action) => {
+                state.status = "succeeded";
+                state.error = "";
+                state.selectedProduct = action.payload.data;
+            })
+            .addCase(refreshAllCountriesData.rejected, (state, action) => {
                 state.status = "failed";
                 state.error = action.error.message;
             });

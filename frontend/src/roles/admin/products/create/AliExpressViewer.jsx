@@ -1,5 +1,7 @@
 import { useState } from "react";
-import axios from "axios";
+import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
+import { SaveAliProduct } from "../../../../features/productSlice";
 
 const AliExpressViewer = () => {
   const [productId, setProductId] = useState("");
@@ -8,6 +10,8 @@ const AliExpressViewer = () => {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [activeTab, setActiveTab] = useState("overview");
+  
+  const dispatch = useDispatch();
 
   const fetchProductInfo = async (e) => {
     e.preventDefault();
@@ -83,23 +87,20 @@ const AliExpressViewer = () => {
 
   const saveProductInfo = async () => {
     try {
-      const response = await axios.post(
-        "https://api.cherrfy.com/api/product/" + productId,
-        {
-          productId: productId,
-        }
-      );
-      console.log(response.data);
-      if (response.status === 200) {
-        console.log("Product info saved successfully.");
-        setMessage("Product info saved successfully.");
-      } else {
+      const response = await dispatch(SaveAliProduct(productId));
+      if (response.error) {
         console.error("Failed to save product info.");
         setMessage("Failed to save product info.");
+        toast.error("Failed to save product info.");
+      } else {
+        console.log("Product info saved successfully.");
+        setMessage("Product info saved successfully.");
+        toast.success("Product info saved successfully.");
       }
     } catch (error) {
       console.error("Error saving product info:", error);
       setMessage("Error saving product info.");
+      toast.error("Error saving product info.");
     }
   };
 

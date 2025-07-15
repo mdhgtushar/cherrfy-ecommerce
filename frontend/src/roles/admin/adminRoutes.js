@@ -37,6 +37,7 @@ import ProductListPage from "./products/list/ProductListPage";
 import AliExpressAdd from "./products/create/AliExpressAdd";
 import ChooseSource from "./products/ChooseSource";
 import ManualCreatePage from "./products/create/ManualCreatePage";
+import AliExpressEdit from "./products/edit/AliExpressEdit";
 import OrderManagementMenu from "./order/OrderManagementMenu";
 import OrderLayout from "./adminLayout/order/OrderLayout";
 import RoleLayout from "./adminLayout/role/RoleLayout";
@@ -113,6 +114,7 @@ export const adminRoutes = [
           { path: "addProduct", element: <ManualCreatePage /> },
           { path: "addProduct/aliexpress", element: <AliExpressAdd /> },
           { path: "editProduct/:id", element: <EditProduct /> },
+          { path: "edit/aliexpress", element: <AliExpressEdit /> },
           { path: "view/:id", element: <ProductViewPage /> },
           { path: "import", element: <ImportProductPage /> },
         ],

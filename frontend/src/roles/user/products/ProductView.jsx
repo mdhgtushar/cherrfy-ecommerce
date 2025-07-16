@@ -36,89 +36,63 @@ const ProductView = () => {
   // Derive available options and their values from the product data
   const availableOptions = React.useMemo(() => {
     const options = {};
-    if (selectedProduct?.ae_item_sku_info_dtos?.ae_item_sku_info_d_t_o) {
-      selectedProduct.ae_item_sku_info_dtos.ae_item_sku_info_d_t_o.forEach(
-        (skuItem) => {
-          skuItem.ae_sku_property_dtos.ae_sku_property_d_t_o.forEach((prop) => {
-            const propName = prop.sku_property_name;
-            // Use property_value_definition_name if available, otherwise sku_property_value
-            const propValue =
-              prop.property_value_definition_name || prop.sku_property_value;
-
-            if (!options[propName]) {
-              options[propName] = {};
-            }
-            if (!options[propName][propValue]) {
-              options[propName][propValue] = {
-                value: propValue,
-                image: prop.sku_image || null, // Capture image if available
-                skuPropertyId: prop.sku_property_id, // Useful for distinguishing properties if needed
-              };
-            }
-          });
-        }
-      );
+    // Use the country-specific product data structure
+    if (selectedProduct?.skus) {
+      selectedProduct.skus.forEach((skuItem) => {
+        skuItem.ae_sku_property_dtos?.ae_sku_property_d_t_o?.forEach((prop) => {
+          const propName = prop.sku_property_name;
+          const propValue = prop.property_value_definition_name || prop.sku_property_value;
+          if (!options[propName]) {
+            options[propName] = {};
+          }
+          if (!options[propName][propValue]) {
+            options[propName][propValue] = {
+              value: propValue,
+              image: prop.sku_image || null,
+              skuPropertyId: prop.sku_property_id,
+            };
+          }
+        });
+      });
     }
     return options;
   }, [selectedProduct]);
 
   // Get all images (main product images + any SKU specific images)
-  // MOVED THIS USEMEMO BEFORE THE CONDITIONAL RETURN
   const allProductImages = React.useMemo(() => {
-    const mainImages =
-      selectedProduct?.ae_multimedia_info_dto?.image_urls
-        ?.split(";")
-        .filter(Boolean) || [];
+    const mainImages = selectedProduct?.images || [];
     const skuImages = new Set();
-    selectedProduct?.ae_item_sku_info_dtos?.ae_item_sku_info_d_t_o?.forEach(
-      (skuItem) => {
-        skuItem.ae_sku_property_dtos.ae_sku_property_d_t_o.forEach((prop) => {
-          if (prop.sku_image) {
-            skuImages.add(prop.sku_image);
-          }
-        });
-      }
-    );
-    return [...new Set([...mainImages, ...Array.from(skuImages)])]; // Combine and remove duplicates
+    selectedProduct?.skus?.forEach((skuItem) => {
+      skuItem.ae_sku_property_dtos?.ae_sku_property_d_t_o?.forEach((prop) => {
+        if (prop.sku_image) {
+          skuImages.add(prop.sku_image);
+        }
+      });
+    });
+    return [...new Set([...mainImages, ...Array.from(skuImages)])];
   }, [selectedProduct]);
 
   // Initialize selected attributes and selected SKU when product data is available
   useEffect(() => {
-    if (
-      selectedProduct?.ae_item_sku_info_dtos?.ae_item_sku_info_d_t_o?.length > 0
-    ) {
-      // Find the first SKU that has a main image or just pick the first one
+    if (selectedProduct?.skus?.length > 0) {
       const firstSkuWithImage =
-        selectedProduct.ae_item_sku_info_dtos.ae_item_sku_info_d_t_o.find(
+        selectedProduct.skus.find(
           (sku) =>
-            sku.ae_sku_property_dtos.ae_sku_property_d_t_o.some(
-              (prop) => prop.sku_image
-            )
-        ) || selectedProduct.ae_item_sku_info_dtos.ae_item_sku_info_d_t_o[0];
+            sku.ae_sku_property_dtos?.ae_sku_property_d_t_o?.some((prop) => prop.sku_image)
+        ) || selectedProduct.skus[0];
 
       if (firstSkuWithImage) {
-        // Initialize selected attributes based on the first SKU's properties
         const initialAttributes = {};
-        firstSkuWithImage.ae_sku_property_dtos.ae_sku_property_d_t_o.forEach(
-          (prop) => {
-            initialAttributes[prop.sku_property_name] =
-              prop.property_value_definition_name || prop.sku_property_value;
-          }
-        );
+        firstSkuWithImage.ae_sku_property_dtos?.ae_sku_property_d_t_o?.forEach((prop) => {
+          initialAttributes[prop.sku_property_name] = prop.property_value_definition_name || prop.sku_property_value;
+        });
         setSelectedAttributes(initialAttributes);
         setSelectedSKU(firstSkuWithImage);
-
-        // Set the initial main image
-        const primaryVisualProp =
-          firstSkuWithImage.ae_sku_property_dtos.ae_sku_property_d_t_o.find(
-            (p) => p.sku_image
-          );
+        const primaryVisualProp = firstSkuWithImage.ae_sku_property_dtos?.ae_sku_property_d_t_o?.find((p) => p.sku_image);
         if (primaryVisualProp && primaryVisualProp.sku_image) {
           setSelectedImage(primaryVisualProp.sku_image);
-        } else if (selectedProduct?.ae_multimedia_info_dto?.image_urls) {
-          setSelectedImage(
-            selectedProduct.ae_multimedia_info_dto.image_urls.split(";")[0]
-          );
+        } else if (selectedProduct?.images?.length) {
+          setSelectedImage(selectedProduct.images[0]);
         }
       }
     }
@@ -126,61 +100,35 @@ const ProductView = () => {
 
   // Effect to find the matching SKU whenever selected attributes change
   useEffect(() => {
-    if (
-      !selectedProduct ||
-      !selectedProduct.ae_item_sku_info_dtos ||
-      Object.keys(selectedAttributes).length === 0
-    ) {
-      setSelectedSKU(null); // Clear selected SKU if attributes are not fully selected or product data is missing
+    if (!selectedProduct?.skus || Object.keys(selectedAttributes).length === 0) {
+      setSelectedSKU(null);
       return;
     }
-
-    const allSkus =
-      selectedProduct.ae_item_sku_info_dtos.ae_item_sku_info_d_t_o;
-
+    const allSkus = selectedProduct.skus;
     const foundSku = allSkus.find((skuItem) => {
-      // Check if this SKU has all the currently selected attributes and their values
       return Object.keys(selectedAttributes).every((attrName) => {
         const selectedValue = selectedAttributes[attrName];
-        return skuItem.ae_sku_property_dtos.ae_sku_property_d_t_o.some(
-          (prop) => {
-            const skuPropValue =
-              prop.property_value_definition_name || prop.sku_property_value;
-            return (
-              prop.sku_property_name === attrName &&
-              skuPropValue === selectedValue
-            );
-          }
-        );
+        return skuItem.ae_sku_property_dtos?.ae_sku_property_d_t_o?.some((prop) => {
+          const skuPropValue = prop.property_value_definition_name || prop.sku_property_value;
+          return prop.sku_property_name === attrName && skuPropValue === selectedValue;
+        });
       });
     });
-
     if (foundSku) {
       setSelectedSKU(foundSku);
-      // Update main image based on the selected SKU's image for its primary visual attribute, if any
-      const primaryVisualProp =
-        foundSku.ae_sku_property_dtos.ae_sku_property_d_t_o.find(
-          (p) => p.sku_image
-        );
+      const primaryVisualProp = foundSku.ae_sku_property_dtos?.ae_sku_property_d_t_o?.find((p) => p.sku_image);
       if (primaryVisualProp && primaryVisualProp.sku_image) {
         setSelectedImage(primaryVisualProp.sku_image);
-      } else if (selectedProduct?.ae_multimedia_info_dto?.image_urls) {
-        // Fallback to the first general product image if no SKU-specific image
-        setSelectedImage(
-          selectedProduct.ae_multimedia_info_dto.image_urls.split(";")[0]
-        );
+      } else if (selectedProduct?.images?.length) {
+        setSelectedImage(selectedProduct.images[0]);
       }
     } else {
-      // Handle case where no matching SKU is found for the selected combination (e.g., out of stock combination)
       setSelectedSKU(null);
-      // Optionally, set selectedImage to a placeholder or first general image if no SKU matched
-      if (selectedProduct?.ae_multimedia_info_dto?.image_urls) {
-        setSelectedImage(
-          selectedProduct.ae_multimedia_info_dto.image_urls.split(";")[0]
-        );
+      if (selectedProduct?.images?.length) {
+        setSelectedImage(selectedProduct.images[0]);
       }
     }
-  }, [selectedAttributes, selectedProduct]); // Re-run when product or selected attributes change
+  }, [selectedAttributes, selectedProduct]);
 
   if (status === "loading" || status === "idle") {
     return <Loader />;
@@ -190,7 +138,7 @@ const ProductView = () => {
   if (
     status === "failed" ||
     !selectedProduct ||
-    !selectedProduct.ae_item_sku_info_dtos
+    !selectedProduct.skus
   ) {
     return (
       <div className="flex justify-center items-center h-screen">

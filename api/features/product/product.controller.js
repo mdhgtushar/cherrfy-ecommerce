@@ -168,41 +168,17 @@ exports.getProductById = async (req, res) => {
       return res.status(400).json({ message: 'Product ID is required.' });
     }
 
-    console.log('getProductById called with productId:', productId);
-    console.log('getProductById called with countryCode:', countryCode);
-    console.log('getProductById called with currencyCode:', currencyCode);
-
     // Try to find by productId first, then by _id
     let product = await productModel.findOne({ productId: productId });
-    
     if (!product) {
-      console.log('Product not found by productId, trying _id...');
-      // If not found by productId, try by _id
       product = await productModel.findById(productId);
     }
 
     if (!product) {
-      console.log('Product not found by either productId or _id');
       return res.status(404).json({ message: 'Product not found.' });
     }
 
-    console.log('Product found:', {
-      productId: product.productId,
-      _id: product._id,
-      hasAliData: !!product.ali_data
-    });
-
-    // If this is an AliExpress product (has ali_data), return the full data
-    if (product.ali_data) {
-      console.log('Returning full ali_data for AliExpress product');
-      return res.status(200).json({
-        productId: product.productId,
-        _id: product._id,
-        ali_data: product.ali_data
-      });
-    }
-
-    // For regular products, return country-specific data
+    // Only return specific country data for product viewing
     const aliData = product.ali_data?.[countryCode];
     if (!aliData) {
       return res.status(404).json({ message: 'No data for this country.' });
@@ -211,24 +187,17 @@ exports.getProductById = async (req, res) => {
     // === Currency Rate Fetch ===
     const setting = await Setting.findOne({ key: 'currency' });
     const rates = setting?.value?.rates;
-
     const targetRateObj = Object.values(rates).find(
       (obj) => obj.currency === currencyCode
     );
-
     if (!targetRateObj) {
       return res.status(400).json({ message: 'Currency rate not found.' });
     }
-
     const rate = targetRateObj.rate;
-
-    const skus =
-      aliData?.ae_item_sku_info_dtos?.ae_item_sku_info_d_t_o || [];
-
+    const skus = aliData?.ae_item_sku_info_dtos?.ae_item_sku_info_d_t_o || [];
     if (!skus.length) {
       return res.status(404).json({ message: 'No SKU data found.' });
     }
-
     const convertedSkus = skus.map((sku) => ({
       ...sku,
       original_price: sku.sku_price,
@@ -237,7 +206,6 @@ exports.getProductById = async (req, res) => {
       offer_sale_price: (parseFloat(sku.offer_sale_price) * rate).toFixed(2),
       offer_bulk_sale_price: (parseFloat(sku.offer_bulk_sale_price) * rate).toFixed(2),
     }));
-
     return res.status(200).json({
       productId: product.productId,
       product_id: product.productId,

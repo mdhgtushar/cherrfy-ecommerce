@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo, memo } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { addToCart } from "../../../features/cartSlice";
 import { addToWishlist, removeFromWishlist } from '../../../features/wishlistSlice';
@@ -77,7 +77,7 @@ const ProductBox = memo(({ product }) => {
   const isOutOfStock = product.availableStock === 0;
 
   return (
-    <a href={`/#/products/${product._id}`} target="_blank" rel="noopener noreferrer" className="block rounded-lg shadow-md hover:shadow-2xl focus:shadow-2xl transition-all duration-300 group perspective-1000" style={{ transform: 'translateZ(0)' }}>
+    <Link to={`/products/${product._id}`} rel="noopener noreferrer" className="block rounded-lg shadow-md hover:shadow-2xl focus:shadow-2xl transition-all duration-300 group perspective-1000" style={{ transform: 'translateZ(0)' }}>
       <div className={`bg-white rounded-lg overflow-hidden flex flex-col h-full transform transition-transform duration-300 group-hover:scale-105 group-focus:scale-105 ${isOutOfStock ? 'grayscale' : ''}`}>
         
         {/* --- Image Area with 3D Cube and Overlay --- */}
@@ -133,7 +133,7 @@ const ProductBox = memo(({ product }) => {
           </div>
         </div>
       </div>
-    </a>
+    </Link>
   );
 });
 

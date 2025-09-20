@@ -99,7 +99,7 @@ export const refreshAllCountriesData = createAsyncThunk(
 );
 
 
-const productSlice = createSlice({
+const productSlice = createSlice({ 
     name: "products",
     initialState,
     reducers: {
@@ -248,6 +248,30 @@ const productSlice = createSlice({
 export const selectProducts = (state) => state.products.products;
 export const selectProductById = (state, productId) =>
     state.products.products.find((product) => product.id === productId);
+
+// Selector to get two random products from the products list
+export const selectTwoRandomProducts = (state) => {
+    const products = state.products.products;
+    if (products.length < 2) {
+        return products; // Return all products if less than 2
+    }
+    
+    // Create a copy of the products array to avoid mutating the original
+    const shuffled = [...products].sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, 2);
+};
+
+// Selector to get three random products for slides (different from side banners)
+export const selectThreeRandomProductsForSlides = (state) => {
+    const products = state.products.products;
+    if (products.length < 3) {
+        return products; // Return all products if less than 3
+    }
+    
+    // Create a copy of the products array to avoid mutating the original
+    const shuffled = [...products].sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, 3);
+};
 
 export const { clearSelectedProduct } = productSlice.actions;
 export default productSlice.reducer;

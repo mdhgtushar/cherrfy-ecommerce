@@ -24,123 +24,89 @@ import { toast, ToastContainer } from "react-toastify";
 import { logout } from "../../../features/userAuthSlice";
 import ConfirmDialog from "../../../components/ConfirmDialog";
 import SettingsPopup from "./SettingsPopup";
+import API from "../../../util/API";
+ 
+// const categoryData = [
+//   {
+//     name: "Electronics",
+//     href: "#",
+//     icon: Cpu,
+//     children: [
+//       {
+//         name: "Phones & Accessories",
+//         href: "#",
+//         children: [
+//           { name: "Smartphones", href: "#" },
+//           { name: "Cases & Covers", href: "#" },
+//           { name: "Screen Protectors", href: "#" },
+//           { name: "Chargers & Cables", href: "#" },
+//         ],
+//       },
+//       {
+//         name: "Computers & Laptops",
+//         href: "#",
+//         children: [
+//           { name: "Laptops", href: "#" },
+//           { name: "Desktops", href: "#" },
+//           { name: "Monitors", href: "#" },
+//           { name: "Keyboards & Mice", href: "#" },
+//         ],
+//       },
+//       {
+//         name: "Audio",
+//         href: "#",
+//         children: [
+//           { name: "Headphones", href: "#" },
+//           { name: "Bluetooth Speakers", href: "#" },
+//           { name: "Home Theater", href: "#" },
+//         ],
+//       },
+//     ],
+//   },
+//   {
+//     name: "Fashion",
+//     href: "#",
+//     icon: Shirt,
+//     children: [
+//       {
+//         name: "Men's Fashion",
+//         href: "#",
+//         children: [
+//           { name: "T-Shirts & Polos", href: "#" },
+//           { name: "Jeans & Trousers", href: "#" },
+//           { name: "Footwear", href: "#" },
+//           { name: "Watches", href: "#" },
+//         ],
+//       },
+//       {
+//         name: "Women's Fashion",
+//         href: "#",
+//         children: [
+//           { name: "Dresses & Gowns", href: "#" },
+//           { name: "Tops & Tees", href: "#" },
+//           { name: "Handbags", href: "#" },
+//           { name: "Jewelry", href: "#" },
+//         ],
+//       },
+//       {
+//         name: "Kid's Fashion",
+//         href: "#",
+//         children: [
+//           { name: "Clothing", href: "#" },
+//           { name: "Shoes", href: "#" },
+//           { name: "Accessories", href: "#" },
+//         ],
+//       },
+//     ],
+//   },
+//   { name: "Home & Kitchen", href: "#", icon: Home },
+//   { name: "Beauty", href: "#", icon: Smile },
+//   { name: "Books", href: "#", icon: Book },
+// ];
 
-// --- Mock Data & Functions for a Self-Contained Demo ---
+const data = await API.get('/category');
+const categoryData = data.data;
 
-// const useSelector = (selector) => {
-
-//     const [isLoggedIn, setIsLoggedIn] = useState(true);
-
-//     useEffect(() => {
-//         const buttonId = "login-toggle-button-ultimate";
-//         if (document.getElementById(buttonId)) return;
-
-//         const toggleButton = document.createElement('button');
-//         toggleButton.id = buttonId;
-//         toggleButton.innerText = "Demo: Toggle Login";
-//         Object.assign(toggleButton.style, {
-//             position: 'fixed', bottom: '10px', right: '10px', zIndex: '1001',
-//             padding: '8px 12px', backgroundColor: '#f97316', color: 'white',
-//             border: 'none', borderRadius: '8px', cursor: 'pointer', fontSize: '14px'
-//         });
-
-//         toggleButton.addEventListener('click', () => setIsLoggedIn(p => !p));
-//         document.body.appendChild(toggleButton);
-
-//         return () => { if (toggleButton && toggleButton.parentNode) document.body.removeChild(toggleButton); };
-//     }, []);
-
-//     const mockState = {
-//         userAuth: {
-//             user: isLoggedIn ? {
-//                 username: "Jane Doe",
-//                 email: "jane.doe@example.com",
-//             } : null,
-//         },
-//         cart: { items: isLoggedIn ? [{}, {}] : [] },
-//         userSettings: { selectedCurrency: "USD", shipToCountry: "USA" },
-//     };
-//     return selector(mockState);
-// };
-
-// --- Fully Populated Category Data for Mega Menu ---
-const categoryData = [
-  {
-    name: "Electronics",
-    href: "#",
-    icon: Cpu,
-    children: [
-      {
-        name: "Phones & Accessories",
-        href: "#",
-        children: [
-          { name: "Smartphones", href: "#" },
-          { name: "Cases & Covers", href: "#" },
-          { name: "Screen Protectors", href: "#" },
-          { name: "Chargers & Cables", href: "#" },
-        ],
-      },
-      {
-        name: "Computers & Laptops",
-        href: "#",
-        children: [
-          { name: "Laptops", href: "#" },
-          { name: "Desktops", href: "#" },
-          { name: "Monitors", href: "#" },
-          { name: "Keyboards & Mice", href: "#" },
-        ],
-      },
-      {
-        name: "Audio",
-        href: "#",
-        children: [
-          { name: "Headphones", href: "#" },
-          { name: "Bluetooth Speakers", href: "#" },
-          { name: "Home Theater", href: "#" },
-        ],
-      },
-    ],
-  },
-  {
-    name: "Fashion",
-    href: "#",
-    icon: Shirt,
-    children: [
-      {
-        name: "Men's Fashion",
-        href: "#",
-        children: [
-          { name: "T-Shirts & Polos", href: "#" },
-          { name: "Jeans & Trousers", href: "#" },
-          { name: "Footwear", href: "#" },
-          { name: "Watches", href: "#" },
-        ],
-      },
-      {
-        name: "Women's Fashion",
-        href: "#",
-        children: [
-          { name: "Dresses & Gowns", href: "#" },
-          { name: "Tops & Tees", href: "#" },
-          { name: "Handbags", href: "#" },
-          { name: "Jewelry", href: "#" },
-        ],
-      },
-      {
-        name: "Kid's Fashion",
-        href: "#",
-        children: [
-          { name: "Clothing", href: "#" },
-          { name: "Shoes", href: "#" },
-          { name: "Accessories", href: "#" },
-        ],
-      },
-    ],
-  },
-  { name: "Home & Kitchen", href: "#", icon: Home },
-  { name: "Beauty", href: "#", icon: Smile },
-  { name: "Books", href: "#", icon: Book },
-];
 
 // --- Sub-Components (Internal to UltimateHeader) ---
 

@@ -9,6 +9,7 @@ const orderRoutes = require('./order/order.routes');
 const logisticRoutes = require('./logistic/logistic.routes');
 const settingsRoutes = require('./settings/settings.routes');
 const { disputeRoutes } = require('./dispute/index.js');
+const  categoryRoutes  = require('./category/category.routes.js');
 const { wishlistRoutes, followedStoreRoutes } = require('./user/index.js');
 
 // Health check route
@@ -31,5 +32,6 @@ router.use('/settings', settingsRoutes);
 router.use('/dispute', disputeRoutes);
 router.use('/wishlist', wishlistRoutes);
 router.use('/followed-stores', followedStoreRoutes);
+router.use('/category', categoryRoutes);
 
 module.exports = router; 

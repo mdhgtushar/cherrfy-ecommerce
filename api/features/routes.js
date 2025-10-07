@@ -8,6 +8,7 @@ const productRoutes = require('./product/product.routes');
 const orderRoutes = require('./order/order.routes');
 const logisticRoutes = require('./logistic/logistic.routes');
 const settingsRoutes = require('./settings/settings.routes');
+const mediaRoutes = require("./media/media.router")
 const { disputeRoutes } = require('./dispute/index.js');
 const  categoryRoutes  = require('./category/category.routes.js');
 const { wishlistRoutes, followedStoreRoutes } = require('./user/index.js');
@@ -33,5 +34,6 @@ router.use('/dispute', disputeRoutes);
 router.use('/wishlist', wishlistRoutes);
 router.use('/followed-stores', followedStoreRoutes);
 router.use('/category', categoryRoutes);
+router.use("/media", mediaRoutes)
 
 module.exports = router; 

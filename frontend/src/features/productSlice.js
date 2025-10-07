@@ -6,14 +6,17 @@ const initialState = {
     status: "idle",
     selectedProduct: {},
     error: null,
+    hasMore: true, // 🆕 ডেটা আর আছে কিনা
+    currentPage: 1, // 🆕 এখন কোন পেজে আছো
 };
 
-// ✅ Correct action type here
 export const fetchProducts = createAsyncThunk(
     "products/fetchProducts",
-    async ({ country, currency }) => {
-        const response = await Api.get("/product/?country=" + country + "&currency=" + currency); // Assuming 'BD' is the country code
-        return response.data;
+    async ({ country, currency, page = 1, limit = 10 }) => {
+        const response = await Api.get(
+            `/product/?country=${country}&currency=${currency}&page=${page}&limit=${limit}`
+        );
+        return { data: response.data, page };
     }
 );
 
@@ -99,7 +102,7 @@ export const refreshAllCountriesData = createAsyncThunk(
 );
 
 
-const productSlice = createSlice({ 
+const productSlice = createSlice({
     name: "products",
     initialState,
     reducers: {
@@ -115,8 +118,20 @@ const productSlice = createSlice({
                 state.status = "loading";
             })
             .addCase(fetchProducts.fulfilled, (state, action) => {
-                state.products = action.payload.data || [];
+                const { data, page } = action.payload;
+                const newProducts = data.data || [];
+
+                if (page === 1) {
+                    // প্রথমবারে replace করো
+                    state.products = newProducts;
+                } else {
+                    // পরেরবার append করো
+                    state.products = [...state.products, ...newProducts];
+                }
+
                 state.status = "succeeded";
+                state.currentPage = page;
+                state.hasMore = newProducts.length > 0; // যদি নতুন কিছু না আসে তাহলে false
             })
             .addCase(fetchProducts.rejected, (state, action) => {
                 state.status = "failed";
@@ -162,7 +177,7 @@ const productSlice = createSlice({
                 state.selectedProduct = action.payload;
             })
             .addCase(fetchAliProduct.rejected, (state, action) => {
-                state.status = "failed"; 
+                state.status = "failed";
                 state.error = action.payload;
             })
             .addCase(SaveAliProduct.pending, (state) => {
@@ -255,7 +270,7 @@ export const selectTwoRandomProducts = (state) => {
     if (products.length < 2) {
         return products; // Return all products if less than 2
     }
-    
+
     // Create a copy of the products array to avoid mutating the original
     const shuffled = [...products].sort(() => 0.5 - Math.random());
     return shuffled.slice(0, 2);
@@ -267,7 +282,7 @@ export const selectThreeRandomProductsForSlides = (state) => {
     if (products.length < 3) {
         return products; // Return all products if less than 3
     }
-    
+
     // Create a copy of the products array to avoid mutating the original
     const shuffled = [...products].sort(() => 0.5 - Math.random());
     return shuffled.slice(0, 3);

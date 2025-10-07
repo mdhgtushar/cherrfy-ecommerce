@@ -13,6 +13,16 @@ exports.createOrder = async (req, res) => {
 };
 
 // Get all orders
+exports.getAllOrders = async (req, res) => {
+  try {
+    const orders = await Order.find();
+    res.json(orders);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+// Get all orders
 exports.getOrders = async (req, res) => {
   try {
     const orders = await Order.find({ user: req.user._id });

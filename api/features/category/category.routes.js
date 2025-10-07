@@ -6,10 +6,12 @@ const asyncHandler = require("express-async-handler");
 
 const {
     createCategory, 
-    getAllCategories
+    getAllCategories,
+    deleteCategory
 } = require('./category.controller.js');
 
 router.post('/', protect, admin, asyncHandler(createCategory));
 router.get('/', asyncHandler(getAllCategories));
+router.delete('/:id', protect, admin, asyncHandler(deleteCategory));
 
 module.exports = router;

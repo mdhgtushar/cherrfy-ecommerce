@@ -18,6 +18,8 @@
   WISHLIST_AND_FOLLOWED_STORES: '/profile/wishlist-and-followed-stores',
   APPEAL_DISPUTE_CENTER: '/profile/appeal-dispute-center',
   SETTINGS: '/profile/settings',
+  TERMS_OF_SERVICE: '/terms-of-service',
+  PRIVACY_POLICY: '/privacy-policy',
 };
 
 export default USER_PATHS;

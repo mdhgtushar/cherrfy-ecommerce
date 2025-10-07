@@ -229,6 +229,11 @@ exports.getAllProducts = async (req, res) => {
   const countryCode = req.query.country?.toUpperCase();
   const currencyCode = req.query.currency?.toUpperCase();
 
+  // 🧩 New pagination params
+  const page = parseInt(req.query.page || "1", 10); // default 1 
+  const limit = parseInt(req.query.limit || "10", 10);
+  const skip = (page - 1) * limit;
+
   if (!countryCode || !currencyCode) {
     return res.status(400).json({ 
       success: false,
@@ -274,20 +279,30 @@ exports.getAllProducts = async (req, res) => {
 
     const rate = matchedRate.rate;
 
-    // Fetch only products with ali_data for that country
+    // 🧩 Fetch only products for that country with pagination
+    const totalCount = await productModel.countDocuments({ [`ali_data.${countryCode}`]: { $exists: true } });
+
     const products = await productModel.find(
       { [`ali_data.${countryCode}`]: { $exists: true } },
       { [`ali_data.${countryCode}`]: 1, productId: 1 }
-    );
+    )
+    .skip(skip)
+    .limit(Number(limit))
+    .sort({ _id: 1 }); // optional sort, stable order
 
     if (!products || products.length === 0) {
       return res.status(200).json({
         success: true,
-        message: 'No products found for this country.',
+        message: 'No products found for this country in this range.',
         data: [],
         count: 0,
         country: countryCode,
-        currency: currencyCode
+        currency: currencyCode,
+        pagination: {
+          page,
+          limit,
+          total: totalCount
+        }
       });
     }
 
@@ -325,7 +340,7 @@ exports.getAllProducts = async (req, res) => {
       };
     });
 
-    // Filter out any nulls (if sku data missing)
+    // Filter out nulls
     const validProducts = updatedProducts.filter(Boolean);
 
     return res.status(200).json({
@@ -335,7 +350,13 @@ exports.getAllProducts = async (req, res) => {
       count: validProducts.length,
       country: countryCode,
       currency: currencyCode,
-      rate: rate
+      rate,
+      pagination: {
+        page,
+        limit,
+        total: totalCount,
+        hasMore: limit * page < totalCount
+      }
     });
   } catch (error) {
     console.error('Product fetch error:', error);
@@ -346,6 +367,7 @@ exports.getAllProducts = async (req, res) => {
     });
   }
 };
+
 
 
 exports.deleteProduct = async (req, res) => {

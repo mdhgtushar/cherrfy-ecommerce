@@ -15,4 +15,10 @@ const getAllCategories = async (req, res) => {
     res.status(200).json(categories);
 }
 
-module.exports = { createCategory, getAllCategories };
+const deleteCategory = async (req, res) => {
+    const { id } = req.params;
+    await Category.findByIdAndDelete(id);
+    res.status(200).json({ message: 'Category deleted successfully' });
+}
+
+module.exports = { createCategory, getAllCategories, deleteCategory };

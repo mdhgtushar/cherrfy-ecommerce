@@ -23,6 +23,8 @@ import WishlistAndStores from './profile/WishlistAndStores';
 import DisputeCenter from './profile/DisputeCenter';
 import PrivateRoute from './userLayout/PrivateRoute';
 import ProductDetails from './products/ProductDetails';
+import TermsOfService from './site/TermsOfService';
+import PrivacyPolicy from './site/PrivacyPolicy';
 export const userRoutes = [
   {
     element: <Layout />,
@@ -38,6 +40,8 @@ export const userRoutes = [
       // { path: USER_PATHS.PROFILE.slice(1), element: <UserDashboardPage /> },
       { path: USER_PATHS.LOGIN.slice(1), element: <LoginPage /> },
       { path: USER_PATHS.REGISTER.slice(1), element: <RegisterPage /> },
+      { path: USER_PATHS.TERMS_OF_SERVICE.slice(1), element: <TermsOfService /> },
+      { path: USER_PATHS.PRIVACY_POLICY.slice(1), element: <PrivacyPolicy /> },
       { path: '*', element: <Page404 /> },
       {
         element: <PrivateRoute><ProfileLayout /></PrivateRoute>,

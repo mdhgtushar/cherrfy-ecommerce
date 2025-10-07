@@ -9,7 +9,7 @@ import { checkToken as checkAdminToken } from "./features/adminAuthSlice";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
+import "slick-carousel/slick/slick-theme.css"; 
 
  
 function App() { 

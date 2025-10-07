@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Gallery from "./Gallery"
 
 export default function FileMediaManager() {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -14,6 +15,7 @@ export default function FileMediaManager() {
     <div className="p-6 space-y-6">
       <h1 className="text-3xl font-bold">📁 File & Media Manager</h1>
 
+<Gallery />
       {/* Upload Files */}
       <section className="border p-4 rounded-xl shadow">
         <h2 className="text-xl font-semibold mb-2">Upload Files</h2>

@@ -1,38 +1,18 @@
 import React from "react";
 
-export const Loader = ({ size = "md", className = "" }) => {
-  const sizes = {
-    sm: "h-4 w-4",
-    md: "h-8 w-8", 
-    lg: "h-12 w-12",
-    xl: "h-16 w-16"
-  };
-
+const Loader = ({ count = 4 }) => {
   return (
-    <div className={`flex items-center justify-center ${className}`}>
-      <div className={`animate-spin rounded-full border-b-2 border-blue-600 ${sizes[size]}`}></div>
-    </div>
-  );
-};
-
-export const PageLoader = () => {
-  return (
-    <div className="flex items-center justify-center min-h-screen">
-      <div className="text-center">
-        <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600 mx-auto"></div>
-        <p className="mt-4 text-gray-600">Loading...</p>
-      </div>
-    </div>
-  );
-};
-
-export const TableLoader = () => {
-  return (
-    <div className="flex items-center justify-center py-12">
-      <div className="text-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-        <p className="mt-2 text-gray-600">Loading products...</p>
-      </div>
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4">
+      {Array.from({ length: count }).map((_, index) => (
+        <div
+          key={index}
+          className="border border-gray-200 rounded-lg p-4 animate-pulse bg-white"
+        >
+          <div className="h-40 bg-gray-200 rounded-md mb-4"></div>
+          <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+          <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+        </div>
+      ))}
     </div>
   );
 };

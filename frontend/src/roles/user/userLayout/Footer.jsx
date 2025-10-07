@@ -1,8 +1,6 @@
-import React from 'react';
-
-// This is a mock for react-router-dom's Link component for demonstration purposes.
-// In a real app, you would use `import { Link } from 'react-router-dom';`
-const Link = ({ to, children, ...props }) => <a href={to} {...props}>{children}</a>;
+import React from 'react'; 
+import { Link } from 'react-router-dom';
+import USER_PATHS from '../USER_PATHS';
 
 const UltimateFooter = () => {
     const currentYear = new Date().getFullYear();
@@ -17,14 +15,14 @@ const UltimateFooter = () => {
     ];
 
     const socialLinks = [
-        { name: 'Facebook', href: '#', src: 'https://logotyp.us/files/facebook.svg' },
-        { name: 'X', href: '#', src: 'https://logotyp.us/files/twitter-x.svg' },
-        { name: 'Instagram', href: '#', src: 'https://logotyp.us/files/instagram.svg' },
-        { name: 'LinkedIn', href: '#', src: 'https://logotyp.us/files/linkedin.svg' },
+        { name: 'Facebook', href: 'https://facebook.com/cherrfy', src: 'https://logotyp.us/files/facebook.svg' },
+        { name: 'X', href: 'https://x.com/cherrfy', src: 'https://logotyp.us/files/twitter-x.svg' },
+        { name: 'Instagram', href: 'https://instagram.com/cherrfy', src: 'https://logotyp.us/files/instagram.svg' },
+        { name: 'LinkedIn', href: 'https://linkedin.com/company/cherrfy', src: 'https://logotyp.us/files/linkedin.svg' },
     ];
 
     return (
-        <footer className="bg-gray-100 border-t border-gray-200">
+        <footer className="bg-gray-100 border-t border-gray-200 mt-5">
             <div className="container mx-auto px-4 py-8">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center text-center md:text-left">
 
@@ -43,15 +41,15 @@ const UltimateFooter = () => {
                     <div className="flex flex-col items-center gap-4 row-start-2 md:row-start-1">
                         <div className="flex items-center gap-5">
                             {socialLinks.map(social => (
-                                <Link key={social.name} to={social.href} className="text-gray-500 hover:opacity-75 transition-opacity">
+                                <Link key={social.name} to={social.href} target="_blank" className="text-gray-500 hover:opacity-75 transition-opacity">
                                     <img src={social.src} alt={`${social.name} logo`} className="h-7 w-7" />
                                 </Link>
                             ))}
                         </div>
                         <div className="flex items-center gap-3 text-xs text-gray-600">
-                            <Link to="#" className="hover:text-orange-500">Terms of Service</Link>
+                            <Link to={USER_PATHS.TERMS_OF_SERVICE} className="hover:text-orange-500">Terms of Service</Link>
                             <div className="border-l h-3 border-gray-400"></div>
-                            <Link to="#" className="hover:text-orange-500">Privacy Policy</Link>
+                            <Link to={USER_PATHS.PRIVACY_POLICY} className="hover:text-orange-500">Privacy Policy</Link>
                         </div>
                     </div>
 

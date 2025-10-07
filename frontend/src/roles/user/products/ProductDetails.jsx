@@ -12,6 +12,7 @@ import ImageZoom from "./ImageZoom";
 import RecomandProducts from "./RecomandProducts";
 import ViewProductRightSidebar from "./ViewProductRightSidebar";
 import ItemProperties from "./ItemProperties";
+import ProductSkeleton from "../../../components/ProductSkeleton";
 
 const ProductView = () => {
   const dispatch = useDispatch();
@@ -117,7 +118,7 @@ const ProductView = () => {
     }
   }, [selectedAttributes, selectedProduct]);
 
-  if (status === "loading" || status === "idle") return <Loader />;
+  if (status === "loading" || status === "idle") return <ProductSkeleton />;
   if (status === "failed" || !selectedProduct?.skus)
     return (
       <div className="flex justify-center items-center h-screen">
@@ -198,7 +199,7 @@ const ProductView = () => {
                 ))}
 
                 {/* Quantity */}
-                <div className="my-4">
+                {/* <div className="my-4">
                   <label className="text-sm font-medium text-gray-600">Quantity</label>
                   <input
                     type="number"
@@ -207,17 +208,17 @@ const ProductView = () => {
                     onChange={(e) => setQty(Number(e.target.value))}
                     className="border rounded px-3 py-1 w-24 mt-1"
                   />
-                </div>
+                </div> */}
 
                 {/* SKU Info */}
-                <div className="text-sm text-gray-600 mt-2">
+                {/* <div className="text-sm text-gray-600 mt-2">
                   <p><strong>SKU ID:</strong> {selectedSKU?.sku_id}</p>
                   <p><strong>Stock:</strong> {selectedSKU?.sku_available_stock}</p>
                   <p>
                     <strong>Price in {selectedProduct?.currency}:</strong>{" "}
                     {(parseFloat(selectedSKU?.offer_sale_price || 0) * selectedProduct?.rate).toFixed(2)}
                   </p>
-                </div>
+                </div> */}
               </>
             ) : (
               <p className="text-red-500 mt-4">

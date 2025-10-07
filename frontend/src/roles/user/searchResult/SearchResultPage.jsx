@@ -21,11 +21,11 @@ const SearchResultPage = () => {
   return (
     <div className="flex ">
       <FilterSidebar onFilterChange={handleFilters} />
-      <div className="flex-1 p-2">
+      <div className="flex-1 p-2 px-5">
         <h2 className="text-lg font-semibold mb-2 p-2 bg-gray-100 px-5"> 
           Search Results
         </h2>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-5 gap-2">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-4 gap-2">
           {products.map((product) => {
             return <ProductBox product={product} key={product._id} />;
           })}

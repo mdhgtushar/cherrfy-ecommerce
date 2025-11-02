@@ -23,13 +23,13 @@ const returnRefundSchema = new mongoose.Schema(
     reason: {
       type: String,
       required: true,
-      enum: [
-        "Damaged item",
-        "Wrong item received",
-        "Item not as described",
-        "Size/fit issue",
-        "Other",
-      ],
+      // enum: [
+      //   "Damaged item",
+      //   "Wrong item received",
+      //   "Item not as described",
+      //   "Size/fit issue",
+      //   "Other",
+      // ],
     },
 
     description: {

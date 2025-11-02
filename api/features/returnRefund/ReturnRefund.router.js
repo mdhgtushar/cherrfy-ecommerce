@@ -1,13 +1,13 @@
-import express from "express";
-import {
+const express = require("express");
+const {
   createReturnRefund,
   getAllReturnRefunds,
   getUserReturnRefunds,
   getReturnRefundById,
   updateReturnRefundStatus,
   deleteReturnRefund,
-} from "./ReturnRefund.controller.js";
-import { protect, admin } from "../../middleware/auth.middleware.js";
+} = require("./ReturnRefund.controller");
+const { protect, admin } = require("../../middleware/auth.middleware");
 
 const router = express.Router();
 
@@ -21,4 +21,4 @@ router.get("/", protect, admin, getAllReturnRefunds);
 router.put("/:id", protect, admin, updateReturnRefundStatus);
 router.delete("/:id", protect, admin, deleteReturnRefund);
 
-export default router;
+module.exports = router;

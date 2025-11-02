@@ -11,10 +11,12 @@ const settingsRoutes = require('./settings/settings.routes');
 const mediaRoutes = require("./media/media.router")
 const { disputeRoutes } = require('./dispute/index.js');
 const  categoryRoutes  = require('./category/category.routes.js');
-const { wishlistRoutes, followedStoreRoutes } = require('./user/index.js');
+const followedStoreRoutes = require('./followedStore/followedStore.routes.js');
 const extraRoutes = require('./extra/extra.routes');
 const googleAuth = require("./user/google.auth.js")
 const facebookAuth = require("./user/facebook.auth.js")
+const wishlistRoutes = require('./userWishlist/wishlist.routes');
+const returnRefundRoutes = require('./returnRefund/returnRefund.router.js');
 
 // Health check route
 router.get('/', (req, res) => {
@@ -41,6 +43,6 @@ router.use("/media", mediaRoutes)
 router.use('/extra', extraRoutes);
 router.use("/auth", googleAuth)
 router.use("/auth", facebookAuth)
-router.use("/return-refund", require("./returnRefund/ReturnRefund.router"));
+router.use("/return-refund", returnRefundRoutes);  
 
 module.exports = router; 

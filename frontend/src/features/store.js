@@ -11,6 +11,7 @@ import wishlistReducer from "./wishlistSlice";
 import followedStoresReducer from "./followedStoresSlice";
 import orderReducer from './orderSlice';
 import { setUnauthorizedHandler } from "../util/API";
+import returnRefundReducer from "./returnRefundSlice";
 
 
 const store = configureStore({
@@ -24,7 +25,8 @@ const store = configureStore({
     dispute: disputeReducer,
     wishlist: wishlistReducer,
     followedStores: followedStoresReducer,
-    order: orderReducer
+    order: orderReducer,
+    returns: returnRefundReducer
   },
 });
  

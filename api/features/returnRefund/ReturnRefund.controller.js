@@ -27,7 +27,7 @@ export const createReturnRefund = async (req, res) => {
     });
   } catch (error) {
     console.error("Error creating return/refund:", error);
-    res.status(500).json({ success: false, message: "Internal server error" });
+    res.status(500).json({ success: false, message: "Internal server error", error });
   }
 };
 

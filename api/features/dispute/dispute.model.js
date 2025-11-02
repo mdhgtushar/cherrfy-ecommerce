@@ -18,7 +18,7 @@ const disputeSchema = new mongoose.Schema({
   },
   category: {
     type: String,
-    enum: ['order_issue', 'delivery_problem', 'product_quality', 'payment_issue', 'refund_request', 'general_complaint', 'appeal'],
+    // enum: ['order_issue', 'delivery_problem', 'product_quality', 'payment_issue', 'refund_request', 'general_complaint', 'appeal'],
     required: true
   },
   priority: {

@@ -2,6 +2,22 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { jwtDecode } from "jwt-decode";
 import Api from "../util/API";
 
+
+export const loginWithGoogle = createAsyncThunk(
+    "auth/loginWithGoogle",
+    async (id_token, { rejectWithValue }) => {
+        try {
+            const res = await Api.post("/auth/google", { id_token });
+            // server থেকে আপনার JWT আশা করুন
+            return res.data; // { token, user }
+        } catch (err) {
+            return rejectWithValue(err.response?.data || { message: "Network error" });
+        }
+    }
+);
+
+
+
 // Example async thunk for login
 export const loginUser = createAsyncThunk(
     'userAuth/loginUser',
@@ -104,6 +120,20 @@ const userAuthSlice = createSlice({
             .addCase(registerUser.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload || 'Registration failed';
+            })
+            .addCase(loginWithGoogle.pending, (state) => {
+                state.status = "loading";
+            })
+            .addCase(loginWithGoogle.fulfilled, (state, action) => {
+                state.loading = false;
+                state.token = action.payload.data.token;
+                state.user = action.payload.data.token && action.payload.data.user;
+                state.error = null;
+                localStorage.setItem("userToken", action.payload.data.token);
+            })
+            .addCase(loginWithGoogle.rejected, (state, action) => {
+                state.status = "failed";
+                state.error = action.payload.message || "Login failed";
             });
     },
 });

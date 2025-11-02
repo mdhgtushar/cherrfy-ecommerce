@@ -12,7 +12,7 @@ const Layout = () => {
   return (
     <div>
       <div className='mb-0'>
-        {/* <HeaderTop /> */}
+        <HeaderTop />
         <CategoryNav />
         {/* <Header/> */}
       </div>
@@ -20,7 +20,7 @@ const Layout = () => {
         <Outlet />
       </div>
       
-      <FullscreenOffer />
+      {/* <FullscreenOffer /> */}
       <BackToTopButton />
       <Footer />
     </div>

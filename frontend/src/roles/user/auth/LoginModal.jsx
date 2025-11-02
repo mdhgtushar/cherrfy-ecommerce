@@ -14,7 +14,7 @@ const LoginModal = ({ isOpen, onClose }) => {
 
   useEffect(() => {
     if (user) {
-      toast.success("Login successful.");
+      // toast.success("Login successful.");
       onClose(); // Close modal after successful login
     }
   }, [user]);

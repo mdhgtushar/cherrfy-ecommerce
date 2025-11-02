@@ -35,6 +35,6 @@ module.exports = {
   
   // AliExpress API Configuration
   appKey: process.env.ALIEXPRESS_APP_KEY || '510834',
-  appSecret: process.env.ALIEXPRESS_APP_SECRET || 'FVRr5J6Abj8XK4ANH7Hh7TFNuUWNRvad',
-  accessToken: process.env.ALIEXPRESS_ACCESS_TOKEN || '50000100527WgXaoLfT6nAQZmqcddluFmxCRQEW15e978a0bDvCpV0jkGRVX8LtQ5Bsv'
+  appSecret: process.env.ALIEXPRESS_APP_SECRET || '5nJvMPn106A2lwsQ1balFBUkpGIBkIrF',
+  accessToken: process.env.ALIEXPRESS_ACCESS_TOKEN || '50000100629rSYpJesjhFoYQpab3KzdKuhUOE8baS1ddba7149twXjmiwokFLNAtPNYv'
 }; 

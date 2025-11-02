@@ -43,7 +43,7 @@ function App() {
 
     return (
     <>
-      <div className="bg-primary overflow-hidden">
+      <div className="overflow-hidden">
         <Routes>
           {renderRoutes(userRoutes)}
           {renderRoutes(adminRoutes)}

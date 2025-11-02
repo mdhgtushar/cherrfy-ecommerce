@@ -1,54 +1,48 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { Users, Shield, History, ShieldCheck, UserPlus } from "lucide-react";
-import ADMIN_PATHS from "../ADMIN_PATHS";
+import { useEffect, useState } from "react";
+import API from "../../../util/API";
 
-export default function AdminManagementOverview() {
-  return (
-    <div className="p-6 space-y-8 max-w-4xl mx-auto">
-      <h1 className="text-3xl font-bold mb-6">Admin & Role Management</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Admin Users */}
-        <Link to={ADMIN_PATHS.ADMIN.BASE} className="block bg-white border rounded-xl shadow p-6 hover:shadow-lg transition group">
-          <div className="flex items-center gap-4 mb-2">
-            <Users className="text-blue-600 text-3xl group-hover:scale-110 transition" />
-            <span className="text-xl font-semibold">Admin Users</span>
-          </div>
-          <p className="text-gray-600">View, search, and manage all admin users.</p>
-        </Link>
-        {/* Roles & Permissions */}
-        <Link to={ADMIN_PATHS.ADMIN.ROLES} className="block bg-white border rounded-xl shadow p-6 hover:shadow-lg transition group">
-          <div className="flex items-center gap-4 mb-2">
-            <Shield className="text-indigo-600 text-3xl group-hover:scale-110 transition" />
-            <span className="text-xl font-semibold">Roles & Permissions</span>
-          </div>
-          <p className="text-gray-600">Create, edit, and assign roles and permissions.</p>
-        </Link>
-        {/* Activity Logs */}
-        <Link to={ADMIN_PATHS.ADMIN.ACTIVITY} className="block bg-white border rounded-xl shadow p-6 hover:shadow-lg transition group">
-          <div className="flex items-center gap-4 mb-2">
-            <History className="text-orange-600 text-3xl group-hover:scale-110 transition" />
-            <span className="text-xl font-semibold">Activity Logs</span>
-          </div>
-          <p className="text-gray-600">View all admin activity and audit logs.</p>
-        </Link>
-        {/* Security Settings */}
-        <Link to={ADMIN_PATHS.ADMIN.SECURITY} className="block bg-white border rounded-xl shadow p-6 hover:shadow-lg transition group">
-          <div className="flex items-center gap-4 mb-2">
-            <ShieldCheck className="text-green-600 text-3xl group-hover:scale-110 transition" />
-            <span className="text-xl font-semibold">Security Settings</span>
-          </div>
-          <p className="text-gray-600">Manage 2FA, password policy, and security alerts.</p>
-        </Link>
-        {/* Create Admin */}
-        <Link to={ADMIN_PATHS.ADMIN.CREATE} className="block bg-white border rounded-xl shadow p-6 hover:shadow-lg transition group">
-          <div className="flex items-center gap-4 mb-2">
-            <UserPlus className="text-purple-600 text-3xl group-hover:scale-110 transition" />
-            <span className="text-xl font-semibold">Create Admin</span>
-          </div>
-          <p className="text-gray-600">Add a new admin user to the system.</p>
-        </Link>
-      </div>
+function AdminList () {
+  const [admins, setAdmins] = useState([])
+  const getadmins = async () => {
+    const getadminsData = await API.get("/admin");
+    setAdmins(getadminsData.data.data)
+  }
+
+  useEffect(() => {
+    getadmins()
+  },[])
+    return(
+      <div className="overflow-x-auto bg-white shadow-md rounded-lg mt-5">
+      <table className="min-w-full border-collapse">
+        <thead>
+          <tr className="bg-gray-100 text-left text-sm font-semibold text-gray-700 uppercase">
+            <th className="px-4 py-3">Name</th>
+            <th className="px-4 py-3">Email</th>
+            <th className="px-4 py-3">Role</th>  
+            <th className="px-4 py-3 text-right">Action</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {admins.map((admin) => (
+            <tr
+              key={admin._id}
+              className="border-b hover:bg-gray-50 transition"
+            >
+              <td className="px-4 py-2 font-medium text-gray-800">{admin.name ? admin.name : "ADMIN"}</td>
+              <td className="px-4 py-2 text-gray-600">{admin.email}</td>
+              <td className="px-4 py-2 text-gray-600">{admin.role ? admin.role : "ADMIN"}</td>   
+              <td className="px-4 py-2 text-right">
+                <button className="text-blue-500 hover:underline">
+                  View
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
-  );
+    )
 }
+
+export default AdminList;

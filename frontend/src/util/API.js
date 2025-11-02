@@ -2,6 +2,7 @@
 import axios from 'axios';
 
 let onUnauthorized = null;
+let isHandlingUnauthorized = false;
 
 export const setUnauthorizedHandler = (handler) => {
   onUnauthorized = handler;
@@ -30,9 +31,26 @@ API.interceptors.request.use((config) => {
 API.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response && error.response.status === 401) {
-      if (onUnauthorized) {
-        onUnauthorized(); // Call the provided handler
+    const status = error?.response?.status;
+    if (status === 401 || status === 419) {
+      if (!isHandlingUnauthorized) {
+        isHandlingUnauthorized = true;
+        try {
+          // Clear any stored tokens/credentials
+          localStorage.removeItem('adminToken');
+          localStorage.removeItem('userToken');
+          sessionStorage.clear();
+          // Trigger app-level handler or fallback redirect
+          if (onUnauthorized) {
+            onUnauthorized();
+          } else if (typeof window !== 'undefined') {
+            // Adjust path to your admin login route if different
+            window.location.href = '/admin/login';
+          }
+        } finally {
+          // Debounce multiple rapid 401s
+          setTimeout(() => { isHandlingUnauthorized = false; }, 1000);
+        }
       }
     }
     return Promise.reject(error);

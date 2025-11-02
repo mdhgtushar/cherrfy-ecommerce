@@ -1,133 +1,147 @@
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchOrders } from "../../../features/orderSlice";
 import { Link } from "react-router-dom";
-import API from "../../../util/API";
 
-const OrdersPage = () => {
-  const [orders, setOrders] = useState([]);
+export default function Orders() {
+  const orders = useSelector((state) => state.order.orders);
+  const loading = useSelector((state) => state.order.status === "loading");
+  const dispatch = useDispatch();
 
+  // ✅ Fetch orders from API
   useEffect(() => {
-    getMyOrders();
+    // Dispatch action to fetch orders if not already loaded
+    dispatch(fetchOrders());
   }, []);
 
-  const getMyOrders = async () => {
-    try {
-      console.log('Fetching orders...');
-      const result = await API.get(`/order`);
-      console.log('Orders API response:', result);
-      
-      // Handle the new response format with nested data
-      const ordersData = result.data.data || result.data;
-      console.log('Orders data:', ordersData);
-      
-      setOrders(Array.isArray(ordersData) ? ordersData : []);
-    } catch (error) {
-      console.error("Failed to fetch orders:", error);
-      console.error("Error response:", error.response);
-      setOrders([]);
-    }
+  // ✅ Summary calculations
+  const totalSpent = orders.reduce((acc, o) => acc + o.totalPrice, 0);
+  const delivered = orders.filter((o) => o.isDelivered).length;
+  const inTransit = orders.filter((o) => !o.isDelivered).length;
+
+  const badge = (isDelivered) => {
+    return isDelivered
+      ? "bg-green-100 text-green-700"
+      : "bg-blue-100 text-blue-700";
   };
 
-  const formatDate = (dateString) => {
-    const options = { year: "numeric", month: "short", day: "numeric" };
-    return new Date(dateString).toLocaleDateString(undefined, options);
-  };
-
-  const formatCurrency = (amount, currency = "USD") =>
-    new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency,
-    }).format(amount);
+  if (loading) {
+    return (
+      <div className="p-8 text-center text-gray-500">
+        Loading your orders...
+      </div>
+    );
+  }
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-10">
-      <h2 className="text-3xl font-bold mb-8 text-gray-800">My Orders</h2>
-
-      {orders.length === 0 ? (
-        <div className="text-center py-20 bg-white shadow rounded-lg">
-          <p className="text-gray-500 text-lg">You haven't placed any orders yet.</p>
-          <Link
-            to="/"
-            className="inline-block mt-4 text-sm px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-          >
-            Start Shopping
-          </Link>
+    <div className="p-6">
+      {/* Summary Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="bg-white border border-gray-200 rounded-xl p-4">
+          <p className="text-xs text-gray-500">Orders in transit</p>
+          <p className="text-2xl font-bold mt-1 text-gray-800">{inTransit}</p>
         </div>
-      ) : (
-        orders.map((order) => (
-          <div
-            key={order._id}
-            className="bg-white border rounded-xl shadow-sm p-6 mb-6"
-          >
-            {/* Order Info */}
-            <div className="flex flex-col md:flex-row justify-between md:items-center mb-4 gap-4">
-              <div>
-                <p className="text-sm text-gray-600">
-                  <span className="font-medium">Order ID:</span> {order._id}
-                </p>
-                <p className="text-sm text-gray-600">
-                  <span className="font-medium">Date:</span> {formatDate(order.createdAt)}
-                </p>
-                <p className="text-sm text-gray-600">
-                  <span className="font-medium">Payment:</span>{" "}
-                  {order.isPaid ? (
-                    <span className="text-green-600">Paid</span>
-                  ) : (
-                    <span className="text-red-500">Unpaid</span>
-                  )}
-                </p>
-              </div>
-              <div className="text-right">
-                <span
-                  className={`inline-block text-sm px-3 py-1 rounded-full font-medium ${
-                    order.isDelivered ? "bg-green-100 text-green-600" : "bg-yellow-100 text-yellow-700"
-                  }`}
-                >
-                  {order.isDelivered ? "Delivered" : "Not Delivered"}
-                </span>
-                <p className="text-xl font-bold text-gray-800 mt-2">
-                  {formatCurrency(order.totalPrice, order.items?.[0]?.currency || "USD")}
-                </p>
-              </div>
-            </div>
+        <div className="bg-white border border-gray-200 rounded-xl p-4">
+          <p className="text-xs text-gray-500">Delivered</p>
+          <p className="text-2xl font-bold mt-1 text-gray-800">{delivered}</p>
+        </div>
+        <div className="bg-white border border-gray-200 rounded-xl p-4">
+          <p className="text-xs text-gray-500">Total Spent</p>
+          <p className="text-2xl font-bold mt-1 text-gray-800">
+            ${totalSpent.toFixed(2)}
+          </p>
+        </div>
+      </div>
 
-            {/* Items */}
-            <div className="divide-y">
-              {order.items.map((item, index) => (
-                <div key={index} className="flex items-center gap-4 py-4">
-                  <img
-                    src={item.image}
-                    alt={item.name}
-                    className="w-16 h-16 object-cover rounded border"
-                  />
-                  <div className="flex-1">
-                    <p className="text-sm font-medium text-gray-800">{item.name}</p>
-                    <p className="text-sm text-gray-500">
-                      Qty: {item.quantity} | Price:{" "}
-                      {formatCurrency(item.price, item.currency)}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
+      {/* Orders Table */}
+      <div className="bg-white border border-gray-200 rounded-xl mt-6 shadow-sm">
+        <div className="border-b border-gray-200 p-4 font-semibold text-gray-800">
+          Your Orders
+        </div>
 
-            {/* Payment & Action */}
-            <div className="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center mt-5 gap-3">
-              <div className="bg-gray-100 rounded px-3 py-2 text-sm text-gray-700">
-                Payment Method: <strong>{order.paymentMethod}</strong>
-              </div>
-
-              <Link
-                to={`/order/${order._id}`}
-                className="inline-block text-sm text-blue-600 font-medium hover:underline"
-              >
-                View Order Details →
-              </Link>
-            </div>
+        {orders.length === 0 ? (
+          <div className="p-6 text-gray-500 text-center">
+            You have no orders yet.
           </div>
-        ))
-      )}
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="min-w-full text-sm">
+              <thead>
+                <tr className="text-left text-gray-500 border-b border-gray-100">
+                  <th className="py-2 px-4">Image</th>
+                  <th className="py-2 px-4">Order ID</th>
+                  <th className="py-2 px-4">Items</th>
+                  <th className="py-2 px-4">Total</th>
+                  <th className="py-2 px-4">Payment</th>
+                  <th className="py-2 px-4">Status</th>
+                  <th className="py-2 px-4">Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                {orders.map((order) => {
+                  const firstItem = order.items[0];
+                  const date = new Date(order.createdAt).toLocaleDateString();
+
+                  return (
+                    <tr
+                      key={order._id}
+                      className="border-b border-gray-100 hover:bg-gray-50 transition"
+                    >
+                      {/* ✅ Image */}
+                      <td className="py-3 px-4">
+                        <img
+                          src={firstItem?.image}
+                          alt={firstItem?.name}
+                          className="w-12 h-12 object-cover rounded-md border"
+                        />
+                      </td>
+
+                      {/* ✅ Order ID */}
+                      <td className="py-3 px-4 font-medium text-gray-800">
+                        #{order._id.slice(-6).toUpperCase()}
+                      </td>
+
+                      {/* ✅ Items */}
+                      <td className="py-3 px-4 text-gray-700">
+                        {order.items.length} item(s)
+                      </td>
+
+                      {/* ✅ Total */}
+                      <td className="py-3 px-4 font-semibold text-gray-800">
+                        ${order.totalPrice.toFixed(2)}
+                      </td>
+
+                      {/* ✅ Payment Method */}
+                      <td className="py-3 px-4 text-gray-700">
+                        {order.paymentMethod}
+                      </td>
+
+                      {/* ✅ Status */}
+                      <td className="py-3 px-4">
+                        <span
+                          className={`px-2 py-1 rounded-full text-xs font-medium ${badge(
+                            order.isDelivered
+                          )}`}
+                        >
+                          {order.isDelivered ? "Delivered" : "In Transit"}
+                        </span>
+                      </td>
+
+                      {/* ✅ Date */}
+                      <td className="py-3 px-4 text-gray-600">{date}</td>
+                      <td>
+                        <Link to={`/order/${order._id}`} className="bg-primary hover:bg-secondery text-white px-3 py-1 rounded-md text-sm">
+                          order view
+                        </Link>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
     </div>
   );
-};
-
-export default OrdersPage;
+}

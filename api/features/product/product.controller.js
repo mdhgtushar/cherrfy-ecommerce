@@ -25,8 +25,20 @@ exports.getAliExpressProduct = async (req, res) => {
   }
 
   const appKey = '510834';
-  const appSecret = 'FVRr5J6Abj8XK4ANH7Hh7TFNuUWNRvad';
-  const accessToken = '50000100d16Aa7nunrCY4gWGhqcw17bc6efbTiXEfxgKTVcfGPp0HxzEF4xQJ5K5O4Vt';
+  // app secret key
+  const appSecretSetting = await Setting.findOne({ key: 'ali_express_app_secret' });
+  if (!appSecretSetting) {
+    return res.status(400).json({ message: 'App Secret is required.' });
+  }
+  const appSecretValue = appSecretSetting.value;
+  const appSecret = appSecretValue;
+  //app access token
+  const appaccessTokenSetting = await Setting.findOne({ key: 'ali_express_access_token_sg' });
+  if (!appaccessTokenSetting) {
+    return res.status(400).json({ message: 'App appaccessTokenSetting is required.' });
+  }
+  const appaccessTokenValue = appaccessTokenSetting.value;
+  const accessToken = appaccessTokenValue; 
   const apiUrl = 'https://api-sg.aliexpress.com/sync';
   const method = 'aliexpress.ds.product.get';
   const aliexpressCategoryId = '200135143';
@@ -82,11 +94,24 @@ exports.createAliExpressProduct = async (req, res) => {
 
   if (!productId) {
     return res.status(400).json({ message: 'Product ID is required.' });
-  }
+  } 
 
   const appKey = '510834';
-  const appSecret = 'FVRr5J6Abj8XK4ANH7Hh7TFNuUWNRvad';
-  const accessToken = '50000100d16Aa7nunrCY4gWGhqcw17bc6efbTiXEfxgKTVcfGPp0HxzEF4xQJ5K5O4Vt';
+
+  // app secret key
+  const appSecretSetting = await Setting.findOne({ key: 'ali_express_app_secret' });
+  if (!appSecretSetting) {
+    return res.status(400).json({ message: 'App Secret is required.' });
+  }
+  const appSecretValue = appSecretSetting.value;
+  const appSecret = appSecretValue;
+  //app access token
+  const appaccessTokenSetting = await Setting.findOne({ key: 'ali_express_access_token_sg' });
+  if (!appaccessTokenSetting) {
+    return res.status(400).json({ message: 'App appaccessTokenSetting is required.' });
+  }
+  const appaccessTokenValue = appaccessTokenSetting.value;
+  const accessToken = appaccessTokenValue; 
   const apiUrl = 'https://api-sg.aliexpress.com/sync';
   const method = 'aliexpress.ds.product.get';
   const aliexpressCategoryId = '200135143';

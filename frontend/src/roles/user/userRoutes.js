@@ -25,6 +25,11 @@ import PrivateRoute from './userLayout/PrivateRoute';
 import ProductDetails from './products/ProductDetails';
 import TermsOfService from './site/TermsOfService';
 import PrivacyPolicy from './site/PrivacyPolicy';
+import Vauchers from "./profile/Vouchers"
+import Payments from "./profile/Payments"
+import Address from "./profile/Addresses"
+import Notifications from "./profile/Notifications"
+
 export const userRoutes = [
   {
     element: <Layout />,
@@ -54,6 +59,10 @@ export const userRoutes = [
           { path: USER_PATHS.WISHLIST_AND_FOLLOWED_STORES.split('/').pop(), element: <WishlistAndStores /> },
           { path: USER_PATHS.APPEAL_DISPUTE_CENTER.split('/').pop(), element: <DisputeCenter /> },
           { path: USER_PATHS.MY_REVIEWS.split('/').pop(), element: <MyReviews /> },
+          { path: USER_PATHS.VAUCHERS.split('/').pop(), element: <Vauchers /> },
+          { path: USER_PATHS.ADDRESS.split('/').pop(), element: <Address /> },
+          { path: USER_PATHS.PAYMENT.split('/').pop(), element: <Payments /> },
+          { path: USER_PATHS.NOTIFICATIONS.split('/').pop(), element: <Notifications /> },
           { path: USER_PATHS.SETTINGS.split('/').pop(), element: <Settings /> },
           { path: '*', element: <Page404 /> },
         ]

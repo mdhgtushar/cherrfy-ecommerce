@@ -15,7 +15,7 @@ const CartRightSide = () => {
       {/* Floating Cart Button */}
       <button
   onClick={toggleCart}
-  className="fixed right-4 top-1/2 -translate-y-1/2 bg-orange-500 hover:bg-orange-600 text-white p-4 rounded shadow-lg z-50 transition-transform transform hover:scale-110"
+  className="fixed right-4 top-1/2 -translate-y-1/2 bg-primary hover:bg-secondery text-white p-4 rounded shadow-lg z-50 transition-transform transform hover:scale-110"
 >
 <ShoppingCart size={28} />
               {cartItems.length > 0 && (

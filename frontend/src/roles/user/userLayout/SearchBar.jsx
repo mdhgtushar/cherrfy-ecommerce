@@ -46,7 +46,7 @@ const SearchBar = () => {
                 <div className="h-5 border-l border-gray-300 mx-2"></div>
                 <button
                   type="submit"
-                  className="p-2 bg-orange-500 text-white rounded-full hover:bg-orange-600"
+                  className="p-2 bg-primary text-white rounded-full hover:bg-secondery"
                 >
                   <Search className="w-5 h-5" />
                 </button>

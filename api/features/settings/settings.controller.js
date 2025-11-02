@@ -17,62 +17,67 @@ const countryCurrencyMap = {
 
 // Get all settings
 exports.getAllSettings = async (req, res) => {
-    try {
-        const settings = await Setting.find().lean();
-        res.json(settings);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
+  try {
+    const settings = await Setting.find().lean();
+    res.json(settings);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 };
 
 // Get a single setting by key
 exports.getSettingByKey = async (req, res) => {
-    try {
-        const setting = await Setting.findOne({ key: req.params.key }).lean();
-        if (!setting) {
-            return res.status(404).json({ message: 'Setting not found' });
-        }
-        res.json(setting);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
+  try {
+    const setting = await Setting.findOne({ key: req.params.key }).lean();
+    if (!setting) {
+      return res.status(404).json({ message: 'Setting not found' });
     }
+    res.json(setting);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 };
 exports.getCurrency = async (req, res) => {
-    try {
-        const setting = await Setting.findOne({ key: 'currency' }).lean();
-        if (!setting) {
-            return res.status(404).json({ message: 'Setting not found' });
-        }
-        res.json(setting.value);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
+  try {
+    const setting = await Setting.findOne({ key: 'currency' }).lean();
+    if (!setting) {
+      return res.status(404).json({ message: 'Setting not found' });
     }
+    res.json(setting.value);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 };
 // Update a setting by key
 exports.updateSetting = async (req, res) => {
-    try {
-        const updated = await Setting.findOneAndUpdate(
-            { key: req.params.key },
-            { value: req.body.value },
-            { new: true }
-        ).lean();
-        if (!updated) {
-            return res.status(404).json({ message: 'Setting not found' });
-        }
-        res.json(updated);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
+  try {
+    const setting = await Setting.findOne({ key: req.body.key });
+    if (!setting) {
+      const newSetting = await Setting.create({ key: req.body.key, value: req.body.value });
+      res.json(newSetting);
     }
+    const updated = await Setting.findOneAndUpdate(
+      { key: req.body.key },
+      { value: req.body.value },
+      { new: true }
+    ).lean();
+    if (!updated) {
+      return res.status(404).json({ message: 'Setting not found' });
+    }
+    res.json(updated);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 };
 
 // Create a new setting
 exports.addSetting = async (req, res) => {
-    try {
-        const added = await Setting.create(req.body);
-        res.json(added);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
+  try {
+    const added = await Setting.create(req.body);
+    res.json(added);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 };
 
 exports.saveCurrencyFromAPI = async (req, res) => {

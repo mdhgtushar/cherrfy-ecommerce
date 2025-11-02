@@ -1,8 +1,9 @@
 import React from 'react'; 
 import { Link } from 'react-router-dom';
 import USER_PATHS from '../USER_PATHS';
+import logo from "../../../assets/images/cherrfy-logo.png";
 
-const UltimateFooter = () => {
+const Footer = () => {
     const currentYear = new Date().getFullYear();
 
     const paymentMethods = [
@@ -27,10 +28,12 @@ const UltimateFooter = () => {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center text-center md:text-left">
 
                     {/* Column 1: Logo and Copyright */}
-                    <div className="flex flex-col items-center md:items-start row-start-3 md:row-start-1">
-                        <Link to="/" className="mb-2 flex items-center gap-2 hover:opacity-90 transition-opacity">
+                    <div className="flex flex-col items-center md:items-start row-start-3 md:row-start-1 text-center">
+                        <Link to="/" className="mb-2 flex items-center gap-2 hover:opacity-90 transition-opacity mb-5">
                             
-                            <span className="font-bold text-xl tracking-tight text-orange-500">CHERRFY</span>
+                            <span className="font-bold text-xl tracking-tight text-orange-500 h-12">
+                                <img src={logo} className='h-full' />
+                            </span>
                         </Link>
                         <p className="text-xs text-gray-500">
                             © {currentYear} Cherrfy LLC. All Rights Reserved.
@@ -69,4 +72,4 @@ const UltimateFooter = () => {
     );
 };
 
-export default UltimateFooter;
+export default Footer;

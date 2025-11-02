@@ -34,6 +34,7 @@ const navCategories = [
     links: [
       { to: ADMIN_PATHS.DASHBOARD, icon: <Home size={18} />, label: 'Dashboard' },
       { to: ADMIN_PATHS.PRODUCTS.BASE, icon: <Boxes size={18} />, label: 'Product Management' },
+      { to: ADMIN_PATHS.CATEGORY, icon: <ClipboardList size={18} />, label: 'Category Management' },
       { to: ADMIN_PATHS.ORDERS, icon: <ClipboardList size={18} />, label: 'Order Management' },
       { to: ADMIN_PATHS.DISPUTES, icon: <AlertTriangle size={18} />, label: 'Dispute Management' },
       { to: ADMIN_PATHS.USERS, icon: <Users size={18} />, label: 'Users Management' },
@@ -65,9 +66,9 @@ const navCategories = [
       { to: ADMIN_PATHS.BACKUP, icon: <RefreshCcw size={18} />, label: 'Backup & Restore' },
       { to: ADMIN_PATHS.PRICING, icon: <DollarSign size={18} />, label: 'Pricing & Profit Management' },
       { to: ADMIN_PATHS.SETTINGS, icon: <Settings size={18} />, label: 'System Settings' },
-      { to: ADMIN_PATHS.WORKUPDATE, icon: <ClipboardListIcon size={18} />, label: 'Work Update' },
       { to: ADMIN_PATHS.B2C, icon: <ShoppingCart size={18} />, label: 'B2C Management' },
       { to: ADMIN_PATHS.D2C, icon: <Factory size={18} />, label: 'Domestic D2C Management' },
+      { to: ADMIN_PATHS.WORKUPDATE, icon: <ClipboardListIcon size={18} />, label: 'Work Update' },
     ],
   },
 ];

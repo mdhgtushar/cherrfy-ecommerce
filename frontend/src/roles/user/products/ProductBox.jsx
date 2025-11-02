@@ -109,7 +109,7 @@ const ProductBox = memo(({ product }) => {
             {/* Bottom: Action Buttons & Pagination */}
             <div className="opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-opacity duration-300 delay-100">
                 <div className="flex flex-col items-center gap-2">
-                    <button onClick={(e) => handleActionClick(e, handleBuyNow)} className="w-full bg-brand-orange text-white px-4 py-2 rounded-md text-sm font-semibold hover:bg-opacity-90 transition-colors disabled:bg-gray-500 disabled:cursor-not-allowed">Buy Now</button>
+                    <button onClick={(e) => handleActionClick(e, handleBuyNow)} className="w-full bg-primary text-white px-4 py-2 rounded-md text-sm font-semibold hover:bg-opacity-90 transition-colors disabled:bg-gray-500 disabled:cursor-not-allowed">Buy Now</button>
                     <button onClick={(e) => handleActionClick(e, handleAddToCart)} className="w-full bg-black/30 backdrop-blur-sm text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-black/50 transition-colors disabled:bg-gray-500 disabled:cursor-not-allowed">Add to Cart</button>
                 </div>
                 {product.images.length > 1 && (

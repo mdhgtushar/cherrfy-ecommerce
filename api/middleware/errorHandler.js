@@ -9,7 +9,7 @@ class ApiError extends Error {
     this.statusCode = statusCode;
     this.isOperational = isOperational;
     this.status = `${statusCode}`.startsWith('4') ? 'fail' : 'error';
-    
+
     Error.captureStackTrace(this, this.constructor);
   }
 }
@@ -78,6 +78,9 @@ const errorHandler = (err, req, res, next) => {
  * Async error wrapper
  */
 const asyncHandler = (fn) => (req, res, next) => {
+  if (typeof fn !== 'function') {
+    return next(new TypeError('asyncHandler expected a function as an argument'));
+  }
   Promise.resolve(fn(req, res, next)).catch(next);
 };
 

@@ -5,6 +5,7 @@ const ADMIN_PATHS = {
   BASE: ADMIN_BASE,
   DASHBOARD: `${ADMIN_BASE}/dashboard`,
   ABOUT: `${ADMIN_BASE}/about`,
+  CATEGORY: `${ADMIN_BASE}/category`,
   ADMIN: {
     BASE: `${ADMIN_BASE}/admin`,
     LIST: `${ADMIN_BASE}/admin/adminList`,

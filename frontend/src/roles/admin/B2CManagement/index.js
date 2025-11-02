@@ -1,0 +1,10 @@
+export { default as B2CManagement } from './B2CManagement';
+export { default as B2CRouter } from './B2CRouter';
+export { default as B2CHeader } from './B2CHeader';
+export { default as CustomerManagement } from './CustomerManagement';
+export { default as OrderManagement } from './OrderManagement';
+export { default as WishlistManagement } from './WishlistManagement';
+export { default as ReviewsManagement } from './ReviewsManagement';
+export { default as PricingManagement } from './PricingManagement';
+export { default as CouponsManagement } from './CouponsManagement';
+export { default as LoyaltyManagement } from './LoyaltyManagement';

@@ -93,10 +93,10 @@ const SettingsPopup = () => {
       </button> */}
       <div onClick={() => setIsLogOut(true)}>
         <div className="flex items-center text-sm">
-          <div className="flex items-center hover:text-red-600 cursor-pointer">
+          <div className="flex items-center hover:text-secondery cursor-pointer">
             <Settings className="mr-1 w-5 h-5 text-2xl" />
             <div className="text-sm">
-              <div className="text-xs text-gray-500 hover:text-red-600 rounded-full text-black text-left">
+              <div className="text-xs text-gray-500 hover:text-secondery rounded-full text-black text-left">
                 {getCountryName(shipToCountry)} - {currency} /
               </div>
               <div className="font-semibold flex items-center">
@@ -219,7 +219,7 @@ const SettingsPopup = () => {
       </div>
             <button
               onClick={saveChanges}
-              className="mt-6 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+              className="mt-6 px-4 py-2 bg-primary text-white rounded hover:bg-secondery"
             >
               Save
             </button>

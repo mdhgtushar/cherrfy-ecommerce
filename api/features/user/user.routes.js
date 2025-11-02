@@ -28,6 +28,7 @@ router.put('/password', protect, asyncHandler(changePassword));
 router.put('/settings', protect, asyncHandler(updateUserSettings));
 
 // Admin routes
+// router.get('list', protect, admin, asyncHandler())
 router.get('/', protect, admin, asyncHandler(getAllUsers));
 router.get('/:id', protect, admin, asyncHandler(getUserById));
 router.put('/:id', protect, admin, asyncHandler(updateUserById));

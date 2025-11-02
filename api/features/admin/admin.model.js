@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 
 const AdminSchema = new mongoose.Schema({
-
     email: {
         type: String,
         required: true,
@@ -11,7 +10,6 @@ const AdminSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-
     createdAt: {
         type: Date,
         default: Date.now,

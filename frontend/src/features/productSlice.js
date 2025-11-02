@@ -12,7 +12,7 @@ const initialState = {
 
 export const fetchProducts = createAsyncThunk(
     "products/fetchProducts",
-    async ({ country, currency, page = 1, limit = 10 }) => {
+    async ({ country = "BD", currency = "BDT", page = 1, limit = 10 }) => {
         const response = await Api.get(
             `/product/?country=${country}&currency=${currency}&page=${page}&limit=${limit}`
         );

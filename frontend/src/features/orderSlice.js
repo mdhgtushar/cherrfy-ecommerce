@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+import API from '../util/API';
 
 const initialState = {
     orders: [],
@@ -13,8 +14,8 @@ export const fetchOrders = createAsyncThunk(
     'order/fetchOrders',
     async (_, { rejectWithValue }) => {
         try {
-            const response = await axios.get('/api/orders');
-            return response.data;
+            const response = await API.get('/order');
+            return response.data.data;
         } catch (err) {
             return rejectWithValue(err.response?.data || err.message);
         }

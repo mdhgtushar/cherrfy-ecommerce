@@ -1,7 +1,6 @@
-import { Navigate } from "react-router-dom";
+import { Navigate, Routes, Route } from "react-router-dom";
 import ADMIN_PATHS from "./ADMIN_PATHS";
 import React from 'react';
-import { Routes, Route } from 'react-router-dom';
 
 // Layouts
 import AdminLayout from "./adminLayout/AdminLayout";
@@ -29,7 +28,7 @@ import FileMediaManager from "./fileMedia/FileMediaManager";
 import MarketingContentPage from "./marketingContent/MarketingContentPage";
 import AliExpressApiSys from "./aliExpressIntegration/AliExpressApiSys";
 import ProductManagement from "./products/ProductManagement";
-import B2CManagement from "./B2CManagement/B2CManagement";
+import B2CRouter from "./B2CManagement/B2CRouter";
 import D2CManagement from "./D2CManagement/D2CManagement";
 import PricingAndProfitManagement from "./PricingAndProfitManagement/PricingAndProfitManagement";
 import ProductLayout from "./adminLayout/product/ProductLayout";
@@ -64,6 +63,14 @@ import CourierIntegrationLogs from "./shipping/CourierIntegrationLogs.jsx";
 import CampaignsDiscounts from "./campaigns/CampaignsDiscounts";
 import AnalyticsReports from "./analytics/AnalyticsReports";
 import ProductViewPage from "./products/list/ProductViewPage";
+import CustomerManagement from "./B2CManagement/CustomerManagement";
+import OrderManagement from "./B2CManagement/OrderManagement";
+import WishlistManagement from "./B2CManagement/WishlistManagement";
+import ReviewsManagement from "./B2CManagement/ReviewsManagement";
+import PricingManagement from "./B2CManagement/PricingManagement";
+import CouponsManagement from "./B2CManagement/CouponsManagement";
+import LoyaltyManagement from "./B2CManagement/LoyaltyManagement";
+import CategoryManagement from "./category/CategoryManagement.jsx";
 
 export const adminRoutes = [
  
@@ -75,6 +82,7 @@ export const adminRoutes = [
       { path: "about", element: <About /> },
       { path: "workupdate", element: <UserDashboard /> },
       { path: "settings", element: <ProjectForm /> },
+      { path: "category", element: <CategoryManagement /> },
       {
         path: "admin",
         element: <RoleLayout />,
@@ -101,7 +109,15 @@ export const adminRoutes = [
       { path: "media", element: <FileMediaManager /> },
       { path: "marketing", element: <MarketingContentPage /> },
       { path: "aliexpress", element: <AliExpressApiSys /> },
-      { path: "b2c", element: <B2CManagement /> },
+      { path: "b2c", element: <B2CRouter />, children: [
+        { path: "customers", element: <CustomerManagement /> },
+        { path: "orders", element: <OrderManagement /> },
+        { path: "wishlist", element: <WishlistManagement /> },
+        { path: "reviews", element: <ReviewsManagement /> },
+        { path: "pricing", element: <PricingManagement /> },
+        { path: "coupons", element: <CouponsManagement /> },
+        { path: "loyalty", element: <LoyaltyManagement /> },
+      ] },
       { path: "d2c", element: <D2CManagement /> },
       { path: "pricing", element: <PricingAndProfitManagement /> },
       { path: "disputes", element: <DisputeManagement /> },
@@ -146,4 +162,5 @@ export const adminRoutes = [
       { path: "*", element: <Navigate to="/admin/auth/login" /> },
     ],
   },
+
 ];

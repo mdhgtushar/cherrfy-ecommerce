@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { 
-  DollarSign, 
-  ShoppingCart, 
-  Users, 
+import {
+  DollarSign,
+  ShoppingCart,
+  Users,
   Package,
   TrendingUp,
   ArrowUpRight,
@@ -24,32 +24,49 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import ADMIN_PATHS from "../ADMIN_PATHS";
+import API from "../../../util/API";
 
 export default function Dashboard() {
   const [loading, setLoading] = useState(false);
+  const [dashboardData, setDashboardData] = useState({});
+  const getdata = async () => {
+    try {
+      setLoading(true);
+      const response = await API.get("/extra/dashboard");
+      setDashboardData(response.data.data);
+      console.log(response.data.data);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
+    getdata()
+  }, []);
   // Organized dummy data
   const stats = {
     // Primary Metrics
     primary: [
-      { title: "Total Revenue", value: "$124,750", change: "+12.5%", trend: "up", icon: DollarSign, color: "green" },
-      { title: "Total Orders", value: "2,847", change: "+8.2%", trend: "up", icon: ShoppingCart, color: "blue" },
-      { title: "Total Products", value: "1,247", change: "+15.3%", trend: "up", icon: Package, color: "purple" },
-      { title: "Total Users", value: "15,420", change: "+5.7%", trend: "up", icon: Users, color: "indigo" }
+      { title: "Total Revenue", value: "--", change: "+12.5%", trend: "up", icon: DollarSign, color: "green" },
+      { title: "Total Orders", value: dashboardData.totalOrders, change: "+8.2%", trend: "up", icon: ShoppingCart, color: "blue" },
+      { title: "Total Products", value: dashboardData.totalProducts, change: "+15.3%", trend: "up", icon: Package, color: "purple" },
+      { title: "Total Users", value: dashboardData.totalUsers, change: "+5.7%", trend: "up", icon: Users, color: "indigo" }
     ],
 
     // Secondary Metrics
     secondary: [
       { title: "Conversion Rate", value: "3.2%", change: "-0.8%", trend: "down", icon: Target, color: "orange" },
-      { title: "Avg Order Value", value: "$43.85", change: "+2.1%", trend: "up", icon: CreditCard, color: "emerald" },
+      { title: "Avg Order Value", value: "--", change: "+2.1%", trend: "up", icon: CreditCard, color: "emerald" },
       { title: "Active Users", value: "8,920", change: "+12.3%", trend: "up", icon: Activity, color: "cyan" },
       { title: "Page Views", value: "45,230", change: "+18.7%", trend: "up", icon: Eye, color: "pink" }
     ],
 
     // Sales Data
     sales: {
-      today: "$12,450",
-      thisWeek: "$87,450", 
+      today: dashboardData.totalOrders,
+      thisWeek: "$87,450",
       thisMonth: "$324,750",
       growth: "+8.8%"
     },
@@ -95,9 +112,8 @@ export default function Dashboard() {
         <div className={`p-2 rounded-lg bg-${color}-100`}>
           <Icon className={`w-5 h-5 text-${color}-600`} />
         </div>
-        <div className={`flex items-center space-x-1 text-sm ${
-          trend === 'up' ? 'text-green-600' : 'text-red-600'
-        }`}>
+        <div className={`flex items-center space-x-1 text-sm ${trend === 'up' ? 'text-green-600' : 'text-red-600'
+          }`}>
           {trend === 'up' ? <ArrowUpRight className="w-4 h-4" /> : <ArrowDownRight className="w-4 h-4" />}
           <span>{change}</span>
         </div>

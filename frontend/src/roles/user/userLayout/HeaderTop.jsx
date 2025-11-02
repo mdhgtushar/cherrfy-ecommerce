@@ -17,6 +17,7 @@ import SettingsPopup from "./SettingsPopup";
 import ConfirmDialog from "../../../components/ConfirmDialog";
 import { toast } from "react-toastify";
 import LoginModal from "../../user/auth/LoginModal";
+import logo from "../../../assets/images/cherrfy-logo.png";
 
 const useSmartDropdown = () => {
   const [show, setShow] = useState(false);
@@ -100,7 +101,7 @@ const HeaderTop = () => {
                 className="flex items-center space-x-2 text-gray-700"
                 onClick={() => setDrawerOpen(false)}
               >
-                <User className="text-red-500" />
+                <User className="text-primary" />
                 <span>Profile</span>
               </Link>
               <Link
@@ -108,7 +109,7 @@ const HeaderTop = () => {
                 className="flex items-center space-x-2 text-gray-700"
                 onClick={() => setDrawerOpen(false)}
               >
-                <Truck className="text-red-500" />
+                <Truck className="text-primary" />
                 <span>Orders</span>
               </Link>
               <Link
@@ -116,7 +117,7 @@ const HeaderTop = () => {
                 className="flex items-center space-x-2 text-gray-700"
                 onClick={() => setDrawerOpen(false)}
               >
-                <ShoppingCart className="text-red-500" />
+                <ShoppingCart className="text-primary" />
                 <span>Cart ({cartItemCount})</span>
               </Link>
               <Link
@@ -124,14 +125,14 @@ const HeaderTop = () => {
                 className="flex items-center space-x-2 text-gray-700"
                 onClick={() => setDrawerOpen(false)}
               >
-                <Settings className="text-red-500" />
+                <Settings className="text-primary" />
                 <span>Settings</span>
               </Link>
               <button
                 onClick={handleLogout}
                 className="flex items-center space-x-2 text-gray-700"
               >
-                <LogOut className="text-red-500" />
+                <LogOut className="text-primary" />
                 <span>Logout</span>
               </button>
             </>
@@ -141,7 +142,7 @@ const HeaderTop = () => {
                 setDrawerOpen(false);
                 setShowLogin(true);
               }}
-              className="text-red-600 font-semibold"
+              className="text-primary font-semibold"
             >
               Login / Register
             </button>
@@ -159,11 +160,10 @@ const HeaderTop = () => {
             <Menu className="w-6 h-6" />
           </button>
           <Link
-            to="/"
-            className="font-bold text-2xl border-2 p-1 px-5 rounded hover:shadow-md"
-            style={{ color: "#e6931d", borderColor: "#e6931d" }}
+            to="/" 
+            className="h-12"
           >
-            CHERRFY
+            <img src={logo} className="h-full"/>
           </Link>
         </div>
 
@@ -176,7 +176,7 @@ const HeaderTop = () => {
         <div className="items-center space-x-6 md:flex hidden">
           <SettingsPopup />
           <div
-            className="relative cursor-pointer text-sm text-gray-600 hover:text-red-600"
+            className="relative cursor-pointer text-sm text-gray-600 hover:text-secondery"
             onMouseEnter={loginDropdown.handleMouseEnter}
             onMouseLeave={loginDropdown.handleMouseLeave}
             onClick={loginDropdown.handleMouseClick}
@@ -215,45 +215,45 @@ const HeaderTop = () => {
                         to={USER_PATHS.PROFILE}
                         className="flex items-center px-4 py-2 hover:bg-gray-100 text-gray-700"
                       >
-                        <User className="mr-2 text-red-500" />
+                        <User className="mr-2 text-primary" />
                         Profile
                       </Link>
                       <Link
                         to={USER_PATHS.ORDER}
                         className="flex items-center px-4 py-2 hover:bg-gray-100 text-gray-700"
                       >
-                        <Truck className="mr-2 text-red-500" />
+                        <Truck className="mr-2 text-primary" />
                         Orders
                       </Link>
                       <Link
                         to={USER_PATHS.CART}
                         className="flex items-center px-4 py-2 hover:bg-gray-100 text-gray-700"
                       >
-                        <ShoppingCart className="mr-2 text-red-500" />
+                        <ShoppingCart className="mr-2 text-primary" />
                         Cart
                       </Link>
                       <Link
                         to={USER_PATHS.SETTINGS}
                         className="flex items-center px-4 py-2 hover:bg-gray-100 text-gray-700"
                       >
-                        <Settings className="mr-2 text-red-500" />
+                        <Settings className="mr-2 text-primary" />
                         Settings
                       </Link>
                       <button
                         onClick={handleLogout}
                         className="flex items-center px-4 py-2 hover:bg-gray-100 text-gray-700 w-full text-left"
                       >
-                        <LogOut className="mr-2 text-red-500" />
+                        <LogOut className="mr-2 text-primary" />
                         Logout
                       </button>
                     </>
                   ) : (
-                    <button
-                      onClick={() => setShowLogin(true)}
-                      className="text-red-600 font-semibold w-full text-left px-4 py-2"
+                    <Link
+                      to={"/login"}
+                      className="text-primary font-semibold w-full text-left px-4 py-2"
                     >
                       Login / Register
-                    </button>
+                    </Link>
                   )}
                 </div>
               </div>

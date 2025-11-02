@@ -8,6 +8,8 @@ module.exports = {
       // 1. Add your brand color for reusability across your app
       colors: {
         'brand-orange': '#e6931d',
+        'primary': "#D2042D",
+        'secondery': "#FA0F3E"
       },
       // 2. Define the keyframes for our 3D effects.
       // While the cube effect is now handled with inline styles for dynamic rotation,

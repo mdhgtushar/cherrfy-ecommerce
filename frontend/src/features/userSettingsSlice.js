@@ -13,7 +13,7 @@ export const updateUserSettings = createAsyncThunk(
 );
 export const userProfileInfo = createAsyncThunk(
     'userAuth/userProfileInfo',
-     async (credentials, thunkAPI) => {
+    async (credentials, thunkAPI) => {
         // Replace with your API call
         try {
             const res = await API.get("/user/profile");
@@ -88,6 +88,6 @@ const userSettingsSlice = createSlice({
     },
 });
 
-export const { setTheme, setLanguage, setNotifications,setSettingsSlice } = userSettingsSlice.actions;
+export const { setTheme, setLanguage, setNotifications, setSettingsSlice } = userSettingsSlice.actions;
 
 export default userSettingsSlice.reducer;

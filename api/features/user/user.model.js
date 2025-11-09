@@ -77,5 +77,10 @@ const userSchema = new mongoose.Schema({
         default: Date.now
     }
 });
-
+userSchema.set('toJSON', {
+  transform: function (doc, ret) {
+    delete ret.password;
+    return ret;
+  }
+});
 module.exports = mongoose.model('User', userSchema);

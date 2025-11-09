@@ -9,7 +9,7 @@ const returnRefundSchema = new mongoose.Schema(
     },
 
     order: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: String,
       ref: "Order",
       required: true,
     },

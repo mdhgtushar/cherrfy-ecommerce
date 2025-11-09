@@ -1,18 +1,23 @@
 import React from 'react'; 
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
-import { fetchWishlist } from '../../../features/wishlistSlice';
+import { fetchWishlist, removeFromWishlist } from '../../../features/wishlistSlice';
 import { useEffect } from 'react';
 
 export default function Wishlist(){
   const wishlistItems = useSelector(state => state.wishlist.items);
+  const error = useSelector(state => state.wishlist.error);
   const dispatch = useDispatch();
-
+console.log("Wishlist error:", error);
    useEffect (() => {
     dispatch(fetchWishlist());
   },[]);
  
-
+const remove_from_wishlist = (productId) => {
+  console.log("Removing product from wishlist:", productId);
+  // Dispatch action to remove item from wishlist
+  dispatch(removeFromWishlist(productId));
+}
 
   return (
     <div activeKey="wishlist" pageTitle="Wishlist / Favourites">
@@ -25,11 +30,11 @@ export default function Wishlist(){
               <div key={idx} className="bg-white border border-[#E0E0E0] rounded">
                 <div className="h-28 bg-gray-100"></div>
                 <div className="p-3">
-                  <p className="text-sm font-medium text-[#333333]">{i.title}</p>
+                  <p className="text-sm font-medium text-[#333333]">{i.product}</p>
                   <p className="text-sm text-[#D2042D] font-semibold">${i.price}</p>
                   <div className="mt-2 flex items-center gap-2">
                     <a href="#" className="text-xs bg-[#D2042D] hover:bg-[#FA0F3E] text-white px-2 py-1 rounded">Add to Cart</a>
-                    <a href="#" className="text-xs text-gray-500 hover:underline">Remove</a>
+                    <button onClick={() => remove_from_wishlist(i.product)} href="#" className="text-xs text-gray-500 hover:underline">Remove</button>
                   </div>
                 </div>
               </div>

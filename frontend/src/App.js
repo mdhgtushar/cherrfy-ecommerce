@@ -4,7 +4,7 @@ import { vandorRoutes } from "./roles/vendor/vendorRoutes";
 import { Route, Routes } from "react-router-dom";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { checkToken as checkUserToken } from "./features/userAuthSlice";
+import { checkToken as checkUserToken, profileInfo } from "./features/userAuthSlice";
 import { checkToken as checkAdminToken } from "./features/adminAuthSlice";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -19,6 +19,7 @@ function App() {
   useEffect(() => {
     dispatch(checkUserToken());
     dispatch(checkAdminToken());
+    dispatch(profileInfo());
   }, [dispatch]);
 
   const renderRoutes = (routes) =>
@@ -43,13 +44,6 @@ function App() {
 
     return (
     <>
-      <div className="overflow-hidden">
-        <Routes>
-          {renderRoutes(userRoutes)}
-          {renderRoutes(adminRoutes)}
-          {renderRoutes(vandorRoutes)}
-        </Routes>
-      </div>
       <ToastContainer
         position="top-right"
         autoClose={5000}
@@ -62,6 +56,13 @@ function App() {
         pauseOnHover
         theme="light"
       />
+      <div className="overflow-hidden">
+        <Routes>
+          {renderRoutes(userRoutes)}
+          {renderRoutes(adminRoutes)}
+          {renderRoutes(vandorRoutes)}
+        </Routes>
+      </div>
       {/* {user && admin && (
         <div className="fixed bottom-0 right-0 p-4 border m-2">
           <h1 className="text-2xl font-bold">Admin and User both logged in</h1>

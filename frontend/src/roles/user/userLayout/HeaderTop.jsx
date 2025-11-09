@@ -27,21 +27,12 @@ const useSmartDropdown = () => {
     clearTimeout(timeoutRef.current);
     setShow(true);
   };
-
   const handleMouseLeave = () => {
-    timeoutRef.current = setTimeout(() => {
-      setShow(false);
-    }, 300);
+    timeoutRef.current = setTimeout(() => setShow(false), 300);
   };
-  const handleMouseClick = () => {
-    setShow(false);
-  };
-  return {
-    show,
-    handleMouseEnter,
-    handleMouseLeave,
-    handleMouseClick,
-  };
+  const handleMouseClick = () => setShow(false);
+
+  return { show, handleMouseEnter, handleMouseLeave, handleMouseClick };
 };
 
 const HeaderTop = () => {
@@ -63,9 +54,13 @@ const HeaderTop = () => {
   };
 
   const loginDropdown = useSmartDropdown();
-
+  const initials = (name) => {
+    if (!name) return "";
+    const parts = name.trim().split(/\s+/);
+    return (parts[0]?.[0] || "") + (parts[1]?.[0] || "");
+  };
   return (
-    <div className="sticky top-0 z-50 bg-white shadow-md bg-gray-100">
+    <div className="sticky top-0 z-50 bg-white shadow-md">
       <LoginModal
         isOpen={showLogin}
         onClose={() => {
@@ -87,10 +82,10 @@ const HeaderTop = () => {
           drawerOpen ? "translate-x-0" : "-translate-x-full"
         } md:hidden`}
       >
-        <div className="flex items-center justify-between p-4 border-b">
-          <h2 className="text-xl font-semibold">Menu</h2>
+        <div className="flex items-center justify-between p-4 border-b border-[#E0E0E0]">
+          <h2 className="text-xl font-semibold text-[#333333]">Menu</h2>
           <button onClick={() => setDrawerOpen(false)}>
-            <X className="w-6 h-6" />
+            <X className="w-6 h-6 text-gray-700" />
           </button>
         </div>
         <div className="p-4 space-y-4">
@@ -98,42 +93,38 @@ const HeaderTop = () => {
             <>
               <Link
                 to={USER_PATHS.PROFILE}
-                className="flex items-center space-x-2 text-gray-700"
+                className="flex items-center space-x-2 text-gray-700 hover:bg-[#F8F8F8] p-2 rounded"
                 onClick={() => setDrawerOpen(false)}
               >
-                <User className="text-primary" />
-                <span>Profile</span>
+                <User className="text-primary" /> <span>Profile</span>
               </Link>
               <Link
                 to={USER_PATHS.ORDER}
-                className="flex items-center space-x-2 text-gray-700"
+                className="flex items-center space-x-2 text-gray-700 hover:bg-[#F8F8F8] p-2 rounded"
                 onClick={() => setDrawerOpen(false)}
               >
-                <Truck className="text-primary" />
-                <span>Orders</span>
+                <Truck className="text-primary" /> <span>Orders</span>
               </Link>
               <Link
                 to={USER_PATHS.CART}
-                className="flex items-center space-x-2 text-gray-700"
+                className="flex items-center space-x-2 text-gray-700 hover:bg-[#F8F8F8] p-2 rounded"
                 onClick={() => setDrawerOpen(false)}
               >
-                <ShoppingCart className="text-primary" />
+                <ShoppingCart className="text-primary" />{" "}
                 <span>Cart ({cartItemCount})</span>
               </Link>
               <Link
                 to={USER_PATHS.SETTINGS}
-                className="flex items-center space-x-2 text-gray-700"
+                className="flex items-center space-x-2 text-gray-700 hover:bg-[#F8F8F8] p-2 rounded"
                 onClick={() => setDrawerOpen(false)}
               >
-                <Settings className="text-primary" />
-                <span>Settings</span>
+                <Settings className="text-primary" /> <span>Settings</span>
               </Link>
               <button
                 onClick={handleLogout}
-                className="flex items-center space-x-2 text-gray-700"
+                className="flex items-center space-x-2 text-gray-700 hover:bg-[#F8F8F8] p-2 rounded w-full text-left"
               >
-                <LogOut className="text-primary" />
-                <span>Logout</span>
+                <LogOut className="text-primary" /> <span>Logout</span>
               </button>
             </>
           ) : (
@@ -142,7 +133,7 @@ const HeaderTop = () => {
                 setDrawerOpen(false);
                 setShowLogin(true);
               }}
-              className="text-primary font-semibold"
+              className="text-primary font-semibold w-full text-left p-2 rounded hover:bg-[#F8F8F8]"
             >
               Login / Register
             </button>
@@ -150,29 +141,24 @@ const HeaderTop = () => {
         </div>
       </div>
 
+      {/* Desktop Header */}
       <div className="container mx-auto px-4 py-3 flex items-center justify-between">
-        {/* Left side - Logo + Drawer icon */}
         <div className="flex items-center gap-4">
           <button
             onClick={() => setDrawerOpen(true)}
-            className="md:hidden block text-gray-700"
+            className="md:hidden text-gray-700"
           >
             <Menu className="w-6 h-6" />
           </button>
-          <Link
-            to="/" 
-            className="h-12"
-          >
-            <img src={logo} className="h-full"/>
+          <Link to="/" className="h-12">
+            <img src={logo} className="h-full" />
           </Link>
         </div>
 
-        {/* Search */}
         <div className="flex-1 mx-4 hidden md:block">
           <SearchBar />
         </div>
 
-        {/* Right - Desktop only */}
         <div className="items-center space-x-6 md:flex hidden">
           <SettingsPopup />
           <div
@@ -184,23 +170,21 @@ const HeaderTop = () => {
             <div className="flex flex-col">
               <span>Welcome - </span>
               {user ? (
-                <span className="font-semibold">{user.username}</span>
+                <span className="font-semibold">{user.name}</span>
               ) : (
                 <span className="font-semibold">Login/Register</span>
               )}
             </div>
 
             {loginDropdown.show && (
-              <div className="absolute top-full right-0 mt-2 bg-white border shadow-lg rounded z-50 p-2 w-64">
-                <div className="flex items-center space-x-3 border-b pb-3">
-                  <img
-                    src={user?.avatar}
-                    alt={user?.name}
-                    className="w-10 h-10 rounded-full border"
-                  />
+              <div className="absolute top-full right-0 mt-2 bg-white border border-[#E0E0E0] shadow-lg rounded z-50 p-4 w-64">
+                <div className="flex items-center space-x-3 border-b border-[#E0E0E0] pb-3">
+                  <div className="w-10 h-10 flex-none flex items-center justify-center rounded-full bg-[#D2042D] text-white text-lg font-semibold border">
+                    {initials(user?.name || "G")}
+                  </div>
                   <div>
-                    <h2 className="text-lg font-semibold">
-                      {user?.username || "Guest"}
+                    <h2 className="text-lg font-semibold text-[#333333]">
+                      {user?.name || "Guest"}
                     </h2>
                     <p className="text-sm text-gray-500">
                       {user?.email || "Please Login"}
@@ -213,44 +197,39 @@ const HeaderTop = () => {
                     <>
                       <Link
                         to={USER_PATHS.PROFILE}
-                        className="flex items-center px-4 py-2 hover:bg-gray-100 text-gray-700"
+                        className="flex items-center px-4 py-2 hover:bg-[#F8F8F8] text-gray-700 rounded"
                       >
-                        <User className="mr-2 text-primary" />
-                        Profile
+                        <User className="mr-2 text-primary" /> Profile
                       </Link>
                       <Link
                         to={USER_PATHS.ORDER}
-                        className="flex items-center px-4 py-2 hover:bg-gray-100 text-gray-700"
+                        className="flex items-center px-4 py-2 hover:bg-[#F8F8F8] text-gray-700 rounded"
                       >
-                        <Truck className="mr-2 text-primary" />
-                        Orders
+                        <Truck className="mr-2 text-primary" /> Orders
                       </Link>
                       <Link
                         to={USER_PATHS.CART}
-                        className="flex items-center px-4 py-2 hover:bg-gray-100 text-gray-700"
+                        className="flex items-center px-4 py-2 hover:bg-[#F8F8F8] text-gray-700 rounded"
                       >
-                        <ShoppingCart className="mr-2 text-primary" />
-                        Cart
+                        <ShoppingCart className="mr-2 text-primary" /> Cart
                       </Link>
                       <Link
                         to={USER_PATHS.SETTINGS}
-                        className="flex items-center px-4 py-2 hover:bg-gray-100 text-gray-700"
+                        className="flex items-center px-4 py-2 hover:bg-[#F8F8F8] text-gray-700 rounded"
                       >
-                        <Settings className="mr-2 text-primary" />
-                        Settings
+                        <Settings className="mr-2 text-primary" /> Settings
                       </Link>
                       <button
                         onClick={handleLogout}
-                        className="flex items-center px-4 py-2 hover:bg-gray-100 text-gray-700 w-full text-left"
+                        className="flex items-center px-4 py-2 hover:bg-[#F8F8F8] text-gray-700 w-full rounded text-left"
                       >
-                        <LogOut className="mr-2 text-primary" />
-                        Logout
+                        <LogOut className="mr-2 text-primary" /> Logout
                       </button>
                     </>
                   ) : (
                     <Link
                       to={"/login"}
-                      className="text-primary font-semibold w-full text-left px-4 py-2"
+                      className="text-primary font-semibold w-full text-left px-4 py-2 rounded hover:bg-[#F8F8F8]"
                     >
                       Login / Register
                     </Link>

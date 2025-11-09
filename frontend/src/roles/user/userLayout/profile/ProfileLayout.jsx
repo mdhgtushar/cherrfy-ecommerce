@@ -6,10 +6,7 @@ import { useSelector } from "react-redux";
 
 const siteName = "CHERRFY";
 
-
-
 // Function to generate user initials
-
 
 // 🔥 Build navigation items with automatic active detection
 function buildNavItems(currentPath) {
@@ -114,21 +111,47 @@ function buildNavItems(currentPath) {
   ];
 }
 
-export default function SharedLayout({
-  pageTitle = `${siteName} - Account`,
-}) {
+export default function SharedLayout({ pageTitle = `${siteName} - Account` }) {
   const location = useLocation();
   const navGroups = buildNavItems(location.pathname);
   const userData = useSelector((state) => state.userAuth.user);
-const user = {
-  name: userData.username,
-  email: userData.email,
-  tier: "Gold Member",
-};
-const initials = (name) => {
-  const parts = name.trim().split(/\s+/);
-  return (parts[0]?.[0] || "") + (parts[1]?.[0] || "");
-};
+  const loading = useSelector((state) => state.userAuth.loading);
+  const user = {
+    name: userData.name,
+    email: userData.email,
+    tier: "Gold Member",
+  };
+  const initials = (name) => {
+    if (!name) return "";
+    const parts = name.trim().split(/\s+/);
+    return (parts[0]?.[0] || "") + (parts[1]?.[0] || "");
+  };
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-2xl font-semibold text-[#333333]">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+  if (user.name === undefined) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-2xl font-semibold text-[#333333]">
+            You are not logged in.
+          </p>
+          <Link
+            to={USER_PATHS.LOGIN}
+            className="text-sm text-primary font-medium mt-3"
+          >
+            Login →
+          </Link>
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="min-h-screen antialiased text-gray-800">
       <div className="mx-auto px-4 sm:px-6 lg:px-8 pt-0 pb-12">
@@ -182,9 +205,7 @@ const initials = (name) => {
                             <Icon
                               size={18}
                               className={`mr-3 ${
-                                item.active
-                                  ? "text-[#D2042D]"
-                                  : "text-gray-500"
+                                item.active ? "text-[#D2042D]" : "text-gray-500"
                               }`}
                             />
                           )}

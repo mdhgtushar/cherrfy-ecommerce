@@ -9,8 +9,8 @@ export const setUnauthorizedHandler = (handler) => {
 };
 
 const API = axios.create({
-  baseURL: 'http://localhost:8080/api',
-  // baseURL: 'https://api.cherrfy.com/api',
+  // baseURL: 'http://localhost:8080/api',
+  baseURL: 'https://api.cherrfy.com/api',
   headers: {
     'Content-Type': 'application/json',
     'Access-Control-Allow-Origin': '*',

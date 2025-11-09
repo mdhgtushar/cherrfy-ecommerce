@@ -4,6 +4,7 @@ const router = express.Router();
 const { OAuth2Client } = require("google-auth-library");
 const jwt = require("jsonwebtoken");
 const User = require("./user.model"); // আপনার ইউজার মডেল
+const { generateUserToken } = require("../../utils/generateToken");
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 router.post("/google", async (req, res) => {
@@ -34,22 +35,19 @@ router.post("/google", async (req, res) => {
     }
 
     // create our own JWT
-    const token = jwt.sign(
-      { id: user._id, email: user.email },
-      process.env.JWT_SECRET,
-      { expiresIn: process.env.JWT_EXPIRES_IN || "7d" }
-    );
+    // const token = jwt.sign(
+    //   { id: user._id, email: user.email },
+    //   process.env.JWT_SECRET,
+    //   { expiresIn: process.env.JWT_EXPIRES_IN || "7d" }
+    // );
+    const token = generateUserToken(user);
 
     return res.json({
       success: true,
       message: 'Login successful',
       data: {
         token,
-        user: {
-          id: user._id,
-          username: user.name,
-          email: user.email
-        }
+        user
       }
     });
   } catch (err) {

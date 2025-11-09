@@ -43,6 +43,8 @@ router.use("/media", mediaRoutes)
 router.use('/extra', extraRoutes);
 router.use("/auth", googleAuth)
 router.use("/auth", facebookAuth)
-router.use("/return-refund", returnRefundRoutes);  
+router.use("/return-refund", returnRefundRoutes); 
+router.use("/shipping-address", require("./shippingAddress/shippingAddress.router.js"));
+router.use("/payment-methods", require("./paymentMethod/paymentMethod.router.js"));
 
 module.exports = router; 

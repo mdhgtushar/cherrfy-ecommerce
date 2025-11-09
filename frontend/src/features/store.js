@@ -12,6 +12,7 @@ import followedStoresReducer from "./followedStoresSlice";
 import orderReducer from './orderSlice';
 import { setUnauthorizedHandler } from "../util/API";
 import returnRefundReducer from "./returnRefundSlice";
+import  shippingAddresse    from "./shippingAddressSlice";
 
 
 const store = configureStore({
@@ -26,7 +27,9 @@ const store = configureStore({
     wishlist: wishlistReducer,
     followedStores: followedStoresReducer,
     order: orderReducer,
-    returns: returnRefundReducer
+    returns: returnRefundReducer,
+    shippingAddresses: shippingAddresse,
+    paymentMethods: require("./paymentMethodSlice").default
   },
 });
  

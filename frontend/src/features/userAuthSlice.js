@@ -46,6 +46,19 @@ export const registerUser = createAsyncThunk(
     }
 )
 
+export const profileInfo = createAsyncThunk(
+    'userAuth/profileInfo',
+    async (_, thunkAPI) => {
+        // Replace with your API call
+        try {
+            const res = await Api.get("/user/profile");
+            return res.data;
+        } catch (err) {
+            return thunkAPI.rejectWithValue(err.response.data.message);
+        }
+    }
+)
+
 
 
 const token = localStorage.getItem("userToken");
@@ -91,6 +104,19 @@ const userAuthSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
+            .addCase(profileInfo.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(profileInfo.fulfilled, (state, action) => {
+                state.loading = false;
+                state.user = action.payload.data;
+                state.error = null;
+            })
+            .addCase(profileInfo.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload || 'Profile info failed';
+            })
             .addCase(loginUser.pending, (state) => {
                 state.loading = true;
                 state.error = null;
@@ -98,7 +124,7 @@ const userAuthSlice = createSlice({
             .addCase(loginUser.fulfilled, (state, action) => {
                 state.loading = false;
                 state.token = action.payload.data.token;
-                state.user = action.payload.data.token && action.payload.data.token.split('.').length === 3 ? jwtDecode(action.payload.data.token) : null;
+                state.user = action.payload.data.user;
                 state.error = null;
                 localStorage.setItem("userToken", action.payload.data.token);
             })

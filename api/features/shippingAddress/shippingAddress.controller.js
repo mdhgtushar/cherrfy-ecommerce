@@ -1,4 +1,4 @@
-import ShippingAddress from "../models/shippingAddressModel.js";
+import ShippingAddress from "./shippingAddress.model.js";
 
 /**
  * @desc    Create new shipping address

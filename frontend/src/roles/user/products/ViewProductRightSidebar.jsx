@@ -5,6 +5,15 @@ import { useNavigate, useParams } from "react-router-dom";
 import { addToCart, checkout } from "../../../features/cartSlice";
 import USER_PATHS from "../USER_PATHS";
 import API from "../../../util/API";
+import { addToWishlist } from "../../../features/wishlistSlice";
+import {
+  Heart,
+  ShoppingBasket,
+  ShoppingCart,
+  Star,
+  WashingMachine,
+} from "lucide-react";
+import { toast, ToastContainer } from "react-toastify";
 
 const ViewProductRightSidebar = ({
   selectedProduct,
@@ -27,11 +36,8 @@ const ViewProductRightSidebar = ({
   // Memoized product info for safe access
   const productInfo = useMemo(() => {
     return {
-      subject:    selectedProduct?.name ||
-        "Unnamed Product",
-      productId:
-        selectedProduct?.productId ||
-        null,
+      subject: selectedProduct?.name || "Unnamed Product",
+      productId: selectedProduct?.productId || null,
     };
   }, [selectedProduct]);
 
@@ -111,11 +117,7 @@ const ViewProductRightSidebar = ({
   };
 
   const handleAddToCart = () => {
-    if (
-      selectedSKU &&
-      selectedSKU.sku_available_stock > 0 &&
-      qty > 0
-    ) {
+    if (selectedSKU && selectedSKU.sku_available_stock > 0 && qty > 0) {
       setIsAddingToCart(true);
       dispatch(
         addToCart({
@@ -127,10 +129,10 @@ const ViewProductRightSidebar = ({
           sku_id: selectedSKU?.sku_id,
         })
       );
-      alert("Product added to cart!");
+      toast.success("Product added to cart!");
       setIsAddingToCart(false);
     } else {
-      alert(
+      toast.error(
         "Cannot add to cart: Please select a valid option and ensure quantity is positive and in stock."
       );
     }
@@ -169,15 +171,22 @@ const ViewProductRightSidebar = ({
   const isAddToWishlistDisabled = isAvailable || commonDisabled;
   const isShareButtonDisabled = commonDisabled;
 
+  const onAddToWishlist = (productId) => {
+    dispatch(addToWishlist(productId));
+    toast.success("Wishlist Added.");
+  };
   return (
     <div className="w-full md:w-1/4 p-4 pt-0 bg-white">
+      <ToastContainer />
       <div className="bg-white p-6 rounded-lg shadow-lg border border-gray-200 w-full">
         <h2 className="text-lg font-semibold mb-4 text-gray-800">
           Shipping & Purchase
         </h2>
 
         {isShippingLoading ? (
-          <p className="text-blue-600 text-center py-4">Loading shipping info...</p>
+          <p className="text-blue-600 text-center py-4">
+            Loading shipping info...
+          </p>
         ) : (
           mockShippingData &&
           Object.keys(mockShippingData).length > 0 && (
@@ -234,10 +243,7 @@ const ViewProductRightSidebar = ({
         </div>
 
         <div className="mt-4 flex items-center space-x-3">
-          <label
-            htmlFor="qty"
-            className="text-sm font-medium text-gray-700"
-          >
+          <label htmlFor="qty" className="text-sm font-medium text-gray-700">
             Qty:
           </label>
           <div className="flex items-center border border-gray-300 rounded-md overflow-hidden shadow-sm">
@@ -272,11 +278,18 @@ const ViewProductRightSidebar = ({
             </button>
           </div>
           <button
-            className="flex-1 bg-gradient-to-r from-red-600 to-red-700 text-white font-bold px-4 py-2 rounded-md shadow-md hover:from-red-700 hover:to-red-800 transform hover:scale-105 transition-all duration-200 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:from-gray-400 disabled:to-gray-500"
+            className="flex-1 flex items-center justify-center bg-gradient-to-r from-red-600 to-red-700 text-white font-bold px-4 py-2 rounded-md shadow-md hover:from-red-700 hover:to-red-800 transform hover:scale-105 transition-all duration-200 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:from-gray-400 disabled:to-gray-500"
             onClick={handleAddToCart}
             disabled={isAddToCartDisabled}
           >
-            {isAddingToCart ? "Adding..." : "Add to Cart"}
+            {isAddingToCart ? (
+              "Adding..."
+            ) : (
+              <span className="flex items-center">
+                <ShoppingCart className="mr-2 h-5 w-5" />
+                Cart
+              </span>
+            )}
           </button>
         </div>
 
@@ -290,29 +303,27 @@ const ViewProductRightSidebar = ({
 
         <div className="mt-2 grid grid-cols-2 gap-2">
           <button
-            className="border border-gray-300 text-gray-700 px-4 py-2 rounded-md w-full hover:bg-gray-100 transition duration-200 ease-in-out flex items-center justify-center space-x-2 shadow-sm hover:shadow-md transform hover:scale-102 focus:outline-none focus:ring-1 focus:ring-gray-400"
+            className="border  border-gray-300 text-yellow-700 px-4 py-2 rounded-md w-full hover:bg-gray-100 transition duration-200 ease-in-out flex items-center justify-center space-x-2 shadow-sm hover:shadow-md transform hover:scale-102 focus:outline-none focus:ring-1 focus:ring-gray-400"
             onClick={handleAddToFavorite}
             disabled={isAddToFavoriteDisabled}
           >
-            <svg
-              className="w-5 h-5 text-yellow-500"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.538 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.783.57-1.838-.197-1.538-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.462a1 1 0 00.95-.69l1.07-3.292z"></path>
-            </svg>
-            <span>{isAddingToFavorite ? "Favoriting..." : "Add to Favorite"}</span>
+            <span>
+              {isAddingToFavorite ? (
+                "Favoriting..."
+              ) : (
+                <span className="flex items-center">
+                  <Star /> <span className="text-sm ml-1">Favorite</span>
+                </span>
+              )}
+            </span>
           </button>
 
           <button
-            className="border border-gray-300 text-gray-700 px-4 py-2 rounded-md w-full hover:bg-gray-100 transition duration-200 ease-in-out flex items-center justify-center space-x-2 shadow-sm hover:shadow-md transform hover:scale-102 focus:outline-none focus:ring-1 focus:ring-gray-400"
-            onClick={() => {
-              alert("Added to Wishlist!");
-            }}
-            disabled={isAddToWishlistDisabled}
+            className="border  border-gray-300 text-primary px-4 py-2 rounded-md w-full hover:bg-gray-100 transition duration-200 ease-in-out flex items-center justify-center space-x-2 shadow-sm hover:shadow-md transform hover:scale-102 focus:outline-none focus:ring-1 focus:ring-gray-400"
+            onClick={() => onAddToWishlist(id)}
+            // disabled={isAddToWishlistDisabled}
           >
-            <span className="text-red-500 text-lg">❤</span> <span>Add to Wishlist</span>
+            <Heart /> <span className="text-sm ml-1">Wishlist</span>
           </button>
         </div>
 

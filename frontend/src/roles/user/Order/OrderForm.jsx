@@ -1,4 +1,6 @@
+ 
 import React, { useState, useMemo } from 'react';
+import { Link } from 'react-router-dom';
 
 export default function Checkout(){
   const [region, setRegion] = useState('BD');
@@ -51,9 +53,9 @@ export default function Checkout(){
 
         <div className="bg-white border border-[#E0E0E0] rounded-md p-4 mb-6">
           <ol className="flex items-center text-xs text-gray-500 gap-2">
-            <li className="flex items-center gap-2"><span className="w-6 h-6 rounded-full bg-[#D2042D] text-white flex items-center justify-center">1</span> Cart</li>
+            <li className="flex items-center gap-2"><Link to="/cart" className="flex items-center gap-2"><span className="w-6 h-6 rounded-full bg-[#D2042D] text-white flex items-center justify-center">1</span> Cart </Link></li>
             <span className="text-gray-300">—</span>
-            <li className="flex items-center gap-2"><span className="w-6 h-6 rounded-full bg-[#D2042D] text-white flex items-center justify-center">2</span> Address</li>
+            <li className="flex items-center gap-2"><Link to="/shipping-address" className="flex items-center gap-2"><span className="w-6 h-6 rounded-full bg-[#D2042D] text-white flex items-center justify-center">2</span> Address</Link> </li>
             <span className="text-gray-300">—</span>
             <li className="flex items-center gap-2 font-semibold text-[#D2042D]"><span className="w-6 h-6 rounded-full border border-[#D2042D] text-[#D2042D] flex items-center justify-center">3</span> Payment</li>
             <span className="text-gray-300">—</span>
@@ -335,7 +337,7 @@ export default function Checkout(){
                 <label className="flex items-center gap-2 text-xs mt-2"><input type="checkbox" checked={termsAccepted} onChange={e=>setTermsAccepted(e.target.checked)} className="rounded"/> I agree to the Terms and Privacy Policy.</label>
               </div>
             </div>
-            <button disabled={!termsAccepted} className={`w-full text-white font-semibold py-3 rounded ${termsAccepted ? 'bg-[#D2042D] hover:bg-[#FA0F3E]' : 'bg-[#D2042D]/60 cursor-not-allowed'}`}>Place Order</button>
+            <Link to="/review-order" disabled={!termsAccepted} className={`w-full block text-center text-white font-semibold py-3 rounded ${termsAccepted ? 'bg-[#D2042D] hover:bg-[#FA0F3E]' : 'bg-[#D2042D]/60 cursor-not-allowed'}`}>Place Order</Link>
             <div className="flex items-center justify-center gap-4 text-[11px] text-gray-500">
               <span>🔒 SSL Secured</span>
               <span>💳 PCI-DSS Compliant</span>

@@ -1,12 +1,12 @@
-import express from "express";
-import {
+const express = require("express");
+const {
   createShippingAddress,
   getUserAddresses,
   updateShippingAddress,
   deleteShippingAddress,
   setDefaultAddress,
-} from "../controllers/shippingAddressController.js";
-import { protect } from "../middleware/authMiddleware.js"; // assumes JWT auth middleware
+} = require("./shippingAddress.controller.js");
+const { protect } = require("../../middleware/authMiddleware.js"); // assumes JWT auth middleware
 
 const router = express.Router();
 
@@ -20,4 +20,4 @@ router.route("/:id")
 
 router.patch("/default/:id", protect, setDefaultAddress);
 
-export default router;
+module.exports = router;

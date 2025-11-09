@@ -1,32 +1,38 @@
-import React from 'react'; 
+import React, { useEffect } from 'react'; 
+import { useDispatch, useSelector } from 'react-redux';  
+import { fetchPaymentMethods } from '../../../features/paymentMethodSlice';
 
 export default function Payments(){
+  const paymentMethods = useSelector(state => state.paymentMethods.paymentMethods);
+
+  const dispatch = useDispatch();
+
+useEffect(() => { 
+  dispatch(fetchPaymentMethods());
+}, [dispatch]);
+
   return (
     <div activeKey="payments" pageTitle="Payment Methods">
       <div className="bg-white border border-[#E0E0E0] rounded">
         <div className="border-b border-[#E0E0E0] p-4 font-semibold text-[#333333]">Payment Methods</div>
         <div className="p-6">
           <div className="space-y-3">
-            <div className="flex items-center justify-between p-4 border border-[#E0E0E0] rounded">
-              <div>
-                <p className="font-semibold text-[#333333]">Visa ending in 4242</p>
-                <p className="text-sm text-gray-600">Expires 10/27</p>
+            {paymentMethods.length === 0 && (<p className="text-sm text-gray-600">No payment methods added yet.</p>
+            )}
+            {paymentMethods.map(method => (
+              <div key={method.id} className="flex items-center justify-between p-4 border border-[#E0E0E0] rounded">
+                <div> 
+                  <p className="font-semibold text-[#333333]">{method.type}</p>
+                  <p className="text-sm text-gray-600">{method.accountNumber}</p>
+                </div>
+                <div className="space-x-2">
+                  <span className="text-xs px-2 py-1 rounded bg-green-100 text-green-700">Default</span>
+                  <a href="#" className="text-sm text-[#D2042D] hover:underline">Edit</a>
+                  <a href="#" className="text-sm text-gray-500 hover:underline">Remove</a>
+                </div>    
               </div>
-              <div className="space-x-2">
-                <span className="text-xs px-2 py-1 rounded bg-green-100 text-green-700">Default</span>
-                <a href="#" className="text-sm text-[#D2042D] hover:underline">Edit</a>
-                <a href="#" className="text-sm text-gray-500 hover:underline">Remove</a>
-              </div>
-            </div>
-            <div className="flex items-center justify-between p-4 border border-[#E0E0E0] rounded">
-              <div>
-                <p className="font-semibold text-[#333333]">Bkash</p>
-                <p className="text-sm text-gray-600">Default</p>
-              </div>
-              <div className="space-x-2">
-                <a href="#" className="text-sm text-gray-500 hover:underline">Manage</a>
-              </div>
-            </div>
+            ))} 
+              
           </div>
 
           <div className="mt-4">

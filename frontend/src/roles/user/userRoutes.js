@@ -29,6 +29,9 @@ import Vauchers from "./profile/Vouchers"
 import Payments from "./profile/Payments"
 import Address from "./profile/Addresses"
 import Notifications from "./profile/Notifications"
+import AddressPage from './Order/AddressPage';
+import ReviewOrder from './Order/ReviewOrder';
+import OrderSuccess from './Order/OrderSuccess';
 
 export const userRoutes = [
   {
@@ -42,6 +45,8 @@ export const userRoutes = [
       // { path: USER_PATHS.ORDER.slice(1), element: <OrdersPage /> },
       { path: USER_PATHS.ORDER_DETAILS.slice(1), element: <OrderDetails /> },
       { path: USER_PATHS.CHECKOUT.slice(1), element: <OrderForm /> },
+      { path: USER_PATHS.SHIPPING.slice(1), element: <AddressPage /> },
+      { path: USER_PATHS.REVIEWORDER.slice(1), element: <ReviewOrder /> },
       // { path: USER_PATHS.PROFILE.slice(1), element: <UserDashboardPage /> },
       { path: USER_PATHS.LOGIN.slice(1), element: <LoginPage /> },
       { path: USER_PATHS.REGISTER.slice(1), element: <RegisterPage /> },
@@ -70,5 +75,6 @@ export const userRoutes = [
 
     ],
   },
+  { path: USER_PATHS.SUCCESSORDER.slice(1), element: <OrderSuccess /> },
 
 ];

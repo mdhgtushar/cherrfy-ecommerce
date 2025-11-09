@@ -13,7 +13,7 @@ export default function Profile() {
   const ordersInTransit = orders.filter((o) => !o.isDelivered).length;
   const availableVouchers = 3;
   const unreadNotifications = 5;
-  const user = { name: userAuth.user.username, email: userAuth.user.email };
+  const user = { name: userAuth.user.name, email: userAuth.user.email };
   const products = useSelector((state) => state.products.products);
 
   const recommendations = products;
@@ -35,6 +35,7 @@ export default function Profile() {
     if (products.length === 0)
       dispatch(fetchProducts({ country: "US", currency: "USD", page: 2 }));
   }, [dispatch, products.length]);
+  
   return (
     <div activeKey="dashboard" pageTitle="Account Overview">
       <div className="mb-6">

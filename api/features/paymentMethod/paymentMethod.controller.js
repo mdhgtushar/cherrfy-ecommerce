@@ -1,4 +1,4 @@
-import PaymentMethod from "../models/paymentMethodModel.js";
+import PaymentMethod from "./paymentMethod.model.js";
 
 /**
  * @desc    Add a new payment method

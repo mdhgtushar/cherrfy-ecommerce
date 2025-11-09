@@ -4,6 +4,7 @@ import TopPicks from "../products/TopPicks";
 import CategoryHeader from "../userLayout/CategoryHeader";
 import HeroPanel from "./HeroPanel";
 import CartRightSide from "../Order/CartRightSide";
+import ChatSidebar from "../../../components/ChatSidebar";
 
 const MainPage = () => {
   return (
@@ -13,6 +14,7 @@ const MainPage = () => {
       <CategoryHeader />
       <TopPicks /> 
       <CartRightSide />
+      {/* <ChatSidebar /> */}
     </div>
   );
 };

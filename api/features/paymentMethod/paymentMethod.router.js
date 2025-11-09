@@ -1,12 +1,13 @@
-import express from "express";
-import {
+const express = require("express");
+
+const {
   addPaymentMethod,
-  getUserPaymentMethods,
-  updatePaymentMethod,
+  getUserPaymentMethods, 
+  updatePaymentMethod,  
   deletePaymentMethod,
-  setDefaultPaymentMethod,
-} from "../controllers/paymentMethodController.js";
-import { protect } from "../middleware/authMiddleware.js"; // JWT auth middleware
+  setDefaultPaymentMethod
+} = require("./paymentMethod.controller.js");
+const { protect } = require("../../middleware/auth.middleware.js"); 
 
 const router = express.Router();
 
@@ -22,4 +23,4 @@ router
 
 router.patch("/default/:id", protect, setDefaultPaymentMethod);
 
-export default router;
+module.exports = router;  

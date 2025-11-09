@@ -2,22 +2,11 @@ import React, { useState, useEffect } from "react";
 import { ChevronDown } from "lucide-react";
 import API from "../../../util/API";
 
-// Fetch category data from API
-const CategoryNavigationBar = () => {
-  const [categoryData, setCategoryData] = useState([]);
+/* ------------------------------
+   🖥️ Desktop Category Navigation
+------------------------------ */
+const CategoryNavigationBar = ({ categoryData }) => {
   const [hoveredCategory, setHoveredCategory] = useState(null);
-
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const data = await API.get("/category");
-        setCategoryData(data.data);
-      } catch (error) {
-        console.error("Error fetching categories:", error);
-      }
-    };
-    fetchCategories();
-  }, []);
 
   return (
     <div className="hidden md:flex bg-white border-b border-gray-200 shadow-sm">
@@ -27,55 +16,67 @@ const CategoryNavigationBar = () => {
       >
         {categoryData.map((category) => (
           <div
-            key={category.name}
+            key={category._id}
             className="relative h-full flex items-center"
             onMouseEnter={() => setHoveredCategory(category.name)}
           >
+            {/* Top-Level Category */}
             <a
-              href={category.href}
-              className="relative px-4 h-full flex items-center text-sm font-medium text-gray-700 hover:text-secondery gap-1 transition-colors"
+              href={`#${category.name.toLowerCase().replace(/\s+/g, "-")}`}
+              className="relative px-4 h-full flex items-center text-sm font-medium text-gray-700 hover:text-orange-500 gap-1 transition-colors"
             >
               {category.name}
-              {category.children && (
+
+              {category.subcategories?.length > 0 && (
                 <ChevronDown
                   className={`w-4 h-4 transition-transform ${
                     hoveredCategory === category.name ? "rotate-180" : ""
                   }`}
                 />
               )}
+
               {hoveredCategory === category.name && (
-                <span className="absolute bottom-0 left-0 w-full h-0.5 bg-secondery" />
+                <span className="absolute bottom-0 left-0 w-full h-0.5 bg-orange-500" />
               )}
             </a>
 
-            {/* Dropdown menu for subcategories */}
-            {hoveredCategory === category.name && category.children && (
-              <div className="absolute top-full left-1/2 -translate-x-1/2 mt-0 w-max max-w-4xl bg-white border-x border-b border-gray-200 rounded-b-lg shadow-lg p-6 animate-fade-in-down">
-                <div className="flex gap-x-10 gap-y-6">
-                  {category.children.map((subCategory) => (
-                    <div key={subCategory.name} className="flex-1 min-w-[200px]">
-                      <a
-                        href={subCategory.href}
-                        className="font-bold text-gray-800 text-md mb-3 block hover:text-orange-500"
-                      >
-                        {subCategory.name}
-                      </a>
-                      <div className="space-y-2">
-                        {subCategory.children?.map((item) => (
-                          <a
-                            key={item.name}
-                            href={item.href}
-                            className="block text-sm text-gray-600 hover:text-secondery transition-colors"
-                          >
-                            {item.name}
-                          </a>
-                        ))}
+            {/* Subcategories Dropdown */}
+            {hoveredCategory === category.name &&
+              category.subcategories?.length > 0 && (
+                <div className="absolute top-full left-1/2 -translate-x-1/2 mt-0 w-max max-w-4xl bg-white border-x border-b border-gray-200 rounded-b-lg shadow-lg p-6 animate-fade-in-down">
+                  <div className="flex gap-x-10 gap-y-6">
+                    {category.subcategories.map((sub) => (
+                      <div key={sub._id} className="flex-1 min-w-[200px]">
+                        <a
+                          href={`#${sub.name
+                            .toLowerCase()
+                            .replace(/\s+/g, "-")}`}
+                          className="font-bold text-gray-800 text-md mb-3 block hover:text-orange-500"
+                        >
+                          {sub.name}
+                        </a>
+
+                        {/* Nested sub-subcategories (optional) */}
+                        {sub.subcategories?.length > 0 && (
+                          <div className="space-y-2">
+                            {sub.subcategories.map((item) => (
+                              <a
+                                key={item._id}
+                                href={`#${item.name
+                                  .toLowerCase()
+                                  .replace(/\s+/g, "-")}`}
+                                className="block text-sm text-gray-600 hover:text-orange-500 transition-colors"
+                              >
+                                {item.name}
+                              </a>
+                            ))}
+                          </div>
+                        )}
                       </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
           </div>
         ))}
       </div>
@@ -83,16 +84,18 @@ const CategoryNavigationBar = () => {
   );
 };
 
-// Mobile menu
+/* ------------------------------
+   📱 Mobile Navigation Menu
+------------------------------ */
 const MobileNavMenu = ({ isOpen, onClose, categoryData }) => {
   const MobileMenuItem = ({ category, level = 0 }) => {
     const [isSubMenuOpen, setIsSubMenuOpen] = useState(false);
-    const hasChildren = category.children && category.children.length > 0;
+    const hasSub = category.subcategories && category.subcategories.length > 0;
 
-    if (!hasChildren)
+    if (!hasSub)
       return (
         <a
-          href={category.href}
+          href={`#${category.name.toLowerCase().replace(/\s+/g, "-")}`}
           className="flex items-center gap-4 py-3 hover:bg-gray-100 rounded-md"
           style={{ paddingLeft: `${1 + level * 1.5}rem` }}
         >
@@ -105,21 +108,21 @@ const MobileNavMenu = ({ isOpen, onClose, categoryData }) => {
         <button
           onClick={() => setIsSubMenuOpen(!isSubMenuOpen)}
           className="w-full flex justify-between items-center py-3 font-medium hover:bg-gray-100 rounded-md pr-2"
+          style={{ paddingLeft: `${1 + level * 1.5}rem` }}
         >
-          <span className="flex items-center gap-4 pl-4">
-            {category.name}
-          </span>
+          <span>{category.name}</span>
           <ChevronDown
             className={`w-5 h-5 transition-transform ${
               isSubMenuOpen ? "rotate-180 text-orange-500" : ""
             }`}
           />
         </button>
+
         {isSubMenuOpen && (
           <div className="pl-4 bg-gray-50">
-            {category.children.map((child) => (
+            {category.subcategories.map((child) => (
               <MobileMenuItem
-                key={child.name}
+                key={child._id}
                 category={child}
                 level={level + 1}
               />
@@ -139,12 +142,15 @@ const MobileNavMenu = ({ isOpen, onClose, categoryData }) => {
 
   return (
     <>
+      {/* Overlay */}
       <div
         className={`fixed inset-0 bg-black bg-opacity-50 z-40 transition-opacity md:hidden ${
           isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
         }`}
         onClick={onClose}
       />
+
+      {/* Sidebar */}
       <div
         className={`fixed top-0 left-0 h-full w-80 bg-white z-50 transform transition-transform duration-300 md:hidden ${
           isOpen ? "translate-x-0" : "-translate-x-full"
@@ -153,7 +159,7 @@ const MobileNavMenu = ({ isOpen, onClose, categoryData }) => {
         <div className="flex flex-col h-full">
           <nav className="flex-1 overflow-y-auto p-2">
             {categoryData.map((cat) => (
-              <MobileMenuItem key={cat.name} category={cat} />
+              <MobileMenuItem key={cat._id} category={cat} />
             ))}
           </nav>
         </div>
@@ -162,7 +168,9 @@ const MobileNavMenu = ({ isOpen, onClose, categoryData }) => {
   );
 };
 
-// Combined export
+/* ------------------------------
+   🔝 Main Category Header Wrapper
+------------------------------ */
 const CategoryHeader = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [categoryData, setCategoryData] = useState([]);
@@ -170,8 +178,8 @@ const CategoryHeader = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const data = await API.get("/category");
-        setCategoryData(data.data);
+        const res = await API.get("/category");
+        setCategoryData(res.data);
       } catch (error) {
         console.error("Error fetching categories:", error);
       }
@@ -191,6 +199,7 @@ const CategoryHeader = () => {
         categoryData={categoryData}
       />
 
+      {/* 🔸 Animation Style */}
       <style>{`
         @keyframes fadeInDown {
           from { opacity: 0; transform: translateY(-10px); }
